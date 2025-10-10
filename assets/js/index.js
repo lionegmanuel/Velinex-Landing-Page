@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // botones a cal.com
-  const calUrl = "https://cal.com/velinex/consultoria-inicial-ia";
+  const calUrl = "https://cal.com/velinex/auditoria-inicial-ia";
   document.querySelectorAll('.btn-contact, .btn-primary').forEach(btn => {
     btn.addEventListener('click', e => {
       const isAnchor = btn.tagName === "A" && btn.href.includes(calUrl);

@@ -126,4 +126,85 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+  const lazyYouTubeContainers = document.querySelectorAll('.yt-lazy');
+  lazyYouTubeContainers.forEach(container => {
+    container.addEventListener('click', async function handleClick() {
+      const id = container.dataset.videoId;
+      if (!id) return;
+
+      const thumbUrl = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+      const ytWatchUrl = `https://www.youtube.com/watch?v=${id}`;
+      // fetchear la miniatura para detectar si YouTube está bloqueado
+      try {
+        const resp = await fetch(thumbUrl, { method: 'HEAD', mode: 'no-cors' });
+        // Nota: muchos bloqueadores provocarán un error o una respuesta vacía.
+        // Si no lanza excepción, no fue bloqueado y se crea el iframe.
+        const iframe = document.createElement('iframe');
+        iframe.id = 'vsl-video'
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&vq=hd720&rel=0&modestbranding=1&autoplay=1`;
+        iframe.title = 'Velinex — Video explicativo';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.frameBorder = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+
+        container.innerHTML = '';
+        container.appendChild(iframe);
+        // Setup YT Player for controlling quality (works after iframe is in DOM)
+        (function setupYouTubeQuality() {
+          function createPlayerWhenReady() {
+            try {
+              // si la API ya está lista
+              if (window.YT && window.YT.Player) {
+                // crea el player sobre el iframe con id 'vsl-video'
+                new window.YT.Player('vsl-video', {
+                  events: {
+                    onReady: function(event) {
+                      try {
+                        // intenta fijar calidad y reproducir
+                        event.target.setPlaybackQuality('hd720');
+                        // si autoplay=1 no es suficiente, forzamos play
+                        event.target.playVideo();
+                      } catch (errInner) {
+                        // no crítico: sólo logueamos
+                        console.warn('YT: no se pudo fijar calidad o reproducir', errInner);
+                      }
+                    }
+                  }
+                });
+                return;
+              }
+            } catch (err) {
+              console.warn('YT init error', err);
+            }
+
+            // si no existe el script de la API lo inyectamos y definimos callback
+            if (!document.getElementById('youtube-iframe-api')) {
+              const tag = document.createElement('script');
+              tag.id = 'youtube-iframe-api';
+              tag.src = 'https://www.youtube.com/iframe_api';
+              document.body.appendChild(tag);
+            }
+
+            // callback global que YouTube llama cuando la API está lista
+            window.onYouTubeIframeAPIReady = function() {
+              // pequeña espera para asegurar que el iframe ya esté totalmente montado
+              setTimeout(() => {
+                try { createPlayerWhenReady(); } catch(e){ console.warn(e); }
+              }, 50);
+            };
+          }
+
+          // Ejecutar intento inicial (por si la API ya estaba cargada)
+          createPlayerWhenReady();
+        })();
+
+      } catch (e) {
+        window.open(ytWatchUrl, '_blank', 'noopener,noreferrer');
+      }
+    }, { once: true });
+    
+  });
+
 });

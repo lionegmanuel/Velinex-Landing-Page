@@ -206,5 +206,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { once: true });
     
   });
+  // FAQ
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const faqItem = question.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      
+      // Cerrar todos los demás
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Abrir el clickeado si no estaba activo
+      if (!isActive) {
+        faqItem.classList.add('active');
+      }
+    });
+  });
+// Mostrar sticky CTA después de scroll
+  const stickyCTA = document.querySelector('.sticky-cta-mobile');
+  let lastScroll = 0;
 
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 800) {
+      stickyCTA.classList.add('show');
+    } else {
+      stickyCTA.classList.remove('show');
+    }
+    
+    lastScroll = currentScroll;
+  });
 });

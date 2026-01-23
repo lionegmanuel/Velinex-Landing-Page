@@ -988,6 +988,8 @@ footer {
   .visual-block {
     padding: 0.8rem;
     gap: 1rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .nav-top {
@@ -1017,7 +1019,12 @@ footer {
     font-size: 0.8rem;
   }
 }
-
+@media (min-width: 481px) and (max-width: 767px) {
+  .visual-block {
+    display: flex;
+    flex-direction: column;
+  }
+}
 @media (max-width: 768px) {
   .hero h1 {
     font-size: 2rem;
@@ -1171,8 +1178,8 @@ footer {
     gap: 3rem;
   }
   .visual-images {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
   }
   .visual-images img {
     max-width: 100%;
@@ -1187,7 +1194,6 @@ footer {
   .pain-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-
   .visual-images img {
     max-width: 360px;
   }

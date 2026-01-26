@@ -103,6 +103,10 @@ a {
   opacity: 0;
   line-height: 1.7;
 }
+.hero p.cta-disclaimer {
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
 .vsl-title {
   font-size: 1.8rem;
   font-weight: 700;
@@ -289,16 +293,6 @@ section h2 {
 .cta-microcopy strong {
   color: var(--accent);
   font-weight: 700;
-}
-
-.cta-disclaimer {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
 }
 footer {
   text-align: center;

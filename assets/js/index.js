@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // compatibilidad con requestIdleCallback
+  // ============================================================
+  // UTILIDADES
+  // ============================================================
   const runIdle = (cb, timeout = 1000) => {
     if ("requestIdleCallback" in window) {
       requestIdleCallback(cb, { timeout });
@@ -8,70 +10,180 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // animación fade-in con IntersectionObserver
-  const fadeElements = document.querySelectorAll(".fade-in");
-  const observerOptions = { threshold: 0.1 };
+  // ============================================================
+  // SMOOTH SCROLL AL CALENDARIO (global, llamada desde onclick)
+  // ============================================================
+  window.smoothScrollToCalendar = function (e) {
+    if (e) e.preventDefault();
+    const target = document.getElementById("cta-final");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
+  // ============================================================
+  // FADE-IN CON INTERSECTIONOBSERVER
+  // ============================================================
+  const fadeElements = document.querySelectorAll(".fade-in");
+  const fadeObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.08, rootMargin: "0px 0px -30px 0px" },
+  );
 
   fadeElements.forEach((el) => fadeObserver.observe(el));
 
-  // animación escalonada del hero principal
+  // ============================================================
+  // ANIMACIÓN ESCALONADA DEL HERO
+  // ============================================================
   const hero = document.querySelector(".hero");
-  const heroTitle = hero?.querySelector("h1");
-  const heroText = hero?.querySelector("p");
-  const heroBtn = hero?.querySelector(".btn-primary");
+  if (hero) {
+    const staggerTargets = [
+      hero.querySelector(".hero-badge"),
+      hero.querySelector("h1"),
+      hero.querySelector(".hero-subtitle"),
+      hero.querySelector(".vsl-title"),
+      hero.querySelector(".yt-lazy"),
+      hero.querySelector(".cta-block"),
+    ].filter(Boolean);
 
-  if (heroTitle && heroText && heroBtn) {
-    [heroTitle, heroText, heroBtn].forEach((el) => el.classList.add("fade-in"));
+    // elementos que no tienen animación CSS propia
+    const nonAnimated = staggerTargets.filter(
+      (el) =>
+        !el.classList.contains("hero-badge") &&
+        !el.classList.contains("btn-primary"),
+    );
+    nonAnimated.forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "opacity 0.65s ease-out, transform 0.65s ease-out";
+    });
 
-    setTimeout(() => heroTitle.classList.add("show"), 300);
-    setTimeout(() => heroText.classList.add("show"), 600);
-    setTimeout(() => heroBtn.classList.add("show"), 900);
+    staggerTargets.forEach((el, i) => {
+      setTimeout(
+        () => {
+          if (el) {
+            el.style.opacity = "";
+            el.style.transform = "";
+          }
+        },
+        150 + i * 160,
+      );
+    });
   }
 
-  // typewriter si es que existe
+  // ============================================================
+  // SOLUTION CARDS — ANIMACIÓN ESCALONADA AL SCROLL
+  // ============================================================
+  const solutionCards = document.querySelectorAll(".solution-card");
+  if (solutionCards.length) {
+    solutionCards.forEach((card) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(24px)";
+      card.style.transition =
+        "opacity 0.55s ease-out, transform 0.55s ease-out";
+    });
+
+    const cardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Array.from(solutionCards).indexOf(entry.target);
+            setTimeout(() => {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }, idx * 100);
+            cardObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    solutionCards.forEach((card) => cardObserver.observe(card));
+  }
+
+  // ============================================================
+  // PAIN CARDS — ANIMACIÓN ESCALONADA
+  // ============================================================
+  const painCards = document.querySelectorAll(".pain-card");
+  if (painCards.length) {
+    painCards.forEach((card) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(20px)";
+      card.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out";
+    });
+
+    const painObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Array.from(painCards).indexOf(entry.target);
+            setTimeout(() => {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }, idx * 120);
+            painObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    painCards.forEach((card) => painObserver.observe(card));
+  }
+
+  // ============================================================
+  // TYPEWRITER (si existe)
+  // ============================================================
   const typewriter = document.querySelector(".typewriter");
   if (typewriter) {
     const text =
       typewriter.getAttribute("data-text") ||
-      "Impulsamos tu negocio con Inteligencia Artificial";
+      "El sistema que nunca para de convertir.";
     typewriter.textContent = "";
     let i = 0;
-
     const type = () => {
       if (i < text.length) {
-        typewriter.textContent += text.charAt(i);
-        i++;
+        typewriter.textContent += text.charAt(i++);
         setTimeout(type, 50);
       }
     };
     setTimeout(type, 500);
   }
 
-  // botones a cal.com
+  // ============================================================
+  // BOTONES A CAL.COM — fallback para los que abren nueva pestaña
+  // ============================================================
   const calUrl = "https://cal.com/velinex/auditoria-inicial-ia";
-  document.querySelectorAll(".btn-contact, .btn-primary").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const isAnchor = btn.tagName === "A" && btn.href.includes(calUrl);
-      if (!isAnchor) {
-        e.preventDefault();
-        window.open(calUrl, "_blank");
+  document.querySelectorAll(".btn-primary").forEach((btn) => {
+    if (btn.tagName === "A") {
+      const href = btn.getAttribute("href") || "";
+      // Si apunta a #cta-final, ya maneja el scroll — no interferir
+      if (href === "#cta-final") return;
+      // Si no tiene href o apunta a cal.com externo, abrir nueva pestaña
+      if (!href || href === calUrl) {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.open(calUrl, "_blank");
+        });
       }
-    });
+    }
   });
 
-  // scroll suave para anclas internas
+  // ============================================================
+  // SCROLL SUAVE PARA ANCLAS INTERNAS
+  // ============================================================
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", (e) => {
       const targetId = anchor.getAttribute("href");
+      if (targetId === "#cta-final") return; // manejado por smoothScrollToCalendar
       const target = document.querySelector(targetId);
       if (target) {
         e.preventDefault();
@@ -80,151 +192,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Problemas/Soluciones
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
-
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      tabButtons.forEach((b) => b.classList.remove("active"));
-      tabContents.forEach((c) => c.classList.remove("active"));
-
-      btn.classList.add("active");
-      const targetTab = document.getElementById(btn.dataset.tab);
-      if (targetTab) targetTab.classList.add("active");
-    });
-  });
-
-  // cascada
-  const testimonialCards = document.querySelectorAll(".testimonial-card");
-  const testimonialObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add("show");
-          }, index * 200);
-          testimonialObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.1 },
-  );
-
-  testimonialCards.forEach((card) => testimonialObserver.observe(card));
-
-  // activacion de elementos no mostrados cuando sea necesario
-  setTimeout(() => {
-    document.querySelectorAll(".fade-in:not(.show)").forEach((el) => {
-      el.classList.add("show");
-    });
-  }, 2500);
-
-  // posibles errores de render, por seguridad en móviles principalmente
-  runIdle(() => {
-    const criticalSections = [
-      ".hero",
-      ".pain-section",
-      ".services",
-      ".benefits",
-      ".testimonials",
-      ".cta-final",
-    ];
-    criticalSections.forEach((selector) => {
-      const section = document.querySelector(selector);
-      if (section && section.offsetHeight === 0) {
-        section.style.display = "block";
-        section.style.minHeight = "200px";
-      }
-    });
-  });
-
-  // YouTube lazy load
-  const lazyYouTubeContainers = document.querySelectorAll(".yt-lazy");
-  lazyYouTubeContainers.forEach((container) => {
-    container.addEventListener(
-      "click",
-      async function handleClick() {
-        const id = container.dataset.videoId;
-        if (!id) return;
-
-        const thumbUrl = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-        const ytWatchUrl = `https://www.youtube.com/watch?v=${id}`;
-
-        try {
-          const resp = await fetch(thumbUrl, {
-            method: "HEAD",
-            mode: "no-cors",
-          });
-
-          const iframe = document.createElement("iframe");
-          iframe.id = "vsl-video";
-          iframe.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&vq=hd720&rel=0&modestbranding=1&autoplay=1`;
-          iframe.title = "Velinex — Video explicativo";
-          iframe.allow =
-            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-          iframe.allowFullscreen = true;
-          iframe.frameBorder = "0";
-          iframe.style.width = "100%";
-          iframe.style.height = "100%";
-
-          container.innerHTML = "";
-          container.appendChild(iframe);
-
-          (function setupYouTubeQuality() {
-            function createPlayerWhenReady() {
-              try {
-                if (window.YT && window.YT.Player) {
-                  new window.YT.Player("vsl-video", {
-                    events: {
-                      onReady: function (event) {
-                        try {
-                          event.target.setPlaybackQuality("hd720");
-                          event.target.playVideo();
-                        } catch (errInner) {
-                          console.warn(
-                            "YT: no se pudo fijar calidad o reproducir",
-                            errInner,
-                          );
-                        }
-                      },
-                    },
-                  });
-                  return;
-                }
-              } catch (err) {
-                console.warn("YT init error", err);
-              }
-
-              if (!document.getElementById("youtube-iframe-api")) {
-                const tag = document.createElement("script");
-                tag.id = "youtube-iframe-api";
-                tag.src = "https://www.youtube.com/iframe_api";
-                document.body.appendChild(tag);
-              }
-
-              window.onYouTubeIframeAPIReady = function () {
-                setTimeout(() => {
-                  try {
-                    createPlayerWhenReady();
-                  } catch (e) {
-                    console.warn(e);
-                  }
-                }, 50);
-              };
-            }
-
-            createPlayerWhenReady();
-          })();
-        } catch (e) {
-          window.open(ytWatchUrl, "_blank", "noopener,noreferrer");
-        }
-      },
-      { once: true },
-    );
-  });
-
-  // FAQ
+  // ============================================================
+  // FAQ ACCORDION
+  // ============================================================
   document.querySelectorAll(".faq-question").forEach((question) => {
     question.addEventListener("click", () => {
       const faqItem = question.parentElement;
@@ -236,35 +206,149 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!isActive) {
         faqItem.classList.add("active");
+        setTimeout(() => {
+          faqItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 360);
       }
     });
   });
 
-  // Mostrar sticky CTA después de scroll
+  // ============================================================
+  // STICKY CTA MOBILE
+  // ============================================================
   const stickyCTA = document.querySelector(".sticky-cta-mobile");
-  let lastScroll = 0;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!stickyCTA) return;
+      if (window.pageYOffset > 600) {
+        stickyCTA.classList.add("show");
+      } else {
+        stickyCTA.classList.remove("show");
+      }
+    },
+    { passive: true },
+  );
 
-  window.addEventListener("scroll", () => {
-    const currentScroll = window.pageYOffset;
+  // ============================================================
+  // CALENDARIO CAL.COM — MANEJO DEL IFRAME
+  // ============================================================
+  const calIframe = document.getElementById("cal-iframe");
+  const calLoading = document.getElementById("cal-loading");
 
-    if (currentScroll > 800) {
-      stickyCTA.classList.add("show");
-    } else {
-      stickyCTA.classList.remove("show");
+  // Mostrar iframe cuando carga
+  window.handleCalLoad = function () {
+    if (calLoading) calLoading.style.display = "none";
+    if (calIframe) {
+      calIframe.style.display = "block";
+      // ajuste dinámico de altura via postMessage de Cal.com
     }
+  };
 
-    lastScroll = currentScroll;
+  // Escuchar mensajes de Cal.com para ajustar la altura del iframe
+  window.addEventListener("message", (e) => {
+    if (!e.data || typeof e.data !== "object") return;
+    // Cal.com emite { type: "cal:resize", data: { height } }
+    if (e.data.type === "cal:resize" && calIframe) {
+      const newHeight = e.data.data?.height;
+      if (newHeight && newHeight > 200) {
+        calIframe.style.minHeight = newHeight + "px";
+        calIframe.style.height = newHeight + "px";
+      }
+    }
   });
 
-  // ========================================
+  // Timeout de seguridad: si en 8s no cargó, mostrar fallback
+  setTimeout(() => {
+    if (calLoading && calLoading.style.display !== "none") {
+      calLoading.innerHTML = `
+        <p style="color:#94a3b8;font-size:0.9rem;">
+          El calendario no cargó correctamente.
+          <br>
+          <a href="https://cal.com/velinex/auditoria-inicial-ia" target="_blank"
+             style="color:#38bdf8;font-weight:700;"
+             onclick="trackCTAClick('CTA_Cal_Fallback')">
+            Hacé click aquí para agendar →
+          </a>
+        </p>
+      `;
+    }
+  }, 8000);
+
+  // ============================================================
+  // YOUTUBE LAZY LOAD
+  // ============================================================
+  document.querySelectorAll(".yt-lazy").forEach((container) => {
+    container.addEventListener(
+      "click",
+      function handleClick() {
+        const id = container.dataset.videoId;
+        if (!id) return;
+
+        const ytWatchUrl = `https://www.youtube.com/watch?v=${id}`;
+
+        try {
+          const iframe = document.createElement("iframe");
+          iframe.id = "vsl-video";
+          iframe.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&vq=hd720&rel=0&modestbranding=1&autoplay=1`;
+          iframe.title = "Velinex — Cómo funciona el sistema";
+          iframe.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+          iframe.allowFullscreen = true;
+          iframe.frameBorder = "0";
+          iframe.style.width = "100%";
+          iframe.style.height = "100%";
+
+          container.innerHTML = "";
+          container.appendChild(iframe);
+
+          (function setupQuality() {
+            function initPlayer() {
+              try {
+                if (window.YT && window.YT.Player) {
+                  new window.YT.Player("vsl-video", {
+                    events: {
+                      onReady(event) {
+                        try {
+                          event.target.setPlaybackQuality("hd720");
+                          event.target.playVideo();
+                        } catch (e) {}
+                      },
+                    },
+                  });
+                  return;
+                }
+              } catch (e) {}
+
+              if (!document.getElementById("yt-api")) {
+                const tag = document.createElement("script");
+                tag.id = "yt-api";
+                tag.src = "https://www.youtube.com/iframe_api";
+                document.body.appendChild(tag);
+              }
+
+              window.onYouTubeIframeAPIReady = function () {
+                setTimeout(initPlayer, 50);
+              };
+            }
+            initPlayer();
+          })();
+        } catch (e) {
+          window.open(ytWatchUrl, "_blank", "noopener,noreferrer");
+        }
+      },
+      { once: true },
+    );
+  });
+
+  // ============================================================
   // MODAL PARA IMÁGENES
-  // ========================================
+  // ============================================================
   const imageModal = document.getElementById("imageModal");
   const modalImage = document.getElementById("modalImage");
   const modalClose = document.getElementById("modalClose");
 
   if (imageModal && modalImage && modalClose) {
-    // Hacer todas las imágenes de .visual-images clickeables
     document.querySelectorAll(".visual-images img").forEach((img) => {
       img.addEventListener("click", () => {
         modalImage.src = img.src;
@@ -274,41 +358,63 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Cerrar modal
-    function closeModal() {
+    const closeModal = () => {
       imageModal.classList.remove("active");
       document.body.style.overflow = "";
-    }
+    };
 
     modalClose.addEventListener("click", closeModal);
-
-    // Cerrar al hacer click fuera de la imagen
     imageModal.addEventListener("click", (e) => {
-      if (e.target === imageModal) {
-        closeModal();
-      }
+      if (e.target === imageModal) closeModal();
     });
-
-    // Cerrar con tecla ESC
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && imageModal.classList.contains("active")) {
+      if (e.key === "Escape" && imageModal.classList.contains("active"))
         closeModal();
-      }
     });
   }
 
-  // ========================================
-  // TRACKING DE CLICKS EN CTAs
-  // ========================================
-  function trackCTAClick(buttonName) {
-    // 1. Tracking local en localStorage
-    const clicks = JSON.parse(localStorage.getItem("cta_clicks") || "{}");
-    clicks[buttonName] = (clicks[buttonName] || 0) + 1;
-    clicks[`${buttonName}_last_click`] = new Date().toISOString();
-    clicks.total_clicks = (clicks.total_clicks || 0) + 1;
-    localStorage.setItem("cta_clicks", JSON.stringify(clicks));
+  // ============================================================
+  // SAFETY NET — forzar visibilidad en elementos bloqueados
+  // ============================================================
+  setTimeout(() => {
+    document
+      .querySelectorAll(".fade-in:not(.show)")
+      .forEach((el) => el.classList.add("show"));
+    document.querySelectorAll(".solution-card, .pain-card").forEach((el) => {
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0)";
+    });
+  }, 2800);
 
-    // 2. Google Analytics (si está instalado)
+  runIdle(() => {
+    [
+      ".hero",
+      ".pain-section",
+      ".solution-section",
+      ".for-who",
+      ".faq",
+      ".cta-final",
+    ].forEach((sel) => {
+      const section = document.querySelector(sel);
+      if (section && section.offsetHeight === 0) {
+        section.style.display = "block";
+        section.style.minHeight = "200px";
+      }
+    });
+  });
+
+  // ============================================================
+  // TRACKING CTAs
+  // ============================================================
+  function trackCTAClick(buttonName) {
+    try {
+      const clicks = JSON.parse(localStorage.getItem("cta_clicks") || "{}");
+      clicks[buttonName] = (clicks[buttonName] || 0) + 1;
+      clicks[`${buttonName}_last`] = new Date().toISOString();
+      clicks.total = (clicks.total || 0) + 1;
+      localStorage.setItem("cta_clicks", JSON.stringify(clicks));
+    } catch (e) {}
+
     if (typeof gtag !== "undefined") {
       gtag("event", "cta_click", {
         event_category: "CTA",
@@ -316,56 +422,42 @@ document.addEventListener("DOMContentLoaded", () => {
         value: 1,
       });
     }
-
-    // 3. Meta Pixel (si está instalado)
     if (typeof fbq !== "undefined") {
       fbq("track", "Lead", {
         content_name: buttonName,
         source: "landing_page",
       });
     }
-
-    // 4. Log para debugging
-    console.log("🎯 CTA Click tracked:", {
-      button: buttonName,
-      timestamp: new Date().toLocaleString("es-AR"),
-      total_clicks: clicks.total_clicks,
-    });
+    console.log("🎯 CTA:", buttonName);
   }
 
-  // Función para ver estadísticas en consola
-  window.getCTAStats = function () {
-    const clicks = JSON.parse(localStorage.getItem("cta_clicks") || "{}");
-    console.log("📊 Estadísticas de CTAs:");
-    console.table(clicks);
-    return clicks;
+  window.trackCTAClick = trackCTAClick;
+
+  // Listeners por selector
+  const ctaSelectors = [
+    [".btn-primary.schedule", "CTA_Superior_Hero"],
+    [".cta-final .btn-primary", "CTA_Final_Principal"],
+    [".sticky-cta-mobile .btn-primary", "CTA_Sticky_Mobile"],
+  ];
+  ctaSelectors.forEach(([sel, name]) => {
+    const el = document.querySelector(sel);
+    if (el) el.addEventListener("click", () => trackCTAClick(name));
+  });
+
+  // Debugging
+  window.getCTAStats = () => {
+    try {
+      const d = JSON.parse(localStorage.getItem("cta_clicks") || "{}");
+      console.table(d);
+      return d;
+    } catch (e) {
+      return {};
+    }
   };
-
-  // Función para resetear estadísticas
-  window.resetCTAStats = function () {
-    localStorage.removeItem("cta_clicks");
-    console.log("✅ Estadísticas reseteadas");
+  window.resetCTAStats = () => {
+    try {
+      localStorage.removeItem("cta_clicks");
+      console.log("✅ Reset");
+    } catch (e) {}
   };
-
-  // Agregar event listeners a todos los botones CTA
-  const ctaHero = document.querySelector(".btn-primary.schedule");
-  if (ctaHero) {
-    ctaHero.addEventListener("click", () => {
-      trackCTAClick("CTA_Superior_Hero");
-    });
-  }
-
-  const ctaFinal = document.querySelector(".cta-final .btn-primary");
-  if (ctaFinal) {
-    ctaFinal.addEventListener("click", () => {
-      trackCTAClick("CTA_Final_Principal");
-    });
-  }
-
-  const ctaSticky = document.querySelector(".sticky-cta-mobile .btn-primary");
-  if (ctaSticky) {
-    ctaSticky.addEventListener("click", () => {
-      trackCTAClick("CTA_Sticky_Mobile");
-    });
-  }
 });

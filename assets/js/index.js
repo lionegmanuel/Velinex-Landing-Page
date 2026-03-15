@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================================================
   // BOTONES A CAL.COM — fallback para los que abren nueva pestaña
   // ============================================================
-  const calUrl = "https://cal.com/velinex/auditoria-inicial-ia";
+  const calUrl = "https://cal.com/velinex/velinex-auditoria";
   document.querySelectorAll(".btn-primary").forEach((btn) => {
     if (btn.tagName === "A") {
       const href = btn.getAttribute("href") || "";
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p style="color:#94a3b8;font-size:0.9rem;">
           El calendario no cargó correctamente.
           <br>
-          <a href="https://cal.com/velinex/auditoria-inicial-ia" target="_blank"
+          <a href="https://cal.com/velinex/velinex-auditoria" target="_blank"
              style="color:#38bdf8;font-weight:700;"
              onclick="trackCTAClick('CTA_Cal_Fallback')">
             Hacé click aquí para agendar →
@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     events: {
                       onReady(event) {
                         try {
-                          event.target.setPlaybackQuality("hd720");
+                          event.target.setPlaybackQuality("hd1080p");
                           event.target.playVideo();
                         } catch (e) {}
                       },

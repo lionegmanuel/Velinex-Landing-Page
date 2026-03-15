@@ -262,16 +262,16 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     if (calLoading && calLoading.style.display !== "none") {
       calLoading.innerHTML = `
-        <p style="color:#94a3b8;font-size:0.9rem;">
-          El calendario no cargó correctamente.
-          <br>
-          <a href="https://cal.com/velinex/velinex-auditoria" target="_blank"
-             style="color:#38bdf8;font-weight:700;"
-             onclick="trackCTAClick('CTA_Cal_Fallback')">
-            Hacé click aquí para agendar →
-          </a>
-        </p>
-      `;
+          <p style="color:#94a3b8;font-size:0.9rem;">
+            El calendario no cargó correctamente.
+            <br>
+            <a href="https://cal.com/velinex/velinex-auditoria" target="_blank"
+              style="color:#38bdf8;font-weight:700;"
+              onclick="trackCTAClick('CTA_Cal_Fallback')">
+              Hacé click aquí para agendar →
+            </a>
+          </p>
+        `;
     }
   }, 8000);
 
@@ -300,6 +300,13 @@ document.addEventListener("DOMContentLoaded", () => {
           iframe.style.height = "100%";
 
           container.innerHTML = "";
+          // Track play VSL
+          if (typeof gtag !== "undefined") {
+            gtag("event", "vsl_play", {
+              event_category: "Video",
+              event_label: "VSL Principal",
+            });
+          }
           container.appendChild(iframe);
 
           (function setupQuality() {
@@ -432,7 +439,74 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.trackCTAClick = trackCTAClick;
-
+  // ============================================================
+  // SCROLL DEPTH — 25 / 50 / 75 / 100%
+  // ============================================================
+  (function () {
+    const milestones = [25, 50, 75, 100];
+    const reached = {};
+    window.addEventListener(
+      "scroll",
+      function () {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight <= 0) return;
+        const pct = Math.round((scrollTop / docHeight) * 100);
+        milestones.forEach(function (m) {
+          if (pct >= m && !reached[m]) {
+            reached[m] = true;
+            if (typeof gtag !== "undefined") {
+              gtag("event", "scroll_depth", {
+                event_category: "Engagement",
+                event_label: m + "%",
+                value: m,
+              });
+            }
+          }
+        });
+      },
+      { passive: true },
+    );
+  })();
+  // ============================================================
+  // TIME ON PAGE — 30s / 60s / 120s
+  // ============================================================
+  [30, 60, 120].forEach(function (seconds) {
+    setTimeout(function () {
+      if (typeof gtag !== "undefined") {
+        gtag("event", "time_on_page", {
+          event_category: "Engagement",
+          event_label: seconds + "s",
+          value: seconds,
+        });
+      }
+    }, seconds * 1000);
+  });
+  // ============================================================
+  // CALENDAR REACHED — usuario llegó a ver el calendario
+  // ============================================================
+  (function () {
+    const calSection = document.getElementById("cta-final");
+    if (!calSection) return;
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            if (typeof gtag !== "undefined") {
+              gtag("event", "calendar_reached", {
+                event_category: "Conversion",
+                event_label: "Usuario llegó al calendario",
+              });
+            }
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(calSection);
+  })();
   // Listeners por selector
   const ctaSelectors = [
     [".btn-primary.schedule", "CTA_Superior_Hero"],

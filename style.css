@@ -558,9 +558,7 @@ section h2 {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   cursor: zoom-in;
   min-height: 0;
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .visual-images .proof-screenshot:nth-child(1) {
@@ -574,6 +572,11 @@ section h2 {
 .visual-images .proof-screenshot:nth-child(3) {
   grid-column: 3;
   grid-row: 1;
+}
+
+.visual-images img,
+.proof-video-wrapper {
+  cursor: zoom-in;
 }
 
 .visual-images img:hover {
@@ -593,9 +596,8 @@ section h2 {
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease;
+  cursor: zoom-in;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .proof-video-wrapper:hover {
@@ -959,6 +961,50 @@ section h2 {
 }
 
 /* ============================================================
+   WHATSAPP FLOATING BUTTON
+============================================================ */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 58px;
+  height: 58px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  text-decoration: none;
+  animation: whatsappPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.8s;
+  opacity: 0;
+  transform: scale(0);
+}
+
+@keyframes whatsappPop {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(56, 189, 248, 0.8);
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.25);
+  color: #fff;
+}
+
+.whatsapp-icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* ============================================================
    FOOTER
 ============================================================ */
 footer {
@@ -1016,13 +1062,15 @@ footer em {
   animation: zoomIn 0.25s ease;
 }
 
-.modal-content img {
+.modal-content img,
+.modal-content video {
   width: 100%;
   height: auto;
   max-height: 90vh;
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(56, 189, 248, 0.25);
+  display: block;
 }
 
 .modal-close {
@@ -1089,6 +1137,17 @@ footer em {
 
 /* ≤480px */
 @media (max-width: 480px) {
+  .whatsapp-float {
+    bottom: 85px;
+    right: 16px;
+    width: 50px;
+    height: 50px;
+  }
+  .whatsapp-icon {
+    width: 26px;
+    height: 26px;
+  }
+
   html {
     font-size: 14px;
   }
@@ -1130,6 +1189,11 @@ footer em {
   }
   .visual-images {
     grid-template-columns: 1fr 1fr;
+    height: auto;
+  }
+  .visual-images img {
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
   }
   .proof-video-wrapper {
     border-radius: 12px;
@@ -1139,6 +1203,8 @@ footer em {
     display: flex;
     align-items: center;
     justify-content: center;
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 
   .proof-video {
@@ -1167,6 +1233,11 @@ footer em {
 
 /* ≤768px */
 @media (max-width: 768px) {
+  .whatsapp-float {
+    bottom: 85px;
+    right: 16px;
+  }
+
   .hero h1 {
     font-size: 2.4rem;
   }
@@ -1194,6 +1265,15 @@ footer em {
   }
   .visual-images {
     grid-template-columns: 1fr 1fr;
+    height: auto;
+  }
+  .visual-images img {
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+  }
+  .proof-video-wrapper {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
   .for-who-grid {
     grid-template-columns: 1fr;
@@ -1241,6 +1321,15 @@ footer em {
   }
   .visual-images {
     grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
+  .visual-images img {
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+  }
+  .proof-video-wrapper {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }
 

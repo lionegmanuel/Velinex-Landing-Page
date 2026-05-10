@@ -349,17 +349,50 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ============================================================
-  // MODAL PARA IMÁGENES
+  // MODAL PARA IMÁGENES Y VIDEO
   // ============================================================
   const imageModal = document.getElementById("imageModal");
-  const modalImage = document.getElementById("modalImage");
+  const modalContent = document.querySelector(".modal-content");
   const modalClose = document.getElementById("modalClose");
 
-  if (imageModal && modalImage && modalClose) {
+  if (imageModal && modalContent && modalClose) {
+    // Para las imágenes
     document.querySelectorAll(".visual-images img").forEach((img) => {
       img.addEventListener("click", () => {
-        modalImage.src = img.src;
-        modalImage.alt = img.alt;
+        // Limpiamos cualquier contenido previo (video o img)
+        const oldMedia = modalContent.querySelector("img#modalImage, video#modalVideo");
+        if (oldMedia) oldMedia.remove();
+
+        const newImg = document.createElement("img");
+        newImg.id = "modalImage";
+        newImg.src = img.src;
+        newImg.alt = img.alt;
+        
+        modalContent.appendChild(newImg);
+        imageModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    // Para el video
+    document.querySelectorAll(".proof-video-wrapper").forEach((wrapper) => {
+      wrapper.addEventListener("click", () => {
+        const video = wrapper.querySelector("video");
+        if (!video) return;
+
+        // Limpiamos cualquier contenido previo (video o img)
+        const oldMedia = modalContent.querySelector("img#modalImage, video#modalVideo");
+        if (oldMedia) oldMedia.remove();
+
+        const newVideo = document.createElement("video");
+        newVideo.id = "modalVideo";
+        newVideo.src = video.src;
+        newVideo.autoplay = true;
+        newVideo.controls = true;
+        newVideo.loop = true;
+        newVideo.playsInline = true;
+
+        modalContent.appendChild(newVideo);
         imageModal.classList.add("active");
         document.body.style.overflow = "hidden";
       });
@@ -368,6 +401,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeModal = () => {
       imageModal.classList.remove("active");
       document.body.style.overflow = "";
+      // Pausar y remover video para que deje de sonar si lo cierran
+      const video = modalContent.querySelector("video#modalVideo");
+      if (video) {
+        video.pause();
+        video.src = "";
+      }
     };
 
     modalClose.addEventListener("click", closeModal);

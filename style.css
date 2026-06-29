@@ -207,7 +207,7 @@ section h2 {
   font-size: clamp(1rem, 1.8vw, 1.15rem);
   font-weight: 500;
   color: var(--text-secondary);
-  max-width: 720px;
+  max-width: 900px;
   margin: 0 auto 2.25rem;
   line-height: 1.75;
   animation: fadeInUp 0.7s ease-out 0.16s both;
@@ -439,7 +439,60 @@ section h2 {
   color: var(--text-secondary);
   line-height: 1.7;
 }
-
+.puv-section {
+  background: var(--bg);
+  padding: 5.5rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.puv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+}
+.puv-card {
+  background: var(--card-bg);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.75rem;
+  transition:
+    border-color var(--duration) ease-out,
+    transform var(--duration) ease-out;
+}
+.puv-card:hover {
+  border-color: var(--accent-border);
+  transform: translateY(-2px);
+}
+.puv-card--highlight {
+  border-color: var(--accent-border);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.06), var(--card-bg));
+}
+.puv-vs {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+.puv-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+.puv-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+@media (max-width: 768px) {
+  .puv-grid {
+    grid-template-columns: 1fr;
+  }
+}
 /* ── ASSET SECTION (Lo que cambia) ─────────────────────── */
 .asset-section {
   background: linear-gradient(180deg, var(--alt-bg) 0%, var(--bg) 100%);

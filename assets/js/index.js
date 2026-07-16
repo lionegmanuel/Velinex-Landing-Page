@@ -11,6 +11,78 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ============================================================
+  // UTM CAPTURE + ATRIBUCIÓN (first-touch, persiste 30 días)
+  // Guarda utm_source/medium/campaign/content/term del primer ingreso
+  // y los reusa en toda la sesión (y sesiones siguientes hasta que
+  // expiren) para pasarlos a Cal.com, WhatsApp y GA4.
+  // ============================================================
+  const UTM_KEYS = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+  ];
+  const UTM_STORE_KEY = "velinex_attribution";
+  const UTM_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 días
+
+  function captureAttribution() {
+    const params = new URLSearchParams(window.location.search);
+    const incoming = {};
+    UTM_KEYS.forEach((k) => {
+      const v = params.get(k);
+      if (v) incoming[k] = v;
+    });
+
+    let stored = null;
+    try {
+      stored = JSON.parse(localStorage.getItem(UTM_STORE_KEY) || "null");
+    } catch (e) {}
+
+    const expired = stored && Date.now() - stored.ts > UTM_TTL_MS;
+
+    // First-touch: si ya hay algo guardado y no expiró, lo respetamos tal
+    // cual (no pisamos la atribución original con visitas de vuelta sin UTM).
+    if (stored && !expired) return stored;
+
+    const fresh = {
+      ...incoming,
+      ts: Date.now(),
+      referrer: document.referrer || "direct",
+    };
+    if (!fresh.utm_source) {
+      // Sin UTM explícito: inferimos una fuente cruda del referrer para no
+      // perder del todo la pista (ej. alguien que entra desde el bio de IG).
+      try {
+        const refHost = fresh.referrer !== "direct"
+          ? new URL(fresh.referrer).hostname.replace(/^www\./, "")
+          : "";
+        if (refHost) fresh.utm_source = refHost;
+      } catch (e) {}
+    }
+    try {
+      localStorage.setItem(UTM_STORE_KEY, JSON.stringify(fresh));
+    } catch (e) {}
+    return fresh;
+  }
+
+  const attribution = captureAttribution();
+  window.getAttribution = () => attribution;
+
+  function buildUTMQueryString(attr) {
+    return UTM_KEYS.filter((k) => attr[k])
+      .map((k) => `${k}=${encodeURIComponent(attr[k])}`)
+      .join("&");
+  }
+
+  function appendUTMs(url, attr) {
+    const qs = buildUTMQueryString(attr || attribution);
+    if (!qs) return url;
+    return url + (url.includes("?") ? "&" : "?") + qs;
+  }
+  window.appendUTMs = appendUTMs;
+
+  // ============================================================
   // SMOOTH SCROLL AL CALENDARIO (global, llamada desde onclick)
   // ============================================================
   window.smoothScrollToCalendar = function (e) {
@@ -161,14 +233,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================================================
   // BOTONES A CAL.COM — fallback para los que abren nueva pestaña
   // ============================================================
-  const calUrl = "https://cal.com/velinex/velinex-auditoria";
+  const calUrl = appendUTMs("https://cal.com/velinex/velinex-auditoria");
   document.querySelectorAll(".btn-primary").forEach((btn) => {
     if (btn.tagName === "A") {
       const href = btn.getAttribute("href") || "";
       // Si apunta a #cta-final, ya maneja el scroll — no interferir
       if (href === "#cta-final") return;
       // Si no tiene href o apunta a cal.com externo, abrir nueva pestaña
-      if (!href || href === calUrl) {
+      if (!href || href === "https://cal.com/velinex/velinex-auditoria") {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
           window.open(calUrl, "_blank");
@@ -235,6 +307,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================================================
   const calIframe = document.getElementById("cal-iframe");
   const calLoading = document.getElementById("cal-loading");
+  const calFallbackLink = document.getElementById("cal-fallback-link");
+
+  // WhatsApp flotante: sumamos la fuente al mensaje pre-cargado para que
+  // se vea directo en la conversación, sin necesitar ningún backend.
+  const waFloat = document.getElementById("whatsapp-float");
+  if (waFloat && attribution.utm_source) {
+    try {
+      const waUrl = new URL(waFloat.href);
+      const baseText = waUrl.searchParams.get("text") || "";
+      waUrl.searchParams.set("text", `${baseText} (vía ${attribution.utm_source})`);
+      waFloat.href = waUrl.toString();
+    } catch (e) {}
+  }
+
+  // Cargar el iframe recién acá (no en el HTML) para poder sumarle la
+  // atribución (utm_source/medium/campaign) antes del primer request.
+  if (calIframe && calIframe.dataset.calSrc) {
+    calIframe.src = appendUTMs(calIframe.dataset.calSrc);
+  }
+  if (calFallbackLink) {
+    calFallbackLink.href = appendUTMs(calFallbackLink.href);
+  }
 
   // Mostrar iframe cuando carga
   window.handleCalLoad = function () {
@@ -265,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <p style="color:#94a3b8;font-size:0.9rem;">
             El calendario no cargó correctamente.
             <br>
-            <a href="https://cal.com/velinex/velinex-auditoria" target="_blank"
+            <a href="${appendUTMs("https://cal.com/velinex/velinex-auditoria")}" target="_blank"
               style="color:#38bdf8;font-weight:700;"
               onclick="trackCTAClick('CTA_Cal_Fallback')">
               Hacé click aquí para agendar →
@@ -466,6 +560,9 @@ document.addEventListener("DOMContentLoaded", () => {
         event_category: "CTA",
         event_label: buttonName,
         value: 1,
+        utm_source: attribution.utm_source || "(direct)",
+        utm_medium: attribution.utm_medium || "(none)",
+        utm_campaign: attribution.utm_campaign || "(none)",
       });
     }
     if (typeof fbq !== "undefined") {
@@ -536,6 +633,9 @@ document.addEventListener("DOMContentLoaded", () => {
               gtag("event", "calendar_reached", {
                 event_category: "Conversion",
                 event_label: "Usuario llegó al calendario",
+                utm_source: attribution.utm_source || "(direct)",
+                utm_medium: attribution.utm_medium || "(none)",
+                utm_campaign: attribution.utm_campaign || "(none)",
               });
             }
             observer.disconnect();

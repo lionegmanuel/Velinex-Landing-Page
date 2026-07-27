@@ -272,6 +272,26 @@ section h2 {
   letter-spacing: 0.1px;
 }
 
+.hero-trust-strip {
+  margin: 1.35rem auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  max-width: 960px;
+}
+
+.hero-trust-strip span {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  white-space: nowrap;
+}
+
 /* ── YT LAZY ────────────────────────────────────────────── */
 .yt-lazy {
   position: relative;
@@ -881,6 +901,64 @@ section h2 {
   color: var(--text-secondary);
 }
 
+/* ── DIAGNOSTIC SECTION ─────────────────────────────────── */
+.diagnostic-section {
+  background: var(--bg);
+  padding: 5.5rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.diagnostic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.6rem;
+}
+
+.diagnostic-card {
+  background: var(--card-bg);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.85rem 1.55rem;
+  transition:
+    border-color var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+.diagnostic-card:hover {
+  border-color: var(--accent-border);
+  transform: translateY(-2px);
+}
+
+.diagnostic-card span {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.7rem;
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.diagnostic-card h3 {
+  font-size: 1rem;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.diagnostic-card p {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
 /* ── SOCIAL PROOF (descomentá para activar) ─────────────── */
 .testimonials-section {
   background: var(--alt-bg);
@@ -1105,6 +1183,12 @@ section h2 {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.7;
+}
+
+.guarantee-micro {
+  margin-top: 0.65rem;
+  font-size: 0.78rem !important;
+  color: var(--text-muted) !important;
 }
 
 /* ── FAQ ────────────────────────────────────────────────── */
@@ -1492,6 +1576,9 @@ footer em {
   .testimonials-grid {
     grid-template-columns: 1fr 1fr;
   }
+  .diagnostic-grid {
+    grid-template-columns: 1fr;
+  }
   .stats-bar-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
@@ -1546,6 +1633,16 @@ footer em {
     gap: 1rem;
   }
 
+  .hero-trust-strip {
+    gap: 0.45rem;
+  }
+
+  .hero-trust-strip span {
+    font-size: 0.68rem;
+    white-space: normal;
+    text-align: center;
+  }
+
   .asset-inner {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1588,6 +1685,10 @@ footer em {
   }
 
   .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diagnostic-grid {
     grid-template-columns: 1fr;
   }
 

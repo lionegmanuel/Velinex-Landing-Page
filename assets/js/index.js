@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typewriter) {
     const text =
       typewriter.getAttribute("data-text") ||
-      "El sistema que nunca para de convertir.";
+      "Tu negocio atendiendo, calificando y cerrando en piloto automático.";
     typewriter.textContent = "";
     let i = 0;
     const type = () => {

@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // SOLUTION CARDS — ANIMACIÓN ESCALONADA AL SCROLL
+  // SOLUTION CARDS - ANIMACIÓN ESCALONADA AL SCROLL
   // ============================================================
   const solutionCards = document.querySelectorAll(".solution-card");
   if (solutionCards.length) {
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // PAIN CARDS — ANIMACIÓN ESCALONADA
+  // PAIN CARDS - ANIMACIÓN ESCALONADA
   // ============================================================
   const painCards = document.querySelectorAll(".pain-card");
   if (painCards.length) {
@@ -231,13 +231,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // BOTONES A CAL.COM — fallback para los que abren nueva pestaña
+  // BOTONES A CAL.COM - fallback para los que abren nueva pestaña
   // ============================================================
   const calUrl = appendUTMs("https://cal.com/velinex/velinex-auditoria");
   document.querySelectorAll(".btn-primary").forEach((btn) => {
     if (btn.tagName === "A") {
       const href = btn.getAttribute("href") || "";
-      // Si apunta a #cta-final, ya maneja el scroll — no interferir
+      // Si apunta a #cta-final, ya maneja el scroll - no interferir
       if (href === "#cta-final") return;
       // Si no tiene href o apunta a cal.com externo, abrir nueva pestaña
       if (!href || href === "https://cal.com/velinex/velinex-auditoria") {
@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   // ============================================================
-  // CALENDARIO CAL.COM — MANEJO DEL IFRAME
+  // CALENDARIO CAL.COM - MANEJO DEL IFRAME
   // ============================================================
   const calIframe = document.getElementById("cal-iframe");
   const calLoading = document.getElementById("cal-loading");
@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const iframe = document.createElement("iframe");
           iframe.id = "vsl-video";
           iframe.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&vq=hd720&rel=0&modestbranding=1&autoplay=1`;
-          iframe.title = "Velinex — Cómo funciona el sistema";
+          iframe.title = "Velinex - Cómo funciona el sistema";
           iframe.allow =
             "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
           iframe.allowFullscreen = true;
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // SAFETY NET — forzar visibilidad en elementos bloqueados
+  // SAFETY NET - forzar visibilidad en elementos bloqueados
   // ============================================================
   setTimeout(() => {
     document
@@ -576,7 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.trackCTAClick = trackCTAClick;
   // ============================================================
-  // SCROLL DEPTH — 25 / 50 / 75 / 100%
+  // SCROLL DEPTH - 25 / 50 / 75 / 100%
   // ============================================================
   (function () {
     const milestones = [25, 50, 75, 100];
@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   })();
   // ============================================================
-  // TIME ON PAGE — 30s / 60s / 120s
+  // TIME ON PAGE - 30s / 60s / 120s
   // ============================================================
   [30, 60, 120].forEach(function (seconds) {
     setTimeout(function () {
@@ -620,7 +620,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, seconds * 1000);
   });
   // ============================================================
-  // CALENDAR REACHED — usuario llegó a ver el calendario
+  // CALENDAR REACHED - usuario llegó a ver el calendario
   // ============================================================
   (function () {
     const calSection = document.getElementById("cta-final");

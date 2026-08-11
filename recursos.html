@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Centro de Recursos Gratuito | Velinex</title>
+    <meta
+      name="description"
+      content="Templates, skills, guías y materiales prácticos sobre IA aplicada - a negocios y a proyectos propios. Dejanos tus datos y te la paso por WhatsApp."
+    />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://www.velinex.digital/recursos.html" />
+
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-LWKQSM2B03"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-LWKQSM2B03");
+    </script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="assets/img/Velinex%20Full%20Iso%20NBG.webp"
+      type="image/webp"
+    />
+    <style>
+      .recursos-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-bottom: 4rem;
+      }
+      .recursos-form {
+        max-width: 520px;
+        margin: 2.5rem auto 0;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+      }
+      .field label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 0.4rem;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        background: var(--card-bg);
+        border: var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 0.98rem;
+        padding: 0.8rem 1rem;
+        transition:
+          border-color var(--duration) var(--ease),
+          background var(--duration) var(--ease);
+      }
+      .field input:focus,
+      .field select:focus {
+        outline: none;
+        border-color: var(--accent-border);
+        background: var(--card-bg-hover);
+      }
+      .field-radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .field-radio {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        background: var(--card-bg);
+        border: var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        font-size: 0.92rem;
+        color: var(--text-secondary);
+        transition: border-color var(--duration) var(--ease);
+      }
+      .field-radio:has(input:checked) {
+        border-color: var(--accent-border);
+        color: var(--text);
+      }
+      .field-radio input {
+        margin-top: 0.2rem;
+        accent-color: var(--accent);
+        flex-shrink: 0;
+      }
+      /* Honeypot - invisible para personas, visible para bots que completan todo */
+      .hp-field {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .form-error {
+        display: none;
+        color: var(--red);
+        font-size: 0.88rem;
+        text-align: center;
+        margin-top: -0.4rem;
+      }
+      .form-error.visible {
+        display: block;
+      }
+      .submit-btn[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero recursos-section">
+      <div class="hero-bg-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="nav-top">
+          <img
+            src="assets/img/Velinex%20Full%20Iso%20NBG.webp"
+            alt="Velinex"
+            class="logo"
+          />
+        </div>
+
+        <span class="hero-badge">Centro de Recursos gratuito</span>
+
+        <h1>
+          Templates, guías y herramientas de
+          <span class="h1-highlight">IA aplicada</span>
+          - se actualiza con cada video y proyecto nuevo
+        </h1>
+
+        <p class="hero-subtitle">
+          Dejanos tus datos y te paso todo personalmente por WhatsApp - nada
+          se manda solo, así te llevás justo lo que te sirve a vos, tengas
+          negocio hoy o todavía no.
+        </p>
+
+        <form class="recursos-form" id="recursosForm" novalidate>
+          <div class="field">
+            <label for="f-nombre">Nombre completo</label>
+            <input type="text" id="f-nombre" name="nombre" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label for="f-telefono">Número de teléfono (con WhatsApp)</label>
+            <input type="tel" id="f-telefono" name="telefono" autocomplete="tel" required />
+          </div>
+
+          <div class="field">
+            <label for="f-situacion">¿Cuál de estas te describe mejor hoy?</label>
+            <select id="f-situacion" name="situacion" required>
+              <option value="" disabled selected>Seleccioná una opción...</option>
+              <option>Tengo un negocio y no implementamos nada de IA todavía</option>
+              <option>Tengo un negocio y estamos probando pero sin resultados concretos</option>
+              <option>Tengo un negocio y ya implementamos algo, quiero escalarlo</option>
+              <option>Trabajo en una empresa (no soy el dueño) y quiero llevar esto internamente</option>
+              <option>Soy dev, freelancer o builder con un proyecto propio para desarrollar</option>
+              <option>Ninguna de las anteriores, me interesa la IA en general</option>
+            </select>
+          </div>
+
+          <div class="hp-field" aria-hidden="true">
+            <label for="f-empresa-web">Sitio web de tu empresa</label>
+            <input type="text" id="f-empresa-web" name="empresa_web" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <p class="form-error" id="formError">
+            Algo falló al enviar el formulario. Probá de nuevo, o escribime directo por WhatsApp.
+          </p>
+
+          <button type="submit" class="btn-primary btn-large submit-btn" id="submitBtn">
+            Quiero la carpeta →
+          </button>
+          <p class="cta-disclaimer">Tus datos solo se usan para pasarte el recurso - nunca se comparten.</p>
+        </form>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        // ── UTM (mismo mecanismo y misma clave que assets/js/index.js,
+        // así la atribución queda consistente en todo el sitio) ──────────
+        var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+        var UTM_STORE_KEY = "velinex_attribution";
+        var UTM_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+        function captureAttribution() {
+          var params = new URLSearchParams(location.search);
+          var incoming = {};
+          UTM_KEYS.forEach(function (k) {
+            var v = params.get(k);
+            if (v) incoming[k] = v;
+          });
+          var stored = null;
+          try {
+            stored = JSON.parse(localStorage.getItem(UTM_STORE_KEY) || "null");
+          } catch (e) {}
+          var expired = stored && Date.now() - stored.ts > UTM_TTL_MS;
+          if (stored && !expired) return stored;
+          var fresh = Object.assign({}, incoming, {
+            ts: Date.now(),
+            referrer: document.referrer || "direct",
+          });
+          try {
+            localStorage.setItem(UTM_STORE_KEY, JSON.stringify(fresh));
+          } catch (e) {}
+          return fresh;
+        }
+        var attribution = captureAttribution();
+
+        // ── Submit ──────────────────────────────────────────────────────
+        // Token generado 2026-08-11 - filtra bots básicos, no es secreto real
+        // (vive en JS público). Si alguna vez hay que rotarlo, generar uno
+        // nuevo y actualizarlo acá Y en la credencial de n8n (mismo valor).
+        var WEBHOOK_URL = "https://n8n-webhook.velinex.lat/webhook/lead-magnet";
+        var WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
+
+        var form = document.getElementById("recursosForm");
+        var submitBtn = document.getElementById("submitBtn");
+        var formError = document.getElementById("formError");
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          formError.classList.remove("visible");
+
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          var honeypot = form.empresa_web.value.trim();
+          var nombreCompleto = form.nombre.value.trim();
+          var primerNombreRaw = nombreCompleto.split(/\s+/)[0] || "";
+          var primerNombre = primerNombreRaw
+            ? primerNombreRaw.charAt(0).toUpperCase() + primerNombreRaw.slice(1).toLowerCase()
+            : "";
+
+          var payload = {
+            formId: "zxy1Oa",
+            responseId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+            nombre: nombreCompleto,
+            email: form.email.value.trim().toLowerCase(),
+            telefono: form.telefono.value.trim(),
+            calificacion: form.situacion.value,
+            utmSource: attribution.utm_source || "",
+            utmMedium: attribution.utm_medium || "",
+            utmCampaign: attribution.utm_campaign || "",
+            utmContent: attribution.utm_content || "",
+            timestamp: new Date().toISOString(),
+          };
+
+          // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
+          if (honeypot) {
+            redirectToPuente(primerNombre);
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Enviando...";
+
+          fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Velinex-Secret": WEBHOOK_TOKEN,
+            },
+            body: JSON.stringify(payload),
+          })
+            .then(function (res) {
+              if (!res.ok) throw new Error("Webhook respondió " + res.status);
+              gtag("event", "generate_lead", { form_name: "centro_recursos" });
+              redirectToPuente(primerNombre);
+            })
+            .catch(function (err) {
+              console.error(err);
+              formError.classList.add("visible");
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Quiero la carpeta →";
+            });
+        });
+
+        function redirectToPuente(primerNombre) {
+          var url = "puente.html" + (primerNombre ? "?n=" + encodeURIComponent(primerNombre) : "");
+          location.href = url;
+        }
+      })();
+    </script>
+  </body>
+</html>

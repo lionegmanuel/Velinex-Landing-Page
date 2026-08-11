@@ -1,5 +1,5 @@
 /* ============================================================
-   VELINEX · style.css — v2.0 Production
+   VELINEX · style.css - v2.0 Production
    Sistema de diseño completo. Dark-premium.
 ============================================================ */
 
@@ -1479,7 +1479,7 @@ footer em {
 
 /* ── ANIMATIONS ─────────────────────────────────────────── */
 .fade-in {
-  /* visible por defecto — el JS agrega .visible para la animacion de entrada */
+  /* visible por defecto - el JS agrega .visible para la animacion de entrada */
   transition:
     opacity 0.55s ease-out,
     transform 0.55s ease-out;

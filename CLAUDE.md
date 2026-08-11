@@ -1,4 +1,4 @@
-# CLAUDE.md — Velinex Landing Page
+# CLAUDE.md - Velinex Landing Page
 
 ## Contexto del proyecto
 
@@ -20,20 +20,20 @@ Estructura real:
 
 ## Reglas específicas de este repo
 
-- `Edit` sobre `Write` en `index.html`/`style.css`/`assets/js/index.js` — son archivos grandes, cambiar solo lo pedido.
-- `assets/js/index.js` es el único JS externo real del sitio — no duplicar su lógica inline. Excepción ya existente: el accordion del FAQ está implementado **dos veces** (una vez dentro de `index.js`, y una copia inline al final del `<body>` de `index.html`) — no agregar una tercera copia; si se toca el comportamiento del FAQ, actualizar ambas o consolidar, pero no asumir que solo vive en un lugar.
-- Funciones globales expuestas por `index.js` que el HTML llama vía `onclick`/`onload` — no renombrar sin actualizar `index.html`:
+- `Edit` sobre `Write` en `index.html`/`style.css`/`assets/js/index.js` - son archivos grandes, cambiar solo lo pedido.
+- `assets/js/index.js` es el único JS externo real del sitio - no duplicar su lógica inline. Excepción ya existente: el accordion del FAQ está implementado **dos veces** (una vez dentro de `index.js`, y una copia inline al final del `<body>` de `index.html`) - no agregar una tercera copia; si se toca el comportamiento del FAQ, actualizar ambas o consolidar, pero no asumir que solo vive en un lugar.
+- Funciones globales expuestas por `index.js` que el HTML llama vía `onclick`/`onload` - no renombrar sin actualizar `index.html`:
   - `trackCTAClick(buttonName)`
   - `smoothScrollToCalendar(event)`
   - `handleCalLoad()`
   - `appendUTMs(url)` / `window.getAttribution()`
   - `window.getCTAStats()` / `window.resetCTAStats()` (debug)
-- IDs usados por `index.js` — no renombrar en el HTML sin tocar el JS: `cal-loading`, `cal-iframe`, `cal-fallback-link`, `imageModal`, `modalClose`, `whatsapp-float`.
-- El iframe de Cal.com (`#cal-iframe`) usa `data-cal-src` (no `src` directo) — el JS le inyecta el `src` real con UTMs vía `appendUTMs`. No poner `src` fijo en el HTML, rompe la atribución.
+- IDs usados por `index.js` - no renombrar en el HTML sin tocar el JS: `cal-loading`, `cal-iframe`, `cal-fallback-link`, `imageModal`, `modalClose`, `whatsapp-float`.
+- El iframe de Cal.com (`#cal-iframe`) usa `data-cal-src` (no `src` directo) - el JS le inyecta el `src` real con UTMs vía `appendUTMs`. No poner `src` fijo en el HTML, rompe la atribución.
 - Clases con animación manejada por `IntersectionObserver` en `index.js`: `.fade-in` (observer general), `.solution-card` y `.pain-card` (stagger propio). Si se agrega una sección nueva que deba animar al hacer scroll, usar `.fade-in` en vez de reinventar un observer.
-- GA4 tag ID en `index.html`: `G-LWKQSM2B03` — no modificar sin pedido explícito. Eventos custom ya trackeados: `cta_click`, `vsl_play`, `scroll_depth`, `time_on_page`, `calendar_reached`.
-- Meta Pixel: hay una llamada a `fbq('track', 'Lead', ...)` dentro de `trackCTAClick` — no se encontró el snippet de carga del pixel en `index.html`; si se agrega, verificar que `fbq` esté definido antes de asumir que el tracking funciona.
-- No se encontraron referencias a Tally.so ni a webhooks de n8n en este repo — la captura de leads corre 100% vía embed de Cal.com. Si se agrega un formulario propio, documentar el flujo acá.
+- GA4 tag ID en `index.html`: `G-LWKQSM2B03` - no modificar sin pedido explícito. Eventos custom ya trackeados: `cta_click`, `vsl_play`, `scroll_depth`, `time_on_page`, `calendar_reached`.
+- Meta Pixel: hay una llamada a `fbq('track', 'Lead', ...)` dentro de `trackCTAClick` - no se encontró el snippet de carga del pixel en `index.html`; si se agrega, verificar que `fbq` esté definido antes de asumir que el tracking funciona.
+- No se encontraron referencias a Tally.so ni a webhooks de n8n en este repo - la captura de leads corre 100% vía embed de Cal.com. Si se agrega un formulario propio, documentar el flujo acá.
 
 ### Design system (`style.css`, tokens en `:root`)
 
@@ -45,19 +45,19 @@ Estructura real:
 - Motion: `--ease cubic-bezier(0.4,0,0.2,1)` `--ease-spring cubic-bezier(0.34,1.56,0.64,1)` `--duration 0.24s`
 - Sombras: `--shadow-sm/md/lg/accent`, bordes: `--border`, `--border-accent`
 - Fuente: Plus Jakarta Sans (400/500/600/700/800), cargada desde Google Fonts con `preconnect`
-- Nunca usar `var()` dentro del timing function de una `animation`/`transition` shorthand si el valor no resuelve en ese contexto — usar el valor explícito.
+- Nunca usar `var()` dentro del timing function de una `animation`/`transition` shorthand si el valor no resuelve en ese contexto - usar el valor explícito.
 
 ## Regla de negocio no negociable
 
 - El precio nunca aparece en la landing (confirmado: no hay ningún monto en `index.html`; el FAQ "¿Cuánto cuesta?" redirige explícitamente al Diagnóstico gratuito). No agregar precios ni rangos de precio a ningún texto de esta página sin instrucción explícita.
-- Garantía de 45 días: se presenta siempre en la sección `.guarantee-section`, nunca en el hero ni en un titular — mantener ese patrón si se edita.
+- Garantía de 45 días: se presenta siempre en la sección `.guarantee-section`, nunca en el hero ni en un titular - mantener ese patrón si se edita.
 
-## Contexto de sesión — UPDATES.md
+## Contexto de sesión - UPDATES.md
 
 - Al iniciar cualquier conversación nueva, revisar `UPDATES.md` (raíz del repo) si existe, para confirmar contexto de la última sesión trabajada antes de responder o actuar.
 - Nunca escribir ni actualizar `UPDATES.md` salvo que el usuario lo pida explícitamente.
 - Retención por días, no por cantidad de sesiones: se mantienen los últimos 3 días; al superar ese total se elimina el día completo más antiguo.
-- Dentro de un mismo día puede haber sesiones ilimitadas — todo lo trabajado en el día debe quedar documentado, nunca se trunca por volumen.
+- Dentro de un mismo día puede haber sesiones ilimitadas - todo lo trabajado en el día debe quedar documentado, nunca se trunca por volumen.
 - Cada sesión dentro de un día lleva su propio título breve.
 - Las sesiones del mismo día se separan entre sí con `---`.
 - Orden cronológico de la más antigua a la más reciente dentro del día.

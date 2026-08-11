@@ -6,7 +6,7 @@
     <title>Tu Carpeta de Recursos | Velinex</title>
     <meta
       name="description"
-      content="Contame tu situación y te paso la carpeta de recursos completa por WhatsApp — sin vueltas."
+      content="Contame tu situación y te paso la carpeta de recursos completa por WhatsApp - sin vueltas."
     />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="https://www.velinex.digital/puente.html" />
@@ -97,7 +97,7 @@
         <span class="hero-badge">Centro de Recursos</span>
 
         <h1>
-          Ya casi —
+          <span id="greeting">Ya casi</span> -
           <span class="h1-highlight">contame tu situación</span>
           y te paso la carpeta completa
         </h1>
@@ -111,6 +111,7 @@
 
         <div class="cta-block">
           <a
+            id="waCta"
             href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Quiero%20la%20carpeta%20de%20recursos%20%F0%9F%99%8C&type=phone_number&app_absent=0"
             target="_blank"
             rel="noopener"
@@ -119,7 +120,7 @@
           >
             Escribime por WhatsApp
           </a>
-          <p class="cta-disclaimer">Te respondo yo, Manuel — no es un bot.</p>
+          <p class="cta-disclaimer">Te respondo yo, Manuel - no es un bot.</p>
         </div>
 
         <div class="puente-steps">
@@ -133,10 +134,44 @@
           </div>
           <div class="puente-step">
             <span class="puente-step-num">3</span>
-            <p><strong>Te paso la carpeta completa</strong> — todos los recursos, sin vueltas ni condiciones.</p>
+            <p><strong>Te paso la carpeta completa</strong> - todos los recursos, sin vueltas ni condiciones.</p>
           </div>
         </div>
       </div>
     </section>
+
+    <script>
+      (function () {
+        // Nombre: si Tally lo manda en el redirect (?n=), lo usamos. Si viene
+        // un merge field sin resolver (ej. "{{Nombre}}") o algo que no parece
+        // nombre, lo descartamos y la página sigue en modo genérico.
+        function qp(k) {
+          try {
+            return new URLSearchParams(location.search).get(k) || "";
+          } catch (e) {
+            return "";
+          }
+        }
+        var crudo = qp("n").trim();
+        var esVariable = /[{}]|%7b|contact\.|first_name/i.test(crudo);
+        var limpio = esVariable
+          ? ""
+          : crudo.replace(/[<>{}[\]|\\^`"']/g, "").slice(0, 40);
+        if (limpio && !/^[a-zá-úñü' .-]{2,40}$/i.test(limpio)) limpio = "";
+        var nombre = limpio ? limpio.split(/\s+/)[0] : "";
+        if (nombre) {
+          nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
+          document.getElementById("greeting").textContent = "Ya casi, " + nombre;
+        }
+
+        var msg = nombre
+          ? "Hola Manuel! Soy " + nombre + ", quiero la carpeta de recursos 🙌"
+          : "Hola Manuel! Quiero la carpeta de recursos 🙌";
+        document.getElementById("waCta").href =
+          "https://api.whatsapp.com/send/?phone=5493534270844&text=" +
+          encodeURIComponent(msg) +
+          "&type=phone_number&app_absent=0";
+      })();
+    </script>
   </body>
 </html>

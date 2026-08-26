@@ -57,6 +57,11 @@
         color: var(--text-secondary);
         margin-bottom: 0.4rem;
       }
+      .field-hint {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        margin: 0.35rem 0 0;
+      }
       .field input,
       .field select {
         width: 100%;
@@ -167,8 +172,17 @@
           </div>
 
           <div class="field">
-            <label for="f-telefono">Número de teléfono (con WhatsApp)</label>
-            <input type="tel" id="f-telefono" name="telefono" autocomplete="tel" required />
+            <label for="f-telefono">Número de WhatsApp (con código de país)</label>
+            <input
+              type="tel"
+              id="f-telefono"
+              name="telefono"
+              autocomplete="tel"
+              placeholder="+54 9 11 1234 5678"
+              pattern="\+[1-9][\d\s]{7,17}"
+              required
+            />
+            <p class="field-hint" id="f-telefono-hint">Empezá con + y el código de tu país (+54, +34, +52...) - sin el + no lo aceptamos.</p>
           </div>
 
           <div class="field">
@@ -244,9 +258,25 @@
         var submitBtn = document.getElementById("submitBtn");
         var formError = document.getElementById("formError");
 
+        // E.164 estricto: + seguido de 8 a 15 digitos, sin importar el pais.
+        // Garantiza que SIEMPRE quede guardado el codigo de pais, sea cual sea.
+        var TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
+
         form.addEventListener("submit", function (e) {
           e.preventDefault();
           formError.classList.remove("visible");
+          form.telefono.setCustomValidity("");
+
+          var telefonoRaw = form.telefono.value.trim();
+          var telefonoLimpio = "+" + telefonoRaw.replace(/[^\d]/g, "");
+          // El "+" tiene que estar escrito por la persona (no lo sintetizamos):
+          // si no lo puso, no sabemos si el numero tiene codigo de pais o no.
+          var telefonoValido = telefonoRaw.charAt(0) === "+" && TELEFONO_E164.test(telefonoLimpio);
+          if (telefonoRaw && !telefonoValido) {
+            form.telefono.setCustomValidity(
+              "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678."
+            );
+          }
 
           if (!form.checkValidity()) {
             form.reportValidity();
@@ -265,7 +295,7 @@
             responseId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
             nombre: nombreCompleto,
             email: form.email.value.trim().toLowerCase(),
-            telefono: form.telefono.value.trim(),
+            telefono: telefonoLimpio,
             calificacion: form.situacion.value,
             utmSource: attribution.utm_source || "",
             utmMedium: attribution.utm_medium || "",

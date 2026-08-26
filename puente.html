@@ -109,6 +109,24 @@
           sirven a vos.
         </p>
 
+        <div
+          class="yt-lazy"
+          role="button"
+          aria-label="Reproducir video"
+          data-video-id="pyAnmxgj_D4"
+        >
+          <img
+            src="assets/img/VSL%20Centro%20Recursos.png"
+            alt="Qué hay en el Centro de Recursos | Velinex"
+            loading="lazy"
+          />
+          <div class="yt-playbtn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
+          </div>
+        </div>
+
         <div class="cta-block">
           <a
             id="waCta"
@@ -171,6 +189,35 @@
           "https://api.whatsapp.com/send/?phone=5493534270844&text=" +
           encodeURIComponent(msg) +
           "&type=phone_number&app_absent=0";
+
+        // ── VSL Centro de Recursos (lazy-load YouTube, no listado) ────
+        var vslContainer = document.querySelector(".yt-lazy");
+        if (vslContainer) {
+          vslContainer.addEventListener("click", function handleVslClick() {
+            var id = vslContainer.dataset.videoId;
+            if (!id) return;
+            var iframe = document.createElement("iframe");
+            iframe.src =
+              "https://www.youtube-nocookie.com/embed/" +
+              id +
+              "?enablejsapi=1&vq=hd720&rel=0&modestbranding=1&autoplay=1";
+            iframe.title = "Velinex - Qué hay en el Centro de Recursos";
+            iframe.allow =
+              "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            iframe.frameBorder = "0";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            vslContainer.innerHTML = "";
+            vslContainer.appendChild(iframe);
+            if (typeof gtag !== "undefined") {
+              gtag("event", "vsl_play", {
+                event_category: "Video",
+                event_label: "VSL Centro de Recursos",
+              });
+            }
+          });
+        }
       })();
     </script>
   </body>

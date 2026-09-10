@@ -235,16 +235,26 @@
         </div>
 
         <div class="cta-block">
-          <a
-            href="#cta-final"
-            class="btn-primary schedule"
-            onclick="
-              trackCTAClick('CTA_Hero');
-              smoothScrollToCalendar(event);
-            "
-          >
-            Charlemos 30 minutos gratis
-          </a>
+          <div class="asset-cta-row">
+            <a
+              href="#cta-final"
+              class="btn-primary schedule"
+              onclick="
+                trackCTAClick('CTA_Hero');
+                smoothScrollToCalendar(event);
+              "
+            >
+              Charlemos 30 minutos gratis
+            </a>
+            <a
+              href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Quiero%20saber%20m%C3%A1s%20sobre%20el%20sistema%20%F0%9F%98%83&type=phone_number&app_absent=0"
+              target="_blank"
+              class="btn-whatsapp"
+              onclick="trackCTAClick('CTA_Hero_WhatsApp')"
+            >
+              O escribinos por WhatsApp →
+            </a>
+          </div>
           <p class="cta-disclaimer">
             Diagnóstico de 15-20 minutos · Sin compromiso · Sin venta forzada
           </p>
@@ -550,6 +560,14 @@
                 "
               >
                 Quiero esto en mi negocio
+              </a>
+              <a
+                href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Quiero%20saber%20m%C3%A1s%20sobre%20el%20sistema%20%F0%9F%98%83&type=phone_number&app_absent=0"
+                target="_blank"
+                class="btn-whatsapp"
+                onclick="trackCTAClick('CTA_Asset_WhatsApp')"
+              >
+                O por WhatsApp →
               </a>
               <span class="asset-cta-note"
                 >Diagnóstico gratuito de 15-20 minutos</span
@@ -1179,6 +1197,18 @@
             ⚡ Trabajamos con cupos limitados para mantener calidad de
             implementación
           </p>
+        </div>
+
+        <div class="cta-final-whatsapp">
+          <p>¿Preferís arrancar la conversación antes de agendar?</p>
+          <a
+            href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Quiero%20hablar%20sobre%20el%20sistema%20para%20mi%20negocio%20%F0%9F%98%83&type=phone_number&app_absent=0"
+            target="_blank"
+            class="btn-whatsapp"
+            onclick="trackCTAClick('CTA_Final_WhatsApp')"
+          >
+            Escribinos por WhatsApp →
+          </a>
         </div>
 
         <div class="cal-embed-wrapper">

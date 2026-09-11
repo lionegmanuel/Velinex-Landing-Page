@@ -6,7 +6,7 @@
     <title>Tu Carpeta de Recursos | Velinex</title>
     <meta
       name="description"
-      content="Contame tu situación y te paso la carpeta de recursos completa por WhatsApp - sin vueltas."
+      content="Último paso: la carpeta se entrega curada por WhatsApp según el tipo de negocio que marcaste."
     />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="https://www.velinex.digital/puente.html" />
@@ -80,6 +80,18 @@
       .puente-step strong {
         color: var(--text);
       }
+      .puente-filter {
+        max-width: 560px;
+        margin: 1.5rem auto 0;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        text-align: center;
+      }
+      .puente-filter strong {
+        color: var(--text-secondary);
+        font-weight: 600;
+      }
     </style>
   </head>
   <body>
@@ -94,19 +106,18 @@
           />
         </div>
 
-        <span class="hero-badge">Centro de Recursos</span>
+        <span class="hero-badge">Centro de Recursos · Último paso</span>
 
         <h1>
-          <span id="greeting">Ya casi</span> -
-          <span class="h1-highlight">contame tu situación</span>
-          y te paso la carpeta completa
+          <span id="greeting">Listo</span> -
+          <span class="h1-highlight">la carpeta se entrega por WhatsApp</span>,
+          armada para tu tipo de negocio
         </h1>
 
-        <p class="hero-subtitle">
-          No es un archivo genérico que se descarga solo. Escribime por
-          WhatsApp, contame en una línea qué negocio tenés o qué video te
-          trajo hasta acá, y te paso personalmente los recursos que te
-          sirven a vos.
+        <p class="hero-subtitle" id="subtitle">
+          No es un zip genérico que se descarga solo. Según lo que marcaste en
+          el formulario, te paso personalmente los recursos que aplican a tu
+          caso. Tocá el botón: el mensaje ya sale escrito.
         </p>
 
         <div
@@ -130,7 +141,7 @@
         <div class="cta-block">
           <a
             id="waCta"
-            href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Quiero%20la%20carpeta%20de%20recursos%20%F0%9F%99%8C&type=phone_number&app_absent=0"
+            href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Te%20escribo%20para%20recibir%20la%20carpeta%20de%20recursos%20%F0%9F%99%8C&type=phone_number&app_absent=0"
             target="_blank"
             rel="noopener"
             class="btn-primary btn-large"
@@ -144,25 +155,31 @@
         <div class="puente-steps">
           <div class="puente-step">
             <span class="puente-step-num">1</span>
-            <p><strong>Escribime.</strong> El botón ya te abre WhatsApp con el mensaje listo.</p>
+            <p><strong>Escribime.</strong> El botón abre WhatsApp con el mensaje listo, con tu nombre y tu situación.</p>
           </div>
           <div class="puente-step">
             <span class="puente-step-num">2</span>
-            <p><strong>Contame tu situación.</strong> Rubro, qué te trajo hasta acá, o qué video estabas viendo.</p>
+            <p><strong>Te paso la carpeta curada</strong> para tu tipo de negocio - no un link genérico con 40 archivos que nunca vas a abrir.</p>
           </div>
           <div class="puente-step">
             <span class="puente-step-num">3</span>
-            <p><strong>Te paso la carpeta completa</strong> - todos los recursos, sin vueltas ni condiciones.</p>
+            <p id="step3"><strong>Si marcaste que te interesa analizar tu caso,</strong> te hago dos preguntas sobre tu operación y vemos si tiene sentido seguir.</p>
           </div>
         </div>
+
+        <p class="puente-filter">
+          <strong>Importante:</strong> la carpeta sale únicamente por este chat.
+          Si el número que cargaste no es real, no hay forma de que la recibas.
+        </p>
       </div>
     </section>
 
     <script>
       (function () {
-        // Nombre: si Tally lo manda en el redirect (?n=), lo usamos. Si viene
-        // un merge field sin resolver (ej. "{{Nombre}}") o algo que no parece
-        // nombre, lo descartamos y la página sigue en modo genérico.
+        // Parámetros que manda recursos.html en el redirect:
+        //   ?n= primer nombre   ?s= situación (chip)   ?i= 1|0 interés comercial
+        // Si algo viene raro (merge field sin resolver, basura, vacío), la
+        // página sigue en modo genérico sin romperse.
         function qp(k) {
           try {
             return new URLSearchParams(location.search).get(k) || "";
@@ -170,25 +187,70 @@
             return "";
           }
         }
-        var crudo = qp("n").trim();
-        var esVariable = /[{}]|%7b|contact\.|first_name/i.test(crudo);
-        var limpio = esVariable
-          ? ""
-          : crudo.replace(/[<>{}[\]|\\^`"']/g, "").slice(0, 40);
-        if (limpio && !/^[a-zá-úñü' .-]{2,40}$/i.test(limpio)) limpio = "";
-        var nombre = limpio ? limpio.split(/\s+/)[0] : "";
-        if (nombre) {
-          nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
-          document.getElementById("greeting").textContent = "Ya casi, " + nombre;
+        function limpiarTexto(raw, max) {
+          var crudo = (raw || "").trim();
+          var esVariable = /[{}]|%7b|contact\.|first_name/i.test(crudo);
+          if (esVariable) return "";
+          return crudo.replace(/[<>{}[\]|\\^`"']/g, "").slice(0, max);
         }
 
-        var msg = nombre
-          ? "Hola Manuel! Soy " + nombre + ", quiero la carpeta de recursos 🙌"
-          : "Hola Manuel! Quiero la carpeta de recursos 🙌";
+        // ── Nombre ────────────────────────────────────────────────────
+        var nombreLimpio = limpiarTexto(qp("n"), 40);
+        if (nombreLimpio && !/^[a-zá-úñü' .-]{2,40}$/i.test(nombreLimpio)) nombreLimpio = "";
+        var nombre = nombreLimpio ? nombreLimpio.split(/\s+/)[0] : "";
+        if (nombre) {
+          nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
+          document.getElementById("greeting").textContent = "Listo, " + nombre;
+        }
+
+        // ── Situación: solo aceptamos los 4 valores del formulario ────
+        var SITUACIONES = [
+          "Tengo negocio y no usamos IA todavía",
+          "Tengo negocio y probamos pero sin resultados",
+          "Tengo negocio y queremos escalar en serio",
+          "No tengo negocio / Curiosidad personal",
+        ];
+        var situacionRaw = limpiarTexto(qp("s"), 80);
+        var situacion = SITUACIONES.indexOf(situacionRaw) !== -1 ? situacionRaw : "";
+        var tieneNegocio = situacion !== "" && situacion.indexOf("Tengo negocio") === 0;
+
+        // ── Interés comercial ─────────────────────────────────────────
+        var interesComercial = qp("i") === "1";
+
+        // ── Mensaje de WhatsApp ───────────────────────────────────────
+        var msg;
+        if (interesComercial && tieneNegocio) {
+          msg =
+            "Hola Manuel! " +
+            (nombre ? "Soy " + nombre + ". " : "") +
+            "Vengo del Centro de Recursos, tengo un negocio (" +
+            situacion +
+            ") y me interesa que veamos el cuello de botella comercial de mi empresa 🙌";
+        } else if (interesComercial) {
+          msg =
+            "Hola Manuel! " +
+            (nombre ? "Soy " + nombre + ". " : "") +
+            "Vengo del Centro de Recursos y me interesa que veamos el cuello de botella comercial de mi empresa 🙌";
+        } else {
+          msg =
+            "Hola Manuel! " +
+            (nombre ? "Soy " + nombre + ", te" : "Te") +
+            " escribo para recibir la carpeta de recursos 🙌";
+        }
         document.getElementById("waCta").href =
           "https://api.whatsapp.com/send/?phone=5493534270844&text=" +
           encodeURIComponent(msg) +
           "&type=phone_number&app_absent=0";
+
+        // ── Copy adaptado al perfil ───────────────────────────────────
+        var step3 = document.getElementById("step3");
+        if (!interesComercial) {
+          step3.innerHTML =
+            "<strong>Sin vueltas.</strong> Recibís los recursos y listo. Si más adelante querés revisar cómo opera tu negocio, ya tenés mi número.";
+        } else if (!tieneNegocio) {
+          step3.innerHTML =
+            "<strong>Marcaste que te interesa analizar tu caso.</strong> Contame en una línea qué estás armando y vemos si tiene sentido seguir.";
+        }
 
         // ── VSL Centro de Recursos (lazy-load YouTube, no listado) ────
         var vslContainer = document.querySelector(".yt-lazy");

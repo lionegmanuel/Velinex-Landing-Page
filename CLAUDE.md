@@ -24,16 +24,16 @@ Estructura real:
 - `assets/js/index.js` es el único JS externo real del sitio - no duplicar su lógica inline. Excepción ya existente: el accordion del FAQ está implementado **dos veces** (una vez dentro de `index.js`, y una copia inline al final del `<body>` de `index.html`) - no agregar una tercera copia; si se toca el comportamiento del FAQ, actualizar ambas o consolidar, pero no asumir que solo vive en un lugar.
 - Funciones globales expuestas por `index.js` que el HTML llama vía `onclick`/`onload` - no renombrar sin actualizar `index.html`:
   - `trackCTAClick(buttonName)`
-  - `smoothScrollToCalendar(event)`
-  - `handleCalLoad()`
+  - `smoothScrollToCalendar(event)` (hace scroll a `#cta-final`; hoy ningún botón la llama, queda por compatibilidad)
   - `appendUTMs(url)` / `window.getAttribution()`
   - `window.getCTAStats()` / `window.resetCTAStats()` (debug)
-- IDs usados por `index.js` - no renombrar en el HTML sin tocar el JS: `cal-loading`, `cal-iframe`, `cal-fallback-link`, `imageModal`, `modalClose`, `whatsapp-float`.
-- El iframe de Cal.com (`#cal-iframe`) usa `data-cal-src` (no `src` directo) - el JS le inyecta el `src` real con UTMs vía `appendUTMs`. No poner `src` fijo en el HTML, rompe la atribución.
+- IDs usados por `index.js` - no renombrar en el HTML sin tocar el JS: `cta-final`, `imageModal`, `modalClose`, `whatsapp-float`.
+- Sin calendario desde 2026-09-11 (criterio Facu Corengia): el embed de Cal.com se eliminó por completo de `index.html`. Todos los CTAs son enlaces directos a WhatsApp (`.btn-primary.btn-wa`) con el mensaje "Estuve viendo la web de Velinex y quiero auditar el cuello de botella comercial de mi empresa". No reintroducir Cal.com ni copy de "agendá / 30 minutos" sin pedido explícito. `index.js` agrega "(vía utm_source)" al final del texto de todos los links de WhatsApp cuando hay atribución.
+- Evento GA4 `calendar_reached` se mantiene con ese nombre por histórico, pero hoy mide llegada a la sección `#cta-final` (CTA de WhatsApp).
 - Clases con animación manejada por `IntersectionObserver` en `index.js`: `.fade-in` (observer general), `.solution-card` y `.pain-card` (stagger propio). Si se agrega una sección nueva que deba animar al hacer scroll, usar `.fade-in` en vez de reinventar un observer.
 - GA4 tag ID en `index.html`: `G-LWKQSM2B03` - no modificar sin pedido explícito. Eventos custom ya trackeados: `cta_click`, `vsl_play`, `scroll_depth`, `time_on_page`, `calendar_reached`.
 - Meta Pixel: hay una llamada a `fbq('track', 'Lead', ...)` dentro de `trackCTAClick` - no se encontró el snippet de carga del pixel en `index.html`; si se agrega, verificar que `fbq` esté definido antes de asumir que el tracking funciona.
-- No se encontraron referencias a Tally.so ni a webhooks de n8n en este repo - la captura de leads corre 100% vía embed de Cal.com. Si se agrega un formulario propio, documentar el flujo acá.
+- Captura de leads: `index.html` solo abre WhatsApp. El único formulario propio es `recursos.html` (Centro de Recursos): POST JSON al webhook de n8n `https://webhook-n8n.velinex.digital/webhook/lead-magnet` con header `X-Velinex-Secret`, campos `nombre`, `email`, `telefono` (E.164 estricto), `calificacion` (chip de situación), `interes_comercial` (chip "filtro de oro") y UTMs. Tras el submit redirige a `puente.html?n=&s=&i=` que arma el mensaje de WhatsApp según interés comercial. Nunca anticipar en `recursos.html` que la entrega es por WhatsApp (criterio Facu): eso se revela recién en `puente.html`.
 
 ### Design system (`style.css`, tokens en `:root`)
 

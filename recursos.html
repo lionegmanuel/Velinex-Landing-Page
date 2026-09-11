@@ -6,7 +6,7 @@
     <title>Centro de Recursos Gratuito | Velinex</title>
     <meta
       name="description"
-      content="Templates, skills, guías y materiales prácticos sobre IA aplicada - a negocios y a proyectos propios. Dejanos tus datos y te llevás justo lo que te sirve a vos."
+      content="Templates, guías, checklists y herramientas prácticas de IA aplicada a negocios. Dejanos tus datos y accedé a la carpeta completa."
     />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="https://www.velinex.digital/recursos.html" />
@@ -50,20 +50,34 @@
         flex-direction: column;
         gap: 1.1rem;
       }
-      .field label {
+      .field > label,
+      .field legend {
         display: block;
         font-size: 0.85rem;
         font-weight: 600;
         color: var(--text-secondary);
         margin-bottom: 0.4rem;
       }
+      .field fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+      }
+      .field legend {
+        margin-bottom: 0.6rem;
+        line-height: 1.5;
+      }
+      .field legend strong {
+        color: var(--text);
+        font-weight: 700;
+      }
       .field-hint {
         font-size: 0.78rem;
         color: var(--text-secondary);
         margin: 0.35rem 0 0;
       }
-      .field input,
-      .field select {
+      .field input {
         width: 100%;
         background: var(--card-bg);
         border: var(--border);
@@ -73,42 +87,101 @@
         font-size: 0.98rem;
         padding: 0.8rem 1rem;
         transition:
-          border-color var(--duration) var(--ease),
-          background var(--duration) var(--ease);
+          border-color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.24s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .field input:focus,
-      .field select:focus {
+      .field input:focus {
         outline: none;
         border-color: var(--accent-border);
         background: var(--card-bg-hover);
       }
-      .field-radio-group {
+
+      /* ── Chips (radio estilizados, un toque de pulgar en móvil) ── */
+      .chip-group {
         display: flex;
         flex-direction: column;
-        gap: 0.6rem;
+        gap: 0.55rem;
       }
-      .field-radio {
+      .chip {
+        position: relative;
         display: flex;
-        align-items: flex-start;
-        gap: 0.65rem;
+        align-items: center;
+        gap: 0.75rem;
         background: var(--card-bg);
         border: var(--border);
         border-radius: var(--radius-sm);
-        padding: 0.75rem 1rem;
+        padding: 0.85rem 1rem;
+        min-height: 52px;
         cursor: pointer;
-        font-size: 0.92rem;
+        font-size: 0.93rem;
+        font-weight: 500;
+        line-height: 1.4;
         color: var(--text-secondary);
-        transition: border-color var(--duration) var(--ease);
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          border-color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .field-radio:has(input:checked) {
+      .chip:hover {
         border-color: var(--accent-border);
+        background: var(--card-bg-hover);
+      }
+      .chip:active {
+        transform: scale(0.985);
+      }
+      .chip input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+        margin: 0;
+        pointer-events: none;
+      }
+      .chip-dot {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--text-dim);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          border-color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .chip-dot::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        transform: scale(0);
+        transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .chip:has(input:checked) {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
         color: var(--text);
       }
-      .field-radio input {
-        margin-top: 0.2rem;
-        accent-color: var(--accent);
-        flex-shrink: 0;
+      .chip:has(input:checked) .chip-dot {
+        border-color: var(--accent);
+        background: var(--accent);
       }
+      .chip:has(input:checked) .chip-dot::after {
+        transform: scale(1);
+      }
+      .chip:has(input:focus-visible) {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .chip-group.chip-group--error .chip {
+        border-color: var(--red);
+      }
+
       /* Honeypot - invisible para personas, visible para bots que completan todo */
       .hp-field {
         position: absolute;
@@ -154,8 +227,9 @@
         </h1>
 
         <p class="hero-subtitle">
-          Dejanos tus datos y te llevás justo lo que te sirve a vos, tengas
-          negocio hoy o todavía no.
+          Checklists, calculadoras, plantillas y guías paso a paso para
+          implementar IA en tu negocio. Dejanos tus datos y accedé a la carpeta
+          completa.
         </p>
 
         <form class="recursos-form" id="recursosForm" novalidate>
@@ -184,13 +258,53 @@
           </div>
 
           <div class="field">
-            <label for="f-situacion">¿Cuál de estas te describe mejor hoy?</label>
-            <select id="f-situacion" name="situacion" required>
-              <option value="" disabled selected>Seleccioná una opción...</option>
-              <option>Tengo un negocio y no implementamos nada de IA todavía</option>
-              <option>Tengo un negocio y estamos probando pero sin resultados concretos</option>
-              <option>Tengo un negocio y ya implementamos algo, quiero escalarlo</option>
-            </select>
+            <fieldset>
+              <legend>¿Cuál de estas te describe mejor hoy?</legend>
+              <div class="chip-group" id="situacionGroup">
+                <label class="chip">
+                  <input type="radio" name="situacion" value="Tengo negocio y no usamos IA todavía" required />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Tengo negocio y no usamos IA todavía</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="situacion" value="Tengo negocio y probamos pero sin resultados" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Tengo negocio y probamos pero sin resultados</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="situacion" value="Tengo negocio y queremos escalar en serio" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Tengo negocio y queremos escalar en serio</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="situacion" value="No tengo negocio / Curiosidad personal" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>No tengo negocio / Curiosidad personal</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="field">
+            <fieldset>
+              <legend>
+                Si te mostramos cómo <strong>ahorrar 20+ horas semanales y duplicar tus
+                cierres</strong> eliminando el cuello de botella comercial, ¿te
+                interesaría analizar tu caso?
+              </legend>
+              <div class="chip-group" id="interesGroup">
+                <label class="chip">
+                  <input type="radio" name="interes_comercial" value="Sí, me interesa charlarlo" required />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Sí, me interesa charlarlo</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="interes_comercial" value="Solo quiero la carpeta de recursos" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Solo quiero la carpeta de recursos</span>
+                </label>
+              </div>
+            </fieldset>
           </div>
 
           <div class="hp-field" aria-hidden="true">
@@ -199,13 +313,13 @@
           </div>
 
           <p class="form-error" id="formError">
-            Algo falló al enviar el formulario. Probá de nuevo, o escribime directo por WhatsApp.
+            Algo falló al enviar el formulario. Probá de nuevo en unos segundos.
           </p>
 
           <button type="submit" class="btn-primary btn-large submit-btn" id="submitBtn">
-            Quiero la carpeta →
+            Acceder a la carpeta →
           </button>
-          <p class="cta-disclaimer">Tus datos solo se usan para pasarte el recurso - nunca se comparten.</p>
+          <p class="cta-disclaimer">Tus datos solo se usan para darte acceso al recurso - nunca se comparten.</p>
         </form>
       </div>
     </section>
@@ -252,10 +366,25 @@
         var form = document.getElementById("recursosForm");
         var submitBtn = document.getElementById("submitBtn");
         var formError = document.getElementById("formError");
+        var situacionGroup = document.getElementById("situacionGroup");
+        var interesGroup = document.getElementById("interesGroup");
+        var SUBMIT_LABEL = "Acceder a la carpeta →";
 
         // E.164 estricto: + seguido de 8 a 15 digitos, sin importar el pais.
         // Garantiza que SIEMPRE quede guardado el codigo de pais, sea cual sea.
         var TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
+
+        function radioValue(name) {
+          var el = form.querySelector('input[name="' + name + '"]:checked');
+          return el ? el.value : "";
+        }
+
+        // Al elegir un chip se limpia el estado de error de ese grupo
+        [situacionGroup, interesGroup].forEach(function (group) {
+          group.addEventListener("change", function () {
+            group.classList.remove("chip-group--error");
+          });
+        });
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
@@ -272,6 +401,11 @@
               "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678."
             );
           }
+
+          var situacion = radioValue("situacion");
+          var interesComercial = radioValue("interes_comercial");
+          situacionGroup.classList.toggle("chip-group--error", !situacion);
+          interesGroup.classList.toggle("chip-group--error", !interesComercial);
 
           if (!form.checkValidity()) {
             form.reportValidity();
@@ -291,7 +425,8 @@
             nombre: nombreCompleto,
             email: form.email.value.trim().toLowerCase(),
             telefono: telefonoLimpio,
-            calificacion: form.situacion.value,
+            calificacion: situacion,
+            interes_comercial: interesComercial,
             utmSource: attribution.utm_source || "",
             utmMedium: attribution.utm_medium || "",
             utmCampaign: attribution.utm_campaign || "",
@@ -301,7 +436,7 @@
 
           // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
           if (honeypot) {
-            redirectToPuente(primerNombre);
+            redirectToPuente(primerNombre, situacion, interesComercial);
             return;
           }
 
@@ -318,20 +453,28 @@
           })
             .then(function (res) {
               if (!res.ok) throw new Error("Webhook respondió " + res.status);
-              gtag("event", "generate_lead", { form_name: "centro_recursos" });
-              redirectToPuente(primerNombre);
+              gtag("event", "generate_lead", {
+                form_name: "centro_recursos",
+                interes_comercial: interesComercial,
+              });
+              redirectToPuente(primerNombre, situacion, interesComercial);
             })
             .catch(function (err) {
               console.error(err);
               formError.classList.add("visible");
               submitBtn.disabled = false;
-              submitBtn.textContent = "Quiero la carpeta →";
+              submitBtn.textContent = SUBMIT_LABEL;
             });
         });
 
-        function redirectToPuente(primerNombre) {
-          var url = "puente.html" + (primerNombre ? "?n=" + encodeURIComponent(primerNombre) : "");
-          location.href = url;
+        // puente.html lee ?n= (nombre), ?s= (situación) e ?i= (1 = interés
+        // comercial) para armar el mensaje de WhatsApp personalizado.
+        function redirectToPuente(primerNombre, situacion, interesComercial) {
+          var params = new URLSearchParams();
+          if (primerNombre) params.set("n", primerNombre);
+          if (situacion) params.set("s", situacion);
+          params.set("i", /^s[ií]/i.test(interesComercial) ? "1" : "0");
+          location.href = "puente.html?" + params.toString();
         }
       })();
     </script>

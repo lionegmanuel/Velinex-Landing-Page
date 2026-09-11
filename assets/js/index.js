@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // UTM CAPTURE + ATRIBUCIÓN (first-touch, persiste 30 días)
   // Guarda utm_source/medium/campaign/content/term del primer ingreso
   // y los reusa en toda la sesión (y sesiones siguientes hasta que
-  // expiren) para pasarlos a Cal.com, WhatsApp y GA4.
+  // expiren) para pasarlos a WhatsApp, GA4 y al form de recursos.html.
   // ============================================================
   const UTM_KEYS = [
     "utm_source",
@@ -83,7 +83,9 @@ document.addEventListener("DOMContentLoaded", () => {
   window.appendUTMs = appendUTMs;
 
   // ============================================================
-  // SMOOTH SCROLL AL CALENDARIO (global, llamada desde onclick)
+  // SMOOTH SCROLL AL CTA FINAL (global, disponible para onclick).
+  // Ya no la usa ningún botón del HTML (todos abren WhatsApp), queda
+  // por compatibilidad si se vuelve a enlazar #cta-final desde arriba.
   // ============================================================
   window.smoothScrollToCalendar = function (e) {
     if (e) e.preventDefault();
@@ -231,31 +233,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ============================================================
-  // BOTONES A CAL.COM - fallback para los que abren nueva pestaña
-  // ============================================================
-  const calUrl = appendUTMs("https://cal.com/velinex/velinex-auditoria");
-  document.querySelectorAll(".btn-primary").forEach((btn) => {
-    if (btn.tagName === "A") {
-      const href = btn.getAttribute("href") || "";
-      // Si apunta a #cta-final, ya maneja el scroll - no interferir
-      if (href === "#cta-final") return;
-      // Si no tiene href o apunta a cal.com externo, abrir nueva pestaña
-      if (!href || href === "https://cal.com/velinex/velinex-auditoria") {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          window.open(calUrl, "_blank");
-        });
-      }
-    }
-  });
-
-  // ============================================================
   // SCROLL SUAVE PARA ANCLAS INTERNAS
   // ============================================================
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", (e) => {
       const targetId = anchor.getAttribute("href");
-      if (targetId === "#cta-final") return; // manejado por smoothScrollToCalendar
       const target = document.querySelector(targetId);
       if (target) {
         e.preventDefault();
@@ -303,71 +285,27 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   // ============================================================
-  // CALENDARIO CAL.COM - MANEJO DEL IFRAME
+  // WHATSAPP - ATRIBUCIÓN EN EL MENSAJE PRE-CARGADO
+  // Todos los CTAs del sitio abren WhatsApp (ya no hay calendario de
+  // Cal.com). Sumamos la fuente al final del mensaje para que se lea
+  // directo en la conversación, sin necesitar ningún backend.
   // ============================================================
-  const calIframe = document.getElementById("cal-iframe");
-  const calLoading = document.getElementById("cal-loading");
-  const calFallbackLink = document.getElementById("cal-fallback-link");
-
-  // WhatsApp flotante: sumamos la fuente al mensaje pre-cargado para que
-  // se vea directo en la conversación, sin necesitar ningún backend.
-  const waFloat = document.getElementById("whatsapp-float");
-  if (waFloat && attribution.utm_source) {
-    try {
-      const waUrl = new URL(waFloat.href);
-      const baseText = waUrl.searchParams.get("text") || "";
-      waUrl.searchParams.set("text", `${baseText} (vía ${attribution.utm_source})`);
-      waFloat.href = waUrl.toString();
-    } catch (e) {}
+  if (attribution.utm_source) {
+    document
+      .querySelectorAll('a[href*="api.whatsapp.com"], a[href*="wa.me"]')
+      .forEach((link) => {
+        try {
+          const waUrl = new URL(link.href);
+          const baseText = waUrl.searchParams.get("text") || "";
+          if (baseText.includes("(vía ")) return;
+          waUrl.searchParams.set(
+            "text",
+            `${baseText} (vía ${attribution.utm_source})`,
+          );
+          link.href = waUrl.toString();
+        } catch (e) {}
+      });
   }
-
-  // Cargar el iframe recién acá (no en el HTML) para poder sumarle la
-  // atribución (utm_source/medium/campaign) antes del primer request.
-  if (calIframe && calIframe.dataset.calSrc) {
-    calIframe.src = appendUTMs(calIframe.dataset.calSrc);
-  }
-  if (calFallbackLink) {
-    calFallbackLink.href = appendUTMs(calFallbackLink.href);
-  }
-
-  // Mostrar iframe cuando carga
-  window.handleCalLoad = function () {
-    if (calLoading) calLoading.style.display = "none";
-    if (calIframe) {
-      calIframe.style.display = "block";
-      // ajuste dinámico de altura via postMessage de Cal.com
-    }
-  };
-
-  // Escuchar mensajes de Cal.com para ajustar la altura del iframe
-  window.addEventListener("message", (e) => {
-    if (!e.data || typeof e.data !== "object") return;
-    // Cal.com emite { type: "cal:resize", data: { height } }
-    if (e.data.type === "cal:resize" && calIframe) {
-      const newHeight = e.data.data?.height;
-      if (newHeight && newHeight > 200) {
-        calIframe.style.minHeight = newHeight + "px";
-        calIframe.style.height = newHeight + "px";
-      }
-    }
-  });
-
-  // Timeout de seguridad: si en 8s no cargó, mostrar fallback
-  setTimeout(() => {
-    if (calLoading && calLoading.style.display !== "none") {
-      calLoading.innerHTML = `
-          <p style="color:#94a3b8;font-size:0.9rem;">
-            El calendario no cargó correctamente.
-            <br>
-            <a href="${appendUTMs("https://cal.com/velinex/velinex-auditoria")}" target="_blank"
-              style="color:#38bdf8;font-weight:700;"
-              onclick="trackCTAClick('CTA_Cal_Fallback')">
-              Hacé click aquí para agendar →
-            </a>
-          </p>
-        `;
-    }
-  }, 8000);
 
   // ============================================================
   // YOUTUBE LAZY LOAD
@@ -620,7 +558,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }, seconds * 1000);
   });
   // ============================================================
-  // CALENDAR REACHED - usuario llegó a ver el calendario
+  // CALENDAR REACHED - usuario llegó al CTA final (#cta-final).
+  // Se mantiene el nombre del evento GA4 para no cortar el histórico,
+  // aunque ya no hay calendario: hoy mide llegada al CTA de WhatsApp.
   // ============================================================
   (function () {
     const calSection = document.getElementById("cta-final");
@@ -632,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (typeof gtag !== "undefined") {
               gtag("event", "calendar_reached", {
                 event_category: "Conversion",
-                event_label: "Usuario llegó al calendario",
+                event_label: "Usuario llegó al CTA final de WhatsApp",
                 utm_source: attribution.utm_source || "(direct)",
                 utm_medium: attribution.utm_medium || "(none)",
                 utm_campaign: attribution.utm_campaign || "(none)",
@@ -646,16 +586,8 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     observer.observe(calSection);
   })();
-  // Listeners por selector
-  const ctaSelectors = [
-    [".btn-primary.schedule", "CTA_Superior_Hero"],
-    [".cta-final .btn-primary", "CTA_Final_Principal"],
-    [".sticky-cta-mobile .btn-primary", "CTA_Sticky_Mobile"],
-  ];
-  ctaSelectors.forEach(([sel, name]) => {
-    const el = document.querySelector(sel);
-    if (el) el.addEventListener("click", () => trackCTAClick(name));
-  });
+  // Cada CTA del HTML llama trackCTAClick(nombre) en su onclick - no se
+  // agregan listeners por selector para no contar dos veces el mismo click.
 
   // Debugging
   window.getCTAStats = () => {

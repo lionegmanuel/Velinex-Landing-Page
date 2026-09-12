@@ -83,17 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
   window.appendUTMs = appendUTMs;
 
   // ============================================================
-  // SMOOTH SCROLL AL CTA FINAL (global, disponible para onclick).
-  // Ya no la usa ningún botón del HTML (todos abren WhatsApp), queda
-  // por compatibilidad si se vuelve a enlazar #cta-final desde arriba.
+  // SMOOTH SCROLL A LA SECCIÓN DE DIAGNÓSTICO (global, para onclick).
+  // Todos los CTAs principales del sitio la usan.
   // ============================================================
-  window.smoothScrollToCalendar = function (e) {
+  window.smoothScrollToDiagnostic = function (e) {
     if (e) e.preventDefault();
-    const target = document.getElementById("cta-final");
+    const target = document.getElementById("diagnostico");
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+  // Alias histórico: el HTML ya no la llama, queda por compatibilidad.
+  window.smoothScrollToCalendar = window.smoothScrollToDiagnostic;
 
   // ============================================================
   // FADE-IN CON INTERSECTIONOBSERVER
@@ -271,41 +272,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // STICKY CTA MOBILE
   // ============================================================
   const stickyCTA = document.querySelector(".sticky-cta-mobile");
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (!stickyCTA) return;
-      if (window.pageYOffset > 600) {
-        stickyCTA.classList.add("show");
-      } else {
-        stickyCTA.classList.remove("show");
-      }
-    },
-    { passive: true },
-  );
+  const diagnosticoSection = document.getElementById("diagnostico");
+  function updateStickyCTA() {
+    if (!stickyCTA) return;
+    // Dentro de #diagnostico el sticky sobra y tapa el formulario.
+    let enDiagnostico = false;
+    if (diagnosticoSection) {
+      const r = diagnosticoSection.getBoundingClientRect();
+      enDiagnostico = r.top < window.innerHeight && r.bottom > 0;
+    }
+    stickyCTA.classList.toggle(
+      "show",
+      window.pageYOffset > 600 && !enDiagnostico,
+    );
+  }
+  window.addEventListener("scroll", updateStickyCTA, { passive: true });
 
   // ============================================================
-  // WHATSAPP - ATRIBUCIÓN EN EL MENSAJE PRE-CARGADO
-  // Todos los CTAs del sitio abren WhatsApp (ya no hay calendario de
-  // Cal.com). Sumamos la fuente al final del mensaje para que se lea
-  // directo en la conversación, sin necesitar ningún backend.
+  // NOTA: la atribución (utm_source) NO se concatena al texto de los
+  // links de WhatsApp. Viaja por localStorage, GA4 y el payload del
+  // formulario de diagnóstico. Nunca en el mensaje que ve el prospecto.
   // ============================================================
-  if (attribution.utm_source) {
-    document
-      .querySelectorAll('a[href*="api.whatsapp.com"], a[href*="wa.me"]')
-      .forEach((link) => {
-        try {
-          const waUrl = new URL(link.href);
-          const baseText = waUrl.searchParams.get("text") || "";
-          if (baseText.includes("(vía ")) return;
-          waUrl.searchParams.set(
-            "text",
-            `${baseText} (vía ${attribution.utm_source})`,
-          );
-          link.href = waUrl.toString();
-        } catch (e) {}
-      });
-  }
 
   // ============================================================
   // YOUTUBE LAZY LOAD
@@ -471,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ".solution-section",
       ".for-who",
       ".faq",
-      ".cta-final",
+      ".diagnostic-flow-section",
     ].forEach((sel) => {
       const section = document.querySelector(sel);
       if (section && section.offsetHeight === 0) {
@@ -480,6 +467,145 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+
+  // ============================================================
+  // FORMULARIO DE DIAGNÓSTICO ESTRATÉGICO
+  // Envía el lead al webhook de n8n con la atribución ya capturada.
+  // El token no es un secreto real (vive en JS público): filtra bots
+  // básicos. Si se rota, actualizarlo acá, en recursos.html y en n8n.
+  // ============================================================
+  (function () {
+    const form = document.getElementById("diagnostic-form");
+    if (!form) return;
+
+    const WEBHOOK_URL =
+      "https://webhook-n8n.velinex.digital/webhook/lead-magnet";
+    const WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
+    const SUBMIT_LABEL = "Solicitar Diagnóstico Estratégico →";
+
+    const submitBtn = document.getElementById("diag-submit-btn");
+    const feedback = document.getElementById("form-feedback");
+
+    // E.164 estricto: + seguido de 8 a 15 dígitos. Garantiza código de país.
+    const TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
+
+    function showFeedback(type, html) {
+      if (!feedback) return;
+      feedback.className = "form-feedback-msg form-feedback-msg--" + type;
+      feedback.innerHTML = html;
+      feedback.style.display = "block";
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      form.telefono.setCustomValidity("");
+      if (feedback) feedback.style.display = "none";
+
+      const telefonoRaw = form.telefono.value.trim();
+      const telefonoLimpio = "+" + telefonoRaw.replace(/[^\d]/g, "");
+      // El "+" lo tiene que escribir la persona: si no está, no sabemos
+      // si el número trae código de país o no.
+      const telefonoValido =
+        telefonoRaw.charAt(0) === "+" && TELEFONO_E164.test(telefonoLimpio);
+      if (telefonoRaw && !telefonoValido) {
+        form.telefono.setCustomValidity(
+          "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678.",
+        );
+      }
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const payload = {
+        formId: "diagnostico_landing",
+        responseId: crypto.randomUUID
+          ? crypto.randomUUID()
+          : String(Date.now()),
+        nombre: form.nombre.value.trim(),
+        email: form.email.value.trim().toLowerCase(),
+        telefono: telefonoLimpio,
+        cargo: form.cargo.value.trim(),
+        empresa: form.empresa.value.trim(),
+        sector: form.sector.value,
+        consultas_diarias: form.consultas_diarias.value,
+        freno_operativo: form.freno.value.trim(),
+        origen: "landing_diagnostico",
+        timestamp: new Date().toISOString(),
+        utmSource: attribution.utm_source || "",
+        utmMedium: attribution.utm_medium || "",
+        utmCampaign: attribution.utm_campaign || "",
+        utmContent: attribution.utm_content || "",
+        utmTerm: attribution.utm_term || "",
+        referrer: attribution.referrer || "",
+      };
+
+      // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
+      if (form.empresa_web.value.trim()) {
+        onSuccess(false);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Procesando diagnóstico...";
+
+      fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Velinex-Secret": WEBHOOK_TOKEN,
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Webhook respondió " + res.status);
+          onSuccess(true, payload);
+        })
+        .catch((err) => {
+          console.error(err);
+          submitBtn.disabled = false;
+          submitBtn.textContent = SUBMIT_LABEL;
+          showFeedback(
+            "error",
+            "No pudimos enviar tu solicitud. Reintentá en un momento o escribinos por WhatsApp con el botón verde de la esquina.",
+          );
+        });
+    });
+
+    function onSuccess(track, payload) {
+      if (track && typeof gtag !== "undefined") {
+        gtag("event", "diagnostic_submitted", {
+          event_category: "Conversion",
+          event_label: "Formulario de Diagnóstico Estratégico",
+          sector: payload.sector,
+          consultas_diarias: payload.consultas_diarias,
+          utm_source: attribution.utm_source || "(direct)",
+          utm_medium: attribution.utm_medium || "(none)",
+          utm_campaign: attribution.utm_campaign || "(none)",
+        });
+      }
+      if (track && typeof fbq !== "undefined") {
+        fbq("track", "Lead", {
+          content_name: "Diagnostico_Estrategico",
+          source: "landing_page",
+        });
+      }
+      form
+        .querySelectorAll(".form-step-block, .form-action-row")
+        .forEach((el) => {
+          el.style.display = "none";
+        });
+      showFeedback(
+        "ok",
+        "<strong>Diagnóstico recibido.</strong> Nos ponemos en contacto en menos de 24 horas para coordinar tu sesión estratégica.",
+      );
+      if (feedback) {
+        feedback.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  })();
 
   // ============================================================
   // TRACKING CTAs
@@ -558,12 +684,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }, seconds * 1000);
   });
   // ============================================================
-  // CALENDAR REACHED - usuario llegó al CTA final (#cta-final).
+  // CALENDAR REACHED - usuario llegó a la sección de diagnóstico.
   // Se mantiene el nombre del evento GA4 para no cortar el histórico,
-  // aunque ya no hay calendario: hoy mide llegada al CTA de WhatsApp.
+  // aunque ya no hay calendario: hoy mide llegada a #diagnostico.
   // ============================================================
   (function () {
-    const calSection = document.getElementById("cta-final");
+    const calSection = document.getElementById("diagnostico");
     if (!calSection) return;
     const observer = new IntersectionObserver(
       function (entries) {
@@ -572,7 +698,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (typeof gtag !== "undefined") {
               gtag("event", "calendar_reached", {
                 event_category: "Conversion",
-                event_label: "Usuario llegó al CTA final de WhatsApp",
+                event_label: "Usuario llegó a la sección de diagnóstico",
                 utm_source: attribution.utm_source || "(direct)",
                 utm_medium: attribution.utm_medium || "(none)",
                 utm_campaign: attribution.utm_campaign || "(none)",

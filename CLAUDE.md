@@ -24,16 +24,19 @@ Estructura real:
 - `assets/js/index.js` es el único JS externo real del sitio - no duplicar su lógica inline. Excepción ya existente: el accordion del FAQ está implementado **dos veces** (una vez dentro de `index.js`, y una copia inline al final del `<body>` de `index.html`) - no agregar una tercera copia; si se toca el comportamiento del FAQ, actualizar ambas o consolidar, pero no asumir que solo vive en un lugar.
 - Funciones globales expuestas por `index.js` que el HTML llama vía `onclick`/`onload` - no renombrar sin actualizar `index.html`:
   - `trackCTAClick(buttonName)`
-  - `smoothScrollToCalendar(event)` (hace scroll a `#cta-final`; hoy ningún botón la llama, queda por compatibilidad)
+  - `smoothScrollToDiagnostic(event)` (hace scroll a `#diagnostico`; la llaman todos los CTAs principales)
+  - `smoothScrollToCalendar(event)` (alias histórico de la anterior; ningún botón la llama)
   - `appendUTMs(url)` / `window.getAttribution()`
   - `window.getCTAStats()` / `window.resetCTAStats()` (debug)
-- IDs usados por `index.js` - no renombrar en el HTML sin tocar el JS: `cta-final`, `imageModal`, `modalClose`, `whatsapp-float`.
-- Sin calendario desde 2026-09-11 (criterio Facu Corengia): el embed de Cal.com se eliminó por completo de `index.html`. Todos los CTAs son enlaces directos a WhatsApp (`.btn-primary.btn-wa`) con el mensaje "Estuve viendo la web de Velinex y quiero auditar el cuello de botella comercial de mi empresa". No reintroducir Cal.com ni copy de "agendá / 30 minutos" sin pedido explícito. `index.js` agrega "(vía utm_source)" al final del texto de todos los links de WhatsApp cuando hay atribución.
-- Evento GA4 `calendar_reached` se mantiene con ese nombre por histórico, pero hoy mide llegada a la sección `#cta-final` (CTA de WhatsApp).
+- IDs usados por `index.js` - no renombrar en el HTML sin tocar el JS: `diagnostico`, `diagnostic-form`, `diag-submit-btn`, `form-feedback`, `imageModal`, `modalClose`, `whatsapp-float`.
+- Sin calendario desde 2026-09-11 (criterio Facu Corengia): el embed de Cal.com se eliminó por completo de `index.html`. No reintroducir Cal.com sin pedido explícito.
+- Desde 2026-09-12 el CTA principal ya no es WhatsApp en frío: todos los `.btn-primary` de `index.html` hacen scroll a `#diagnostico` (Formulario de Diagnóstico Estratégico en 3 pasos). El único WhatsApp que queda en la página es el botón flotante `#whatsapp-float` para soporte puntual.
+- Prohibido volver a concatenar "(vía utm_source)" al texto de los links de WhatsApp: la atribución viaja por localStorage, GA4 y el payload del formulario, nunca en el mensaje que ve el prospecto.
+- Evento GA4 `calendar_reached` se mantiene con ese nombre por histórico, pero hoy mide llegada a la sección `#diagnostico`. El submit del formulario dispara `diagnostic_submitted`.
 - Clases con animación manejada por `IntersectionObserver` en `index.js`: `.fade-in` (observer general), `.solution-card` y `.pain-card` (stagger propio). Si se agrega una sección nueva que deba animar al hacer scroll, usar `.fade-in` en vez de reinventar un observer.
 - GA4 tag ID en `index.html`: `G-LWKQSM2B03` - no modificar sin pedido explícito. Eventos custom ya trackeados: `cta_click`, `vsl_play`, `scroll_depth`, `time_on_page`, `calendar_reached`.
 - Meta Pixel: hay una llamada a `fbq('track', 'Lead', ...)` dentro de `trackCTAClick` - no se encontró el snippet de carga del pixel en `index.html`; si se agrega, verificar que `fbq` esté definido antes de asumir que el tracking funciona.
-- Captura de leads: `index.html` solo abre WhatsApp. El único formulario propio es `recursos.html` (Centro de Recursos): POST JSON al webhook de n8n `https://webhook-n8n.velinex.digital/webhook/lead-magnet` con header `X-Velinex-Secret`, campos `nombre`, `email`, `telefono` (E.164 estricto), `calificacion` (chip de situación), `interes_comercial` (chip "filtro de oro") y UTMs. Tras el submit redirige a `puente.html?n=&s=&i=` que arma el mensaje de WhatsApp según interés comercial. Nunca anticipar en `recursos.html` que la entrega es por WhatsApp (criterio Facu): eso se revela recién en `puente.html`.
+- Captura de leads: `index.html` tiene el formulario de diagnóstico (`#diagnostic-form`, manejado en `assets/js/index.js`), que hace POST JSON al mismo webhook de n8n que el Centro de Recursos (`https://webhook-n8n.velinex.digital/webhook/lead-magnet`, header `X-Velinex-Secret`) con `origen: "landing_diagnostico"` y `formId: "diagnostico_landing"` para distinguirlo del otro formulario. El otro formulario es `recursos.html` (Centro de Recursos): POST JSON al webhook de n8n `https://webhook-n8n.velinex.digital/webhook/lead-magnet` con header `X-Velinex-Secret`, campos `nombre`, `email`, `telefono` (E.164 estricto), `calificacion` (chip de situación), `interes_comercial` (chip "filtro de oro") y UTMs. Tras el submit redirige a `puente.html?n=&s=&i=` que arma el mensaje de WhatsApp según interés comercial. Nunca anticipar en `recursos.html` que la entrega es por WhatsApp (criterio Facu): eso se revela recién en `puente.html`.
 
 ### Design system (`style.css`, tokens en `:root`)
 
@@ -50,7 +53,9 @@ Estructura real:
 ## Regla de negocio no negociable
 
 - El precio nunca aparece en la landing (confirmado: no hay ningún monto en `index.html`; el FAQ "¿Cuánto cuesta?" redirige explícitamente al Diagnóstico gratuito). No agregar precios ni rangos de precio a ningún texto de esta página sin instrucción explícita.
-- Garantía de 45 días: se presenta siempre en la sección `.guarantee-section`, nunca en el hero ni en un titular - mantener ese patrón si se edita.
+- Cero garantía en la landing desde 2026-09-12: la sección `.guarantee-section` y toda mención a los "45 días de garantía" se eliminaron de `index.html` y de `style.css`. No reintroducirlas sin instrucción explícita (el documento maestro v9.1 todavía describe la garantía como parte de la oferta, pero la página no la comunica).
+- Cronograma cerrado en 4 semanas exactas: nunca escribir "5 semanas", "semana 6" ni rangos. Cuatro fases, una por semana.
+- Prohibida la jerga técnica de cara al cliente: "RAG", "LLM", "APIs", "VPS", "flujos", "go-live", "tokens", "chatbot". Hablar de procesos, cuellos de botella, capacidad de escala y tareas repetitivas.
 
 ## Contexto de sesión - UPDATES.md
 

@@ -307,9 +307,17 @@
             </fieldset>
           </div>
 
-          <div class="hp-field" aria-hidden="true">
-            <label for="f-empresa-web">Sitio web de tu empresa</label>
-            <input type="text" id="f-empresa-web" name="empresa_web" tabindex="-1" autocomplete="off" />
+          <div class="hp-field" aria-hidden="true" style="display:none!important;position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+            <label for="f-empresa-web" style="display:none!important;">No completar</label>
+            <input
+              type="text"
+              id="f-empresa-web"
+              name="empresa_web"
+              tabindex="-1"
+              autocomplete="new-password"
+              style="display:none!important;"
+              value=""
+            />
           </div>
 
           <p class="form-error" id="formError">
@@ -369,6 +377,7 @@
         var situacionGroup = document.getElementById("situacionGroup");
         var interesGroup = document.getElementById("interesGroup");
         var SUBMIT_LABEL = "Acceder a la carpeta →";
+        var formInitTime = Date.now();
 
         // E.164 estricto: + seguido de 8 a 15 digitos, sin importar el pais.
         // Garantiza que SIEMPRE quede guardado el codigo de pais, sea cual sea.
@@ -434,8 +443,13 @@
             timestamp: new Date().toISOString(),
           };
 
-          // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
-          if (honeypot) {
+          // Verificacion anti-bot robusta:
+          // Un bot automatizado llena campos ocultos y envia el formulario en menos de 1.2 segundos.
+          // Si una persona real tardo mas de 1.2s y tiene datos validos, jamas se descarta.
+          var submissionDuration = Date.now() - formInitTime;
+          var isBot = Boolean(honeypot) && submissionDuration < 1200;
+
+          if (isBot) {
             redirectToPuente(primerNombre, situacion, interesComercial);
             return;
           }

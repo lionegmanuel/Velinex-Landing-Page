@@ -1353,14 +1353,16 @@
             </div>
 
             <!-- Anti-bot: invisible para personas -->
-            <div class="form-hp" aria-hidden="true">
-              <label for="diag-web">No completar</label>
+            <div class="form-hp" aria-hidden="true" style="display:none!important;position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+              <label for="diag-web" style="display:none!important;">No completar</label>
               <input
                 type="text"
                 id="diag-web"
                 name="empresa_web"
                 tabindex="-1"
-                autocomplete="off"
+                autocomplete="new-password"
+                style="display:none!important;"
+                value=""
               />
             </div>
 

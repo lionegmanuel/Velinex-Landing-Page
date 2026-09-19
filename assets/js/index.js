@@ -269,24 +269,434 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ============================================================
-  // STICKY CTA MOBILE
+  // SIMULADOR DE FUGAS OPERATIVAS (#simulador)
+  // Calcula en vivo consultas que se enfrían, operaciones perdidas y
+  // horas del equipo. Expone window.applyLeakSimulatorToForm() para
+  // precargar el formulario de diagnóstico con lo que eligió el
+  // visitante. Los coeficientes son promedios orientativos por rubro.
   // ============================================================
-  const stickyCTA = document.querySelector(".sticky-cta-mobile");
+  const leakSim = (function () {
+    const root = document.getElementById("leak-simulator");
+    if (!root) return null;
+
+    const range = document.getElementById("leak-volume");
+    const volumeOut = document.getElementById("leak-volume-value");
+    const chips = Array.from(root.querySelectorAll(".leak-chip"));
+    const options = Array.from(root.querySelectorAll(".leak-option"));
+    const lostEl = document.getElementById("leak-lost-value");
+    const lostNote = document.getElementById("leak-lost-note");
+    const opsEl = document.getElementById("leak-ops-value");
+    const opsLabel = document.getElementById("leak-ops-label");
+    const hoursEl = document.getElementById("leak-hours-value");
+    const hoursNote = document.getElementById("leak-hours-note");
+    if (!range || !lostEl || !opsEl || !hoursEl) return null;
+
+    // Porcentaje de consultas que se enfrían según cobertura fuera de hora.
+    const FACTOR_FUGA = { si: 0.1, parcial: 0.25, no: 0.45 };
+    const COVERAGE_TEXT = {
+      si: "con atención activa a toda hora",
+      parcial: "con respuesta parcial fuera de horario",
+      no: "sin atención fuera del horario de oficina",
+    };
+    // Tasa de cierre estimada sobre las consultas enfriadas, por rubro.
+    const SECTORS = {
+      concesionaria: {
+        label: "Concesionaria automotriz",
+        unit: "operaciones potenciales perdidas por mes",
+        min: 0.009,
+        max: 0.018,
+        formSector: "Automotriz",
+      },
+      inmobiliaria: {
+        label: "Inmobiliaria / Desarrollos",
+        unit: "visitas con asesor que hoy no se agendan por mes",
+        min: 0.03,
+        max: 0.06,
+        formSector: "Inmobiliario",
+      },
+      clinica: {
+        label: "Clínica / Salud",
+        unit: "turnos potenciales perdidos por mes",
+        min: 0.033,
+        max: 0.066,
+        formSector: "Salud y Clínicas",
+      },
+      retail: {
+        label: "Óptica / Retail",
+        unit: "ventas potenciales perdidas por mes",
+        min: 0.04,
+        max: 0.08,
+        formSector: "Retail",
+      },
+      b2b: {
+        label: "Servicios y Empresas B2B",
+        unit: "reuniones comerciales perdidas por mes",
+        min: 0.02,
+        max: 0.04,
+        formSector: "Servicios Profesionales",
+      },
+    };
+    const MINUTES_PER_QUERY = 3.5;
+    const DAYS_PER_MONTH = 30;
+    const HOURS_PER_SHIFT = 8;
+
+    const state = {
+      volume: parseInt(range.value, 10) || 60,
+      sector: "concesionaria",
+      coverage: "parcial",
+      used: false,
+      applied: false,
+    };
+
+    const fmt = new Intl.NumberFormat("es-AR");
+    const reduceMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function compute() {
+      const monthly = state.volume * DAYS_PER_MONTH;
+      const lost = Math.round(monthly * FACTOR_FUGA[state.coverage]);
+      const sector = SECTORS[state.sector];
+      let opsMin = Math.max(1, Math.round(lost * sector.min));
+      let opsMax = Math.max(opsMin, Math.round(lost * sector.max));
+      const hours = Math.round((monthly * MINUTES_PER_QUERY) / 60);
+      const shifts = Math.max(1, Math.round(hours / HOURS_PER_SHIFT));
+      return { monthly, lost, opsMin, opsMax, hours, shifts, sector };
+    }
+
+    // Tween corto de números: arranca desde el valor que se está mostrando
+    // para que mover el slider rápido no salte ni se encole.
+    const tweens = new WeakMap();
+    function animateNumber(el, to) {
+      const from = parseInt(el.dataset.count, 10) || 0;
+      if (tweens.has(el)) cancelAnimationFrame(tweens.get(el));
+      if (reduceMotion || from === to) {
+        el.dataset.count = String(to);
+        el.textContent = fmt.format(to);
+        return;
+      }
+      const duration = 380;
+      const start = performance.now();
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.round(from + (to - from) * eased);
+        el.dataset.count = String(val);
+        el.textContent = fmt.format(val);
+        if (t < 1) {
+          tweens.set(el, requestAnimationFrame(frame));
+        } else {
+          tweens.delete(el);
+        }
+      }
+      tweens.set(el, requestAnimationFrame(frame));
+    }
+
+    function bump(el) {
+      if (reduceMotion) return;
+      el.classList.remove("is-bumping");
+      // Reinicia la animación aunque el cambio sea consecutivo.
+      void el.offsetWidth;
+      el.classList.add("is-bumping");
+    }
+
+    function render(animate) {
+      const r = compute();
+      const min = parseInt(range.min, 10);
+      const max = parseInt(range.max, 10);
+      const pct = ((state.volume - min) / (max - min)) * 100;
+      range.style.setProperty("--leak-fill", pct.toFixed(1) + "%");
+      const volumeLabel =
+        state.volume >= max ? fmt.format(max) + "+" : fmt.format(state.volume);
+      if (volumeOut) volumeOut.textContent = volumeLabel;
+      range.setAttribute("aria-valuetext", volumeLabel + " consultas por día");
+
+      if (animate) {
+        animateNumber(lostEl, r.lost);
+        animateNumber(hoursEl, r.hours);
+        bump(lostEl);
+      } else {
+        lostEl.dataset.count = String(r.lost);
+        lostEl.textContent = fmt.format(r.lost);
+        hoursEl.dataset.count = String(r.hours);
+        hoursEl.textContent = fmt.format(r.hours);
+      }
+      if (lostNote) {
+        lostNote.textContent =
+          "Sobre " +
+          fmt.format(r.monthly) +
+          " consultas mensuales, " +
+          COVERAGE_TEXT[state.coverage] +
+          ".";
+      }
+      const opsText =
+        r.opsMin === r.opsMax
+          ? fmt.format(r.opsMin)
+          : fmt.format(r.opsMin) + " a " + fmt.format(r.opsMax);
+      if (opsEl.textContent !== opsText) {
+        opsEl.textContent = opsText;
+        if (animate) bump(opsEl);
+      }
+      if (opsLabel) opsLabel.textContent = r.sector.unit;
+      if (hoursNote) {
+        hoursNote.textContent =
+          "Equivale a " +
+          fmt.format(r.shifts) +
+          (r.shifts === 1 ? " jornada completa" : " jornadas completas") +
+          " de una persona.";
+      }
+    }
+
+    function markUsed() {
+      if (state.used) return;
+      state.used = true;
+      if (typeof gtag !== "undefined") {
+        gtag("event", "leak_simulator_used", {
+          event_category: "Engagement",
+          event_label: "Simulador de fugas",
+        });
+      }
+    }
+
+    function selectInGroup(list, target, attr, key) {
+      list.forEach((btn) => {
+        const active = btn === target;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-checked", active ? "true" : "false");
+      });
+      state[key] = target.dataset[attr];
+    }
+
+    function bindGroup(list, attr, key) {
+      list.forEach((btn, idx) => {
+        btn.addEventListener("click", () => {
+          selectInGroup(list, btn, attr, key);
+          markUsed();
+          render(true);
+        });
+        btn.addEventListener("keydown", (e) => {
+          let next = null;
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+            next = list[(idx + 1) % list.length];
+          } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            next = list[(idx - 1 + list.length) % list.length];
+          }
+          if (next) {
+            e.preventDefault();
+            next.focus();
+            next.click();
+          }
+        });
+      });
+    }
+
+    range.addEventListener("input", () => {
+      state.volume = parseInt(range.value, 10) || state.volume;
+      markUsed();
+      render(true);
+    });
+    bindGroup(chips, "sector", "sector");
+    bindGroup(options, "coverage", "coverage");
+
+    render(false);
+
+    function snapshot() {
+      const r = compute();
+      return {
+        consultas_dia: state.volume >= parseInt(range.max, 10)
+          ? state.volume + "+"
+          : state.volume,
+        rubro: r.sector.label,
+        cobertura_fuera_de_hora: state.coverage,
+        consultas_mes: r.monthly,
+        consultas_enfriadas_mes: r.lost,
+        operaciones_perdidas_min: r.opsMin,
+        operaciones_perdidas_max: r.opsMax,
+        horas_equipo_mes: r.hours,
+        interactuo: state.used,
+      };
+    }
+
+    return { state, compute, snapshot, SECTORS, COVERAGE_TEXT, fmt };
+  })();
+
+  // ------------------------------------------------------------
+  // Precarga del formulario de diagnóstico con lo elegido en el
+  // simulador. Solo pisa campos que la persona no tocó a mano.
+  // ------------------------------------------------------------
+  (function () {
+    const form = document.getElementById("diagnostic-form");
+    if (!form || !leakSim) {
+      window.applyLeakSimulatorToForm = function () {};
+      return;
+    }
+    const volumeSelect = document.getElementById("diag-volume");
+    const sectorSelect = document.getElementById("diag-sector");
+    const bottleneck = document.getElementById("diag-bottleneck");
+    const note = document.getElementById("diag-prefill-note");
+    const noteText = document.getElementById("diag-prefill-text");
+    let settingProgrammatically = false;
+
+    [volumeSelect, sectorSelect, bottleneck].forEach((el) => {
+      if (!el) return;
+      const mark = () => {
+        if (!settingProgrammatically) el.dataset.userEdited = "1";
+      };
+      el.addEventListener("change", mark);
+      el.addEventListener("input", mark);
+    });
+
+    function volumeToOption(v) {
+      if (v <= 70) return "40-70";
+      if (v <= 150) return "70-150";
+      return "+150";
+    }
+
+    function setIfUntouched(el, value) {
+      if (!el || el.dataset.userEdited === "1") return false;
+      settingProgrammatically = true;
+      el.value = value;
+      settingProgrammatically = false;
+      return true;
+    }
+
+    window.applyLeakSimulatorToForm = function (opts) {
+      const silent = !!(opts && opts.silent);
+      const snap = leakSim.snapshot();
+      const state = leakSim.state;
+      const sector = leakSim.SECTORS[state.sector];
+      let touched = false;
+
+      touched = setIfUntouched(volumeSelect, volumeToOption(state.volume)) || touched;
+      touched = setIfUntouched(sectorSelect, sector.formSector) || touched;
+
+      if (bottleneck && bottleneck.dataset.userEdited !== "1") {
+        const draft =
+          "Recibo unas " +
+          snap.consultas_dia +
+          " consultas por día y hoy estamos " +
+          leakSim.COVERAGE_TEXT[state.coverage] +
+          ". Según el simulador se me enfrían cerca de " +
+          leakSim.fmt.format(snap.consultas_enfriadas_mes) +
+          " consultas al mes y el equipo dedica unas " +
+          leakSim.fmt.format(snap.horas_equipo_mes) +
+          " horas mensuales a responder lo mismo.";
+        touched = setIfUntouched(bottleneck, draft) || touched;
+      }
+
+      if (note && noteText && touched) {
+        noteText.innerHTML =
+          "Precargamos tu simulación: <strong>" +
+          snap.consultas_dia +
+          " consultas/día</strong> · <strong>" +
+          sector.label +
+          "</strong> · " +
+          leakSim.COVERAGE_TEXT[state.coverage] +
+          ". Podés ajustar cualquier dato.";
+        note.hidden = false;
+      }
+
+      state.applied = true;
+      if (!silent && typeof gtag !== "undefined") {
+        gtag("event", "leak_simulator_apply", {
+          event_category: "Conversion",
+          event_label: "CTA del simulador",
+          rubro: snap.rubro,
+          cobertura: snap.cobertura_fuera_de_hora,
+          consultas_dia: state.volume,
+          consultas_enfriadas_mes: snap.consultas_enfriadas_mes,
+        });
+      }
+    };
+
+    // Si usó el simulador pero bajó al formulario por su cuenta (sin
+    // tocar el CTA), igual le reflejamos sus datos al llegar.
+    const diagSection = document.getElementById("diagnostico");
+    if (diagSection && "IntersectionObserver" in window) {
+      const autoApply = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            if (leakSim.state.used && !leakSim.state.applied) {
+              window.applyLeakSimulatorToForm({ silent: true });
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
+      autoApply.observe(diagSection);
+    }
+  })();
+
+  // ============================================================
+  // STICKY CTA MOBILE (dos modos)
+  // "simulador": lleva a #simulador con "Calcular fuga".
+  // "diagnostico": una vez que pasó o usó el simulador, lleva a #diagnostico.
+  // Se oculta mientras el simulador o el formulario están en pantalla.
+  // ============================================================
+  const stickyCTA = document.getElementById("sticky-cta-mobile");
+  const stickyLink = document.getElementById("sticky-cta-link");
+  const heroSection = document.querySelector(".hero");
+  const simuladorSection = document.getElementById("simulador");
   const diagnosticoSection = document.getElementById("diagnostico");
+  const STICKY_MODES = {
+    simulador: { text: "¿Cuántas consultas perdés? Calcular fuga →", href: "#simulador" },
+    diagnostico: { text: "Solicitar Diagnóstico Estratégico →", href: "#diagnostico" },
+  };
+
+  function setStickyMode(mode) {
+    if (!stickyCTA || !stickyLink) return;
+    if (!simuladorSection) mode = "diagnostico";
+    if (stickyCTA.dataset.mode === mode) return;
+    stickyCTA.dataset.mode = mode;
+    stickyLink.textContent = STICKY_MODES[mode].text;
+    stickyLink.setAttribute("href", STICKY_MODES[mode].href);
+  }
+
   function updateStickyCTA() {
     if (!stickyCTA) return;
-    // Dentro de #diagnostico el sticky sobra y tapa el formulario.
+    const vh = window.innerHeight;
+    // Aparece recién cuando el hero quedó completamente arriba.
+    let pastHero = window.pageYOffset > 600;
+    if (heroSection) pastHero = heroSection.getBoundingClientRect().bottom < 0;
+
     let enDiagnostico = false;
     if (diagnosticoSection) {
       const r = diagnosticoSection.getBoundingClientRect();
-      enDiagnostico = r.top < window.innerHeight && r.bottom > 0;
+      enDiagnostico = r.top < vh && r.bottom > 0;
     }
+    let enSimulador = false;
+    let pasoSimulador = false;
+    if (simuladorSection) {
+      const r = simuladorSection.getBoundingClientRect();
+      enSimulador = r.top < vh - 120 && r.bottom > 120;
+      pasoSimulador = r.bottom < vh * 0.5;
+    }
+    const usoSimulador = !!(leakSim && leakSim.state.used);
+    setStickyMode(pasoSimulador || usoSimulador ? "diagnostico" : "simulador");
     stickyCTA.classList.toggle(
       "show",
-      window.pageYOffset > 600 && !enDiagnostico,
+      pastHero && !enDiagnostico && !enSimulador,
     );
   }
   window.addEventListener("scroll", updateStickyCTA, { passive: true });
+  window.addEventListener("resize", updateStickyCTA, { passive: true });
+  setStickyMode(simuladorSection ? "simulador" : "diagnostico");
+
+  window.handleStickyCTA = function (e) {
+    if (e) e.preventDefault();
+    const mode = stickyCTA ? stickyCTA.dataset.mode : "diagnostico";
+    if (mode === "simulador" && simuladorSection) {
+      trackCTAClick("CTA_Sticky_Mobile_Simulador");
+      simuladorSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    trackCTAClick("CTA_Sticky_Mobile");
+    if (leakSim && leakSim.state.used) {
+      window.applyLeakSimulatorToForm({ silent: true });
+    }
+    window.smoothScrollToDiagnostic();
+  };
 
   // ============================================================
   // NOTA: la atribución (utm_source) NO se concatena al texto de los
@@ -540,6 +950,11 @@ document.addEventListener("DOMContentLoaded", () => {
         utmContent: attribution.utm_content || "",
         utmTerm: attribution.utm_term || "",
         referrer: attribution.referrer || "",
+        // Lo que eligió en el simulador de fugas (null si no lo usó).
+        simulador:
+          leakSim && (leakSim.state.used || leakSim.state.applied)
+            ? leakSim.snapshot()
+            : null,
       };
 
       // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.

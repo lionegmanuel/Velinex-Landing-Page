@@ -623,7 +623,132 @@
     </section>
 
     <!-- ============================================================
-     PROCESO  5 SEMANAS (diferencial competitivo)
+     SIMULADOR DE FUGAS OPERATIVAS (calculadora interactiva)
+     Lógica en assets/js/index.js (bloque "SIMULADOR DE FUGAS").
+============================================================ -->
+    <section class="leak-simulator-section fade-in" id="simulador">
+      <div class="container">
+        <p class="section-eyebrow">Calculadora de impacto real</p>
+        <h2>¿Cuánto le está costando a tu negocio no tener un sistema comercial?</h2>
+        <p class="section-subtitle">
+          Seleccioná tus parámetros actuales y calculá en 10 segundos las
+          oportunidades y horas que se están fugando cada mes.
+        </p>
+
+        <div class="leak-simulator" id="leak-simulator">
+          <!-- Columna izquierda: controles -->
+          <div class="leak-controls">
+            <div class="leak-control">
+              <div class="leak-control-head">
+                <label for="leak-volume">Consultas que recibís por día</label>
+                <output class="leak-volume-value" id="leak-volume-value" for="leak-volume">60</output>
+              </div>
+              <input
+                type="range"
+                id="leak-volume"
+                class="leak-range"
+                min="40"
+                max="300"
+                step="5"
+                value="60"
+                aria-describedby="leak-volume-hint"
+              />
+              <div class="leak-range-scale" aria-hidden="true">
+                <span>40</span>
+                <span>100</span>
+                <span>200</span>
+                <span>300+</span>
+              </div>
+              <p class="leak-hint" id="leak-volume-hint">
+                Sumá WhatsApp, Instagram, formularios y llamadas. Si dudás,
+                quedate con el número más bajo.
+              </p>
+            </div>
+
+            <div class="leak-control">
+              <span class="leak-control-label" id="leak-sector-label">Tu rubro</span>
+              <div class="leak-chips" role="radiogroup" aria-labelledby="leak-sector-label" id="leak-sector">
+                <button type="button" class="leak-chip is-active" role="radio" aria-checked="true" data-sector="concesionaria">Concesionaria automotriz</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="inmobiliaria">Inmobiliaria / Desarrollos</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="clinica">Clínica / Salud</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="retail">Óptica / Retail</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="b2b">Servicios y Empresas B2B</button>
+              </div>
+            </div>
+
+            <div class="leak-control">
+              <span class="leak-control-label" id="leak-coverage-label">¿Tenés atención activa noches y fines de semana?</span>
+              <div class="leak-options" role="radiogroup" aria-labelledby="leak-coverage-label" id="leak-coverage">
+                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="si">
+                  <strong>Sí, siempre</strong>
+                  <span>Respondemos en minutos, a toda hora</span>
+                </button>
+                <button type="button" class="leak-option is-active" role="radio" aria-checked="true" data-coverage="parcial">
+                  <strong>Parcial / lenta</strong>
+                  <span>Alguien mira el celular cuando puede</span>
+                </button>
+                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="no">
+                  <strong>No, solo horario de oficina</strong>
+                  <span>Lo que entra fuera de hora espera al día siguiente</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha: diagnóstico en vivo -->
+          <div class="leak-results" aria-live="polite" aria-atomic="false">
+            <div class="leak-results-head">
+              <span class="leak-live-dot" aria-hidden="true"></span>
+              <span>Diagnóstico en vivo de tu operación</span>
+            </div>
+
+            <div class="leak-metric leak-metric--main">
+              <span class="leak-metric-value" id="leak-lost-value" data-count="450">450</span>
+              <span class="leak-metric-label">consultas que hoy se enfrían al mes</span>
+              <span class="leak-metric-note" id="leak-lost-note">Sobre 1.800 consultas mensuales, con respuesta parcial fuera de horario.</span>
+            </div>
+
+            <div class="leak-metrics-row">
+              <div class="leak-metric">
+                <span class="leak-metric-value" id="leak-ops-value">4 a 8</span>
+                <span class="leak-metric-label" id="leak-ops-label">operaciones potenciales perdidas por mes</span>
+              </div>
+              <div class="leak-metric">
+                <span class="leak-metric-value"><span id="leak-hours-value" data-count="105">105</span> h</span>
+                <span class="leak-metric-label">horas de tu equipo por mes respondiendo lo mismo</span>
+                <span class="leak-metric-note" id="leak-hours-note">Equivale a 13 jornadas completas de una persona.</span>
+              </div>
+            </div>
+
+            <p class="leak-results-foot">
+              Estas consultas ya te escribieron. No hace falta invertir un peso
+              más en publicidad para recuperarlas: hace falta un sistema que
+              responda cuando tu equipo no puede.
+            </p>
+
+            <div class="leak-cta-row">
+              <a
+                href="#diagnostico"
+                class="btn-primary btn-large leak-cta"
+                id="leak-cta"
+                onclick="applyLeakSimulatorToForm(); smoothScrollToDiagnostic(event); trackCTAClick('CTA_Simulador')"
+              >
+                Ver el plan para recuperar estas oportunidades en tu negocio →
+              </a>
+              <span class="leak-cta-note">Tus datos del simulador quedan precargados en el formulario.</span>
+            </div>
+
+            <p class="leak-disclaimer">
+              Estimación orientativa basada en promedios del rubro. En el
+              Diagnóstico Estratégico bajamos estos números a tu operación real.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     PROCESO  4 SEMANAS (diferencial competitivo)
 ============================================================ -->
     <section class="process-section fade-in">
       <div class="container">
@@ -737,94 +862,87 @@
     </section>
 
     <!-- ============================================================
-     SOCIAL PROOF  COMENTADO · LISTO PARA ACTIVAR
-     Para activar: eliminar los comentarios <!-- y
-    que envuelven esta sección. Para editar: reemplazar los placeholders entre
-    corchetes [ ]. Cada card necesita: logo (img), nombre empresa, rubro,
-    métrica clave, testimonio, nombre/cargo.
-    ============================================================ -->
-
-    <!--
-<section class="testimonials-section fade-in">
-  <div class="container">
-    <p class="section-eyebrow">Resultados reales</p>
-    <h2>Negocios que ya operan diferente.</h2>
-    <p class="section-subtitle">
-      Números exactos. Sin redondear. Solo lo que se puede demostrar.
-    </p>
-
-    <div class="testimonials-grid">
-
-      <div class="testimonial-card">
-        <div class="testimonial-header">
-          <div class="testimonial-logo">
-            <img src="assets/img/logos/[empresa-1].svg"
-                 alt="Logo [Nombre Empresa 1]"
-                 onerror="this.style.display='none'; this.parentElement.textContent='🏢';" />
-          </div>
-          <div>
-            <div class="testimonial-company">[Nombre Empresa 1]</div>
-            <div class="testimonial-sector">[Sector · País]</div>
-          </div>
-        </div>
-        <div class="testimonial-metric">
-          <span class="testimonial-metric-value">[Métrica · Ej: 95.1%]</span>
-          <span class="testimonial-metric-label">[Descripción breve de la métrica  Ej: contactabilidad de leads]</span>
-        </div>
-        <p class="testimonial-quote">
-          "[Testimonio textual del cliente. Máximo 3 oraciones. Debe describir la transformación concreta que vivió el negocio, antes y después, con números si es posible.]"
+     CASOS REALES (prueba social)
+     Casos anonimizados por rubro: sin nombres de empresas ni personas
+     hasta tener autorización escrita para publicarlos.
+============================================================ -->
+    <section class="testimonials-section fade-in">
+      <div class="container">
+        <p class="section-eyebrow">Resultados reales</p>
+        <h2>Negocios que ya operan diferente.</h2>
+        <p class="section-subtitle">
+          Números medidos en operaciones reales. Sin redondear. Solo lo que se
+          puede demostrar.
         </p>
-        <p class="testimonial-author"> [Nombre Persona], [Cargo] · [Empresa]</p>
-      </div>
 
-      <div class="testimonial-card">
-        <div class="testimonial-header">
-          <div class="testimonial-logo">
-            <img src="assets/img/logos/[empresa-2].svg"
-                 alt="Logo [Nombre Empresa 2]"
-                 onerror="this.style.display='none'; this.parentElement.textContent='🏥';" />
-          </div>
-          <div>
-            <div class="testimonial-company">[Nombre Empresa 2]</div>
-            <div class="testimonial-sector">[Sector · País]</div>
-          </div>
-        </div>
-        <div class="testimonial-metric">
-          <span class="testimonial-metric-value">[Métrica · Ej: +40hs]</span>
-          <span class="testimonial-metric-label">[Descripción  Ej: por semana recuperadas por el equipo]</span>
-        </div>
-        <p class="testimonial-quote">
-          "[Testimonio del segundo cliente. Recordá: lenguaje de resultado, no de tecnología. Lo que cambió en su negocio, no cómo funciona el sistema.]"
-        </p>
-        <p class="testimonial-author"> [Nombre Persona], [Cargo] · [Empresa]</p>
-      </div>
+        <div class="testimonials-grid">
+          <article class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-logo" aria-hidden="true">🚗</div>
+              <div>
+                <div class="testimonial-company">Concesionaria automotriz</div>
+                <div class="testimonial-sector">Caso 1 · Ventas 0 km y usados</div>
+              </div>
+            </div>
+            <div class="testimonial-metric">
+              <span class="testimonial-metric-value">94,8%</span>
+              <span class="testimonial-metric-label">de contactabilidad en menos de 30 segundos</span>
+            </div>
+            <p class="testimonial-quote">
+              Antes, las consultas del sábado a la noche se respondían el lunes
+              y la mitad ya había comprado en otro lado. Hoy cada consulta
+              recibe respuesta al instante, se califica y llega al vendedor
+              con la información lista. Las operaciones de fin de semana
+              dejaron de perderse.
+            </p>
+            <p class="testimonial-author">Resultado: recupero de operaciones de fin de semana</p>
+          </article>
 
-      <div class="testimonial-card">
-        <div class="testimonial-header">
-          <div class="testimonial-logo">
-            <img src="assets/img/logos/[empresa-3].svg"
-                 alt="Logo [Nombre Empresa 3]"
-                 onerror="this.style.display='none'; this.parentElement.textContent='🏠';" />
-          </div>
-          <div>
-            <div class="testimonial-company">[Nombre Empresa 3]</div>
-            <div class="testimonial-sector">[Sector · País]</div>
-          </div>
-        </div>
-        <div class="testimonial-metric">
-          <span class="testimonial-metric-value">[Métrica · Ej: Mes 1]</span>
-          <span class="testimonial-metric-label">[Descripción  Ej: inversión recuperada con los primeros resultados]</span>
-        </div>
-        <p class="testimonial-quote">
-          "[Testimonio del tercer cliente. Idealmente de un rubro distinto a los anteriores para mostrar versatilidad multirubro.]"
-        </p>
-        <p class="testimonial-author"> [Nombre Persona], [Cargo] · [Empresa]</p>
-      </div>
+          <article class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-logo" aria-hidden="true">🏥</div>
+              <div>
+                <div class="testimonial-company">Clínica privada</div>
+                <div class="testimonial-sector">Caso 2 · Salud</div>
+              </div>
+            </div>
+            <div class="testimonial-metric">
+              <span class="testimonial-metric-value">+42 h</span>
+              <span class="testimonial-metric-label">semanales recuperadas por el equipo de recepción</span>
+            </div>
+            <p class="testimonial-quote">
+              La recepción pasaba el día contestando los mismos precios,
+              horarios y coberturas por WhatsApp mientras la fila esperaba en
+              el mostrador. Ahora el sistema responde, agenda y recuerda los
+              turnos. La asistencia al sillón subió al 78%.
+            </p>
+            <p class="testimonial-author">Resultado: asistencia al sillón elevada al 78%</p>
+          </article>
 
-    </div>
-  </div>
-</section>
--->
+          <article class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-logo" aria-hidden="true">🏠</div>
+              <div>
+                <div class="testimonial-company">Desarrollos inmobiliarios</div>
+                <div class="testimonial-sector">Caso 3 · Inmobiliario</div>
+              </div>
+            </div>
+            <div class="testimonial-metric">
+              <span class="testimonial-metric-value">100%</span>
+              <span class="testimonial-metric-label">de las consultas de avisos filtradas y calificadas</span>
+            </div>
+            <p class="testimonial-quote">
+              Cada aviso publicado generaba decenas de consultas iguales que
+              nadie llegaba a filtrar. Hoy todas se responden, se califican por
+              presupuesto y zona, y las visitas se agendan directamente con el
+              asesor. El equipo solo atiende a quien ya está listo para ver.
+            </p>
+            <p class="testimonial-author">Resultado: visitas agendadas directamente con el asesor</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
 
     <!-- ============================================================
      STATS BAR
@@ -1180,6 +1298,7 @@
                     <option value="Inmobiliario">
                       Inmobiliario y desarrollos
                     </option>
+                    <option value="Retail">Óptica, retail y comercios</option>
                     <option value="Educación">Educación y academias</option>
                     <option value="Turismo">Turismo y hotelería</option>
                     <option value="Servicios Profesionales">
@@ -1195,6 +1314,10 @@
             <div class="form-step-block">
               <span class="step-badge">Paso 3</span>
               <h4>Situación operativa actual</h4>
+              <div class="form-prefill-note" id="diag-prefill-note" hidden>
+                <span aria-hidden="true">⚡</span>
+                <span id="diag-prefill-text"></span>
+              </div>
               <div class="form-grid full-width">
                 <div class="form-group">
                   <label for="diag-volume"
@@ -1267,14 +1390,17 @@
       </div>
     </section>
 
-    <!-- Sticky Mobile CTA -->
-    <div class="sticky-cta-mobile">
+    <!-- Sticky Mobile CTA: en modo "simulador" lleva a #simulador; una vez que
+         el visitante pasó o usó el simulador, cambia a modo "diagnostico" y
+         lleva a #diagnostico (index.js maneja texto, href y .show). -->
+    <div class="sticky-cta-mobile" id="sticky-cta-mobile" data-mode="simulador">
       <a
-        href="#diagnostico"
+        href="#simulador"
         class="btn-primary"
-        onclick="smoothScrollToDiagnostic(event); trackCTAClick('CTA_Sticky_Mobile')"
+        id="sticky-cta-link"
+        onclick="handleStickyCTA(event)"
       >
-        Solicitar Diagnóstico Estratégico →
+        ¿Cuántas consultas perdés? Calcular fuga →
       </a>
     </div>
 

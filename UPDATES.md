@@ -16,3 +16,15 @@ Refactor completo siguiendo `PROMPT_IMPLEMENTACION_vFINAL.md` (raíz del repo), 
 - Pendiente de decisión del usuario: si n8n debe ramificar el flujo por `origen`/`formId` ya que el mismo endpoint ahora recibe dos formas de payload distintas (Centro de Recursos vs. diagnóstico de la landing).
 
 Commit: `feat: landing vFinal - transformacion operativa, 4 semanas y diagnostico estrategico`.
+
+## 2026-09-21
+
+### Dual CTA en el hero: acceso al Centro de Recursos
+
+Implementación de `PROMPT_DUAL_CTA_RECURSOS.md` (patrón de doble llamada a la acción, referencia Australis AI vía mentoría de Facu Corengia) para capturar tráfico tibio en el primer scroll sin tocar el CTA principal.
+
+- **`index.html`**: dentro de `.cta-block` del hero se agrega el contenedor `.cta-group` con dos botones. El principal queda idéntico (`smoothScrollToDiagnostic(event)` + `trackCTAClick('CTA_Hero_Diagnostico')`). El secundario "Recursos gratis" (`.btn-secondary`) apunta a `recursos.html?utm_source=landing&utm_medium=hero_secondary&utm_campaign=recursos_cta` y dispara `trackCTAClick('CTA_Hero_Recursos_Gratis')`. Las UTM viajan por URL: `recursos.html` las guarda en `velinex_attribution` y las manda a n8n.
+- **`style.css`**: nuevas clases `.cta-group` y `.btn-secondary` sobre los tokens existentes (`--radius-sm`, `--duration`, `--ease`, `--accent`, `--accent-subtle`), con hover, `:active`, `:focus-visible` y la misma animación de entrada del botón principal con un delay mayor. En `max-width: 640px` los botones se apilan en columna al 100% de ancho y con `white-space: normal` (el `nowrap` de `.btn-primary` desbordaba el texto largo a 390px).
+- **`assets/js/index.js`**: sin cambios. `smoothScrollToDiagnostic` y `trackCTAClick` siguen intactas.
+- Validado en Edge headless: escritorio (1440px) con los dos botones alineados en horizontal, móvil (390px) apilados sin desborde horizontal, sin guion largo en los archivos. No se probó el envío real a n8n / Sheet `leads_base` con este origen.
+- Limpieza del repo: se eliminan los prompts ya ejecutados (`PROMPT_DUAL_CTA_RECURSOS.md`, `PROMPT_IMPLEMENTACION_vFINAL.md`, `PROMPT_OPTIMIZACION_CONVERSION_Y_WIDGET.md`).

@@ -13,8 +13,7 @@ Estructura real:
 ├── robots.txt
 ├── sitemap.xml
 └── assets/
-    ├── img/             # Logos (Velinex Full Iso NBG.webp/.png, Full-Logo variantes), VSL_thumbnail.png, screenshots (1.jpg/2.jpg/3.jpg, screen1-4.png, capturas de conversación WhatsApp real state)
-    ├── video/           # video_ajl_demo.mp4
+    ├── img/             # Logos (Velinex Full Iso NBG.webp en uso; .png y Full-Logo como masters de marca), VSL_thumbnail.png (index + og:image), VSL Centro Recursos.png (puente)
     └── js/index.js       # Todo el JS del sitio (un solo archivo externo)
 ```
 

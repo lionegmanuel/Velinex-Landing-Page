@@ -301,39 +301,39 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tasa de cierre estimada sobre las consultas enfriadas, por rubro.
     const SECTORS = {
       concesionaria: {
-        label: "Concesionaria automotriz",
-        unit: "operaciones potenciales perdidas por mes",
+        label: "Venta de ticket alto con asesor",
+        unit: "ventas potenciales perdidas por mes",
         min: 0.009,
         max: 0.018,
-        formSector: "Automotriz",
+        formSector: "Venta de ticket alto con asesor",
       },
       inmobiliaria: {
-        label: "Inmobiliaria / Desarrollos",
-        unit: "visitas con asesor que hoy no se agendan por mes",
+        label: "Venta con visita o reunión previa",
+        unit: "visitas o reuniones que hoy no se agendan por mes",
         min: 0.03,
         max: 0.06,
-        formSector: "Inmobiliario",
+        formSector: "Venta con visita o reunión previa",
       },
       clinica: {
-        label: "Clínica / Salud",
-        unit: "turnos potenciales perdidos por mes",
+        label: "Servicios con cita previa",
+        unit: "citas potenciales perdidas por mes",
         min: 0.033,
         max: 0.066,
-        formSector: "Salud y Clínicas",
+        formSector: "Servicios con cita previa",
       },
       retail: {
-        label: "Óptica / Retail",
+        label: "Venta directa por chat",
         unit: "ventas potenciales perdidas por mes",
         min: 0.04,
         max: 0.08,
-        formSector: "Retail",
+        formSector: "Venta directa por chat",
       },
       b2b: {
-        label: "Servicios y Empresas B2B",
+        label: "Venta a otras empresas",
         unit: "reuniones comerciales perdidas por mes",
         min: 0.02,
         max: 0.04,
-        formSector: "Servicios Profesionales",
+        formSector: "Venta a otras empresas",
       },
     };
     const MINUTES_PER_QUERY = 3.5;
@@ -641,7 +641,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const diagnosticoSection = document.getElementById("diagnostico");
   const STICKY_MODES = {
     simulador: { text: "¿Cuántas consultas perdés? Calcular fuga →", href: "#simulador" },
-    diagnostico: { text: "Solicitar Diagnóstico Estratégico →", href: "#diagnostico" },
+    diagnostico: { text: "Quiero mi plan de transformación →", href: "#diagnostico" },
   };
 
   function setStickyMode(mode) {
@@ -892,7 +892,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const WEBHOOK_URL =
       "https://webhook-n8n.velinex.digital/webhook/lead-magnet";
     const WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
-    const SUBMIT_LABEL = "Solicitar Diagnóstico Estratégico →";
+    const SUBMIT_LABEL = "Quiero mi plan de transformación →";
 
     const submitBtn = document.getElementById("diag-submit-btn");
     const feedback = document.getElementById("form-feedback");
@@ -964,7 +964,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Procesando diagnóstico...";
+      submitBtn.textContent = "Enviando...";
 
       fetch(WEBHOOK_URL, {
         method: "POST",
@@ -1014,7 +1014,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       showFeedback(
         "ok",
-        "<strong>Diagnóstico recibido.</strong> Nos ponemos en contacto en menos de 24 horas para coordinar tu sesión estratégica.",
+        "<strong>Solicitud recibida.</strong> Te contactamos en menos de 24 horas para coordinar tu sesión de 30 minutos.",
       );
       if (feedback) {
         feedback.scrollIntoView({ behavior: "smooth", block: "center" });

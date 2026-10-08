@@ -72,4 +72,4 @@ Ejecución de `PROMPT_OPTIMIZACION_LANDING.md` con `docs-optimizacion/01-03` (al
 - Excepciones intencionales que quedan en texto visible: opción "Menos de 40 consultas por día" de `#diag-volume` (la usa n8n) y "Venta de ticket alto con asesor" de `#diag-sector` (el plan prohíbe tocar esas opciones).
 - Se borraron `PROMPT_OPTIMIZACION_LANDING.md` y `docs-optimizacion/` (plan interno, nunca commiteado).
 
-Commit: `feat(landing): oferta Programa Piloto Automático 60 y optimización de conversión`.
+Commit: `feat(landing): oferta Programa Piloto Automático 60 y optimización de conversión`. Publicado en GitHub (`origin/main`) por pedido de Manuel. Sigue pendiente confirmar que los cupos de 3 empresas por mes (D4) son reales.

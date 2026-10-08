@@ -2,21 +2,6 @@
 
 Registro de sesiones de trabajo sobre este repo. Retención: últimos 3 días completos.
 
-## 2026-09-12
-
-### Landing vFinal: transformación operativa, 4 semanas exactas y diagnóstico estratégico
-
-Refactor completo siguiendo `PROMPT_IMPLEMENTACION_vFINAL.md` (raíz del repo), alineado al documento maestro v9.1 (reposicionamiento a Transformación Operativa, cronograma cerrado en 4 semanas, cero garantía en la landing).
-
-- **`index.html`**: hero, dolor, solución, PUV y proceso reescritos sin jerga técnica ("RAG", "LLM", "APIs", "VPS", "flujos", "go-live", "tokens", "chatbot"). Cronograma pasa de 5 semanas + semana 6 en vivo a 4 semanas exactas (4 fases, una por semana). Se elimina por completo `.guarantee-section` y toda mención a los 45 días de garantía (hero, trust strip, PUV, métrica del bloque asset, FAQ). La sección "¿Esto es para tu negocio?" se retira (quedaba duplicada con el filtro previo del nuevo bloque). `#cta-final` se reemplaza por `#diagnostico`: filtro previo (sí/no) + explicación de la sesión + formulario en 3 pasos (contacto, empresa, situación operativa). Todos los `.btn-primary` del sitio ahora hacen scroll a `#diagnostico`; el único WhatsApp que queda en la página es el botón flotante de soporte.
-- **`assets/js/index.js`**: erradicada la concatenación de `(vía utm_source)` en los links de WhatsApp (la atribución ahora viaja solo por localStorage, GA4 y el payload del formulario). Nueva `smoothScrollToDiagnostic()` (con `smoothScrollToCalendar` como alias histórico). Manejo completo de `#diagnostic-form`: validación E.164 del teléfono, honeypot, payload con UTMs, POST al webhook de n8n (`https://webhook-n8n.velinex.digital/webhook/lead-magnet`, header `X-Velinex-Secret`, `formId: "diagnostico_landing"`, `origen: "landing_diagnostico"`), evento GA4 `diagnostic_submitted`. `calendar_reached` ahora observa `#diagnostico` en vez de `#cta-final`. Corregido de paso un bug preexistente: `.sticky-cta-mobile.show` no tenía ninguna regla CSS, así que la barra sticky de mobile estaba siempre visible y tapaba el formulario nuevo; ahora se oculta correctamente dentro de `#diagnostico`.
-- **`style.css`**: estilos nuevos de `.diagnostic-flow-section` (filtro, pasos del form, inputs/selects/textarea, feedback de éxito/error) sobre los tokens existentes. Borrados los estilos huérfanos de `.guarantee-section`, `.for-who` y `.cta-final`. Timeline de proceso corregido de `repeat(5, 1fr)` a `repeat(4, 1fr)` (bug preexistente: quedaba una columna de más con las 4 etapas actuales).
-- **`CLAUDE.md`**: actualizado con las funciones/IDs nuevos, la regla de "cero garantía" y "4 semanas exactas", y la jerga prohibida.
-- Validado en Edge headless (1440/768/390px): sin errores de consola, sin scroll horizontal, submit de formulario probado con `fetch` interceptado (payload correcto) y contra el webhook real (200 OK). Queda un lead de prueba en n8n con `responseId: TEST-CLAUDE-2026-09-12` para borrar del lado de n8n.
-- Pendiente de decisión del usuario: si n8n debe ramificar el flujo por `origen`/`formId` ya que el mismo endpoint ahora recibe dos formas de payload distintas (Centro de Recursos vs. diagnóstico de la landing).
-
-Commit: `feat: landing vFinal - transformacion operativa, 4 semanas y diagnostico estrategico`.
-
 ## 2026-09-21
 
 ### Dual CTA en el hero: acceso al Centro de Recursos
@@ -67,3 +52,24 @@ Auditoría completa contra `VELINEX · BASES Y FUNDACIONES` / `CLAUDE.md` del re
 - Pendiente para n8n: el campo `sector` del payload ahora trae el modelo de venta (ej. "Venta con visita o reunión previa") en lugar del rubro.
 
 Commit: `feat(landing): alinear oferta y copy con las bases de Velinex`.
+
+## 2026-10-08
+
+### Oferta Programa Piloto Automático 60 y optimización de conversión
+
+Ejecución de `PROMPT_OPTIMIZACION_LANDING.md` con `docs-optimizacion/01-03` (alineado a BASES v9.3 §8.4, §8.5 y §8.8). Decisiones abiertas aplicadas con el valor por defecto del plan, sin consultar: D1 garantía de 45 días vuelve, solo dentro de `#programa` y en el FAQ; D2 "60 días" se nombra; D3 "auditoría" solo como bajada del Mapa Operativo 360; D4 se mantienen los cupos de 3 empresas por mes (confirmar que siga siendo real); D5 cifras del caso sin tocar.
+
+- **Hero**: badge "Programa Piloto Automático 60 · Cupos para 3 empresas por mes", H1 "Tu negocio atendiendo, calificando y cerrando en piloto automático." (3 líneas a 390 px, CTA visible sin scrollear), subtítulo con el plazo de 60 días, métricas +26.000 / 24/7 / 60 días / 90 min (sale "< 30 seg", que no estaba respaldado) y título del VSL "antes de pedir tu plan". Sale la línea de cupos duplicada del hero.
+- **Orden nuevo**: hero, casos, dolor, simulador, qué contiene, `#programa`, comparativa, calificación, cierre y FAQ. Nav: "El Programa" reemplaza a "Cómo Funciona". El cierre de `#dolor` linkea al simulador (`CTA_Dolor_Simulador`).
+- **`#programa`** (reemplaza a `#proceso`, que queda como span alias para links viejos): línea de tiempo de 5 hitos sin semanas, tarjeta grande del Mapa Operativo 360 con sus 5 entregables, Implementación con 2 entregas, Arranque sin riesgo, Ajuste en Vivo (de regalo hasta el día 60), Lo que ponés vos (90 min + 2 revisiones cortas), garantía con letra chica y CTA `CTA_Programa`. Íconos nuevos en el sprite: escudo, regalo, mapa, ajuste y reloj.
+- **Qué contiene**: fuera el panel en tiempo real, el CRM a medida y la cobranza/postventa como estándar; registro en el CRM o planilla del cliente, cierre "según cómo vendés" y reporte mensual.
+- **Comparativa**: H2 "Lo mismo, contratando a alguien, te costaría más y te daría menos.", sin "volumen ilimitado", tabla con filas de rotación de personal y medición.
+- **Calificación**: sin "40 consultas" ni "$20 USD"; filtro por situación del prospecto. **Cierre**: H2 "...en 30 minutos" y CTA universal; formulario, IDs, opciones y payload intactos.
+- **FAQ**: 12 preguntas (nuevas: "¿Qué pasa si no funciona?" y "¿Qué pasa después del día 60?"), JSON-LD generado desde la misma lista e idéntico al visible. Title, description, OG y Twitter con el programa.
+- **`style.css`**: estilos de `.program-*` sobre los tokens existentes; borrados los `.process-*` huérfanos (no los usan `recursos.html` ni `puente.html`). **`assets/js/index.js`**: sin cambios.
+- **`CLAUDE.md`**: reglas nuevas de oferta, garantía, plazo de 60 días, "auditoría", sin reglas internas en la página y sin promesas fuera del core.
+- QA en Edge headless: 0 errores de consola y sin scroll horizontal en 1440/1280/768/390; los 4 CTAs a `#diagnostico` con `cta_click`; nav y ancla vieja `#proceso` con el `scroll-margin-top` correcto; simulador, precarga, validación E.164 y envío con fetch interceptado (mismas 19 claves de payload); FAQ con mouse y teclado; sticky de mobile. `recursos.html` y `puente.html`: capturas idénticas a las de antes. Lighthouse móvil sin cambios (70/99/100/100, local). No se probó el envío real contra n8n.
+- Excepciones intencionales que quedan en texto visible: opción "Menos de 40 consultas por día" de `#diag-volume` (la usa n8n) y "Venta de ticket alto con asesor" de `#diag-sector` (el plan prohíbe tocar esas opciones).
+- Se borraron `PROMPT_OPTIMIZACION_LANDING.md` y `docs-optimizacion/` (plan interno, nunca commiteado).
+
+Commit: `feat(landing): oferta Programa Piloto Automático 60 y optimización de conversión`.

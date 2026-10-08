@@ -73,3 +73,18 @@ Ejecución de `PROMPT_OPTIMIZACION_LANDING.md` con `docs-optimizacion/01-03` (al
 - Se borraron `PROMPT_OPTIMIZACION_LANDING.md` y `docs-optimizacion/` (plan interno, nunca commiteado).
 
 Commit: `feat(landing): oferta Programa Piloto Automático 60 y optimización de conversión`. Publicado en GitHub (`origin/main`) por pedido de Manuel. Sigue pendiente confirmar que los cupos de 3 empresas por mes (D4) son reales.
+
+---
+
+### Plazo de 35 días, calculadora como recurso aparte y orden de cierre
+
+Decisión de Manuel: los 60 días suenan largos para el prospecto. Revisado contra BASES §8.4 (Mapa Operativo 360 en la semana 1, implementación en las semanas 2 a 5, 100% en vivo el día 35, Ajuste en Vivo del 36 al 60), el plazo que se promete pasa a ser **"tu sistema funcionando en 35 días"**. No 30 (contado desde el pago promete menos de 5 semanas, regla de BASES) ni 45 (es la fecha de la garantía). El 60 queda en el nombre del programa.
+
+- **35 días**: nav, subtítulo del hero, métrica del hero, title/description/OG/Twitter, cierre de la calculadora y FAQ "¿Cuánto tiempo toma la implementación completa?" (JSON-LD idéntico). `#programa`: H2 "Tu sistema funcionando en 35 días. Los 25 siguientes, de regalo.", barra nueva `.program-phases` (35 días + 25 de regalo) alineada con la línea de tiempo, hitos "Día 1", "Día 35" y "Del día 36 al 60". La garantía al día 45 no cambia.
+- **Calculadora como recurso**: el simulador sale de `index.html` y pasa a `calculadora.html` (página propia con H1, mismo nav, puente a `#programa` y `#diagnostico`, sin precio ni garantía). Se llega por el botón "Calculadora de fugas" del nav (en mobile "Calculadora") y por el link del cierre de `#dolor`. La simulación se guarda en `localStorage` (`velinex_simulador`) y el CTA lleva a `index.html#diagnostico`, que precarga el formulario y manda `simulador` en el payload igual que antes. Agregada al `sitemap.xml`.
+- **Orden**: el FAQ pasa antes de la calificación y del formulario, que queda como lo último de la página. Barra sticky de mobile con un solo modo ("Quiero mi plan de transformación →").
+- **`assets/js/index.js`**: persistencia y lectura de la simulación entre páginas, `smoothScrollToDiagnostic` navega a la landing si la página no tiene formulario, sticky simplificado. CTAs nuevos: `CTA_Nav_Calculadora`, `CTA_Dolor_Calculadora`, `CTA_Calculadora_Nav`, `CTA_Calculadora_Programa`.
+- **Documentación**: `CLAUDE.md` del repo (estructura, plazo de 35 días, calculadora, orden, CTAs) y BASES v9.3 en `Velinex-Engineering-Bussines` (nota de ajuste, bloque OFERTA, PUV, §8.4, §8.8 y pitch).
+- QA en Edge headless: 28/28 (calculadora, ida a la landing con el formulario precargado, envío con la simulación en el payload, CTAs, nav, anclas, FAQ, sticky), sin errores de consola ni scroll horizontal en 1440/1024/390, sin guion largo. `recursos.html` y `puente.html` idénticas a las capturas previas. No se probó el envío real contra n8n.
+
+Commit: `feat(landing): plazo de 35 días y calculadora de fugas como página aparte`.

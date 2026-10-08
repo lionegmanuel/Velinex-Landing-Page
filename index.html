@@ -6,7 +6,7 @@
     <title>Programa Piloto Automático 60 · Sistema Comercial Autónomo | Velinex</title>
     <meta
       name="description"
-      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Sistema comercial funcionando en 60 días, sin sumar personal."
+      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Tu sistema comercial funcionando en 35 días, sin sumar personal."
     />
     <meta name="robots" content="index, follow" />
     <meta
@@ -27,7 +27,7 @@
     />
     <meta
       property="og:description"
-      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Sistema comercial funcionando en 60 días, sin sumar personal."
+      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Tu sistema comercial funcionando en 35 días, sin sumar personal."
     />
     <meta
       property="og:image"
@@ -45,7 +45,7 @@
     />
     <meta
       name="twitter:description"
-      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Sistema comercial funcionando en 60 días, sin sumar personal."
+      content="Tu negocio atendiendo, calificando y cerrando en piloto automático. Tu sistema comercial funcionando en 35 días, sin sumar personal."
     />
     <meta
       name="twitter:image"
@@ -148,7 +148,7 @@
             "name": "¿Cuánto tiempo toma la implementación completa?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Es un programa cerrado de 60 días desde que arrancamos. Empieza con el Mapa Operativo 360, la auditoría completa de tu empresa, de regalo. Sigue con 2 entregas que probás con tu equipo y un arranque sin riesgo, de a poco hasta el 100%. Hasta el día 60, el Ajuste en Vivo también va de regalo."
+              "text": "Tu sistema queda funcionando al 100% en 35 días desde que arrancamos. Empieza con el Mapa Operativo 360, la auditoría completa de tu empresa, de regalo. Sigue con 2 entregas que probás con tu equipo y un arranque sin riesgo, de a poco hasta el 100%. Después, del día 36 al 60, el Ajuste en Vivo va de regalo: así se completa el Programa Piloto Automático 60."
             }
           },
           {
@@ -240,15 +240,22 @@
         <span class="site-nav-divider" aria-hidden="true"></span>
         <span class="status-pill">
           <span class="status-dot-active" aria-hidden="true"></span>
-          Tu sistema funcionando en 60 días
+          Tu sistema funcionando en 35 días
         </span>
         <ul class="site-nav-links">
           <li><a href="#casos">Casos Reales</a></li>
-          <li><a href="#simulador">Simulador de Fuga</a></li>
           <li><a href="#que-contiene">Qué Contiene</a></li>
           <li><a href="#programa">El Programa</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
+        <a
+          href="calculadora.html"
+          class="nav-resource"
+          onclick="trackCTAClick('CTA_Nav_Calculadora')"
+        >
+          <svg class="icon" aria-hidden="true"><use href="#i-calc" /></svg>
+          <span>Calculadora<span class="nav-resource-extra"> de fugas</span></span>
+        </a>
         <a
           href="#diagnostico"
           class="nav-cta"
@@ -278,7 +285,7 @@
           </h1>
 
           <p class="hero-subtitle">
-            En 60 días dejamos funcionando tu sistema comercial: responde cada
+            En 35 días dejamos funcionando tu sistema comercial: responde cada
             consulta en segundos, las 24 horas, califica, agenda y hace
             seguimiento solo. Tu equipo entra cuando hay una venta esperando.
           </p>
@@ -318,7 +325,7 @@
             <dd class="stats-strip-label">Respuesta en segundos, también de noche y el fin de semana</dd>
           </div>
           <div class="stats-strip-item">
-            <dt class="stats-strip-num">60 días</dt>
+            <dt class="stats-strip-num">35 días</dt>
             <dd class="stats-strip-label">Para tener tu sistema funcionando, con fecha desde que arrancamos</dd>
           </div>
           <div class="stats-strip-item">
@@ -475,138 +482,11 @@
           infraestructura que las atienda y las convierta sin depender del
           tiempo de nadie.
           <a
-            href="#simulador"
+            href="calculadora.html"
             class="pain-closer-link"
-            onclick="trackCTAClick('CTA_Dolor_Simulador')"
+            onclick="trackCTAClick('CTA_Dolor_Calculadora')"
           >Calculá cuánto te está costando hoy →</a>
         </p>
-      </div>
-    </section>
-
-    <!-- ============================================================
-     SIMULADOR DE FUGAS OPERATIVAS (calculadora interactiva)
-     Lógica en assets/js/index.js (bloque "SIMULADOR DE FUGAS").
-============================================================ -->
-    <section class="leak-simulator-section fade-in" id="simulador">
-      <div class="container">
-        <div class="section-head">
-          <p class="section-eyebrow">Calculadora de impacto real</p>
-          <h2>¿Cuánto le está costando a tu negocio operar a mano?</h2>
-          <p class="section-subtitle">
-            Ajustá tus parámetros actuales y calculá en segundos las horas de
-            equipo y operaciones que se pierden cada mes por demoras en la
-            atención.
-          </p>
-        </div>
-
-        <div class="leak-simulator" id="leak-simulator">
-          <!-- Columna izquierda: controles -->
-          <div class="leak-controls">
-            <div class="leak-control">
-              <div class="leak-control-head">
-                <label for="leak-volume">Consultas que recibís por día</label>
-                <output class="leak-volume-value" id="leak-volume-value" for="leak-volume">60</output>
-              </div>
-              <input
-                type="range"
-                id="leak-volume"
-                class="leak-range"
-                min="40"
-                max="300"
-                step="5"
-                value="60"
-                aria-describedby="leak-volume-hint"
-              />
-              <div class="leak-range-scale" aria-hidden="true">
-                <span>40</span>
-                <span>100</span>
-                <span>200</span>
-                <span>300+</span>
-              </div>
-              <p class="leak-hint" id="leak-volume-hint">
-                Sumá WhatsApp, Instagram, formularios y llamadas. Si dudás,
-                quedate con el número más bajo.
-              </p>
-            </div>
-
-            <div class="leak-control">
-              <span class="leak-control-label" id="leak-sector-label">¿Cómo vende tu empresa?</span>
-              <div class="leak-chips" role="radiogroup" aria-labelledby="leak-sector-label" id="leak-sector">
-                <button type="button" class="leak-chip is-active" role="radio" aria-checked="true" data-sector="concesionaria">Venta de ticket alto con asesor</button>
-                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="inmobiliaria">Venta con visita o reunión previa</button>
-                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="clinica">Servicios con cita previa</button>
-                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="retail">Venta directa por chat</button>
-                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="b2b">Venta a otras empresas</button>
-              </div>
-            </div>
-
-            <div class="leak-control">
-              <span class="leak-control-label" id="leak-coverage-label">¿Tenés atención activa noches y fines de semana?</span>
-              <div class="leak-options" role="radiogroup" aria-labelledby="leak-coverage-label" id="leak-coverage">
-                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="si">
-                  <strong>Sí, siempre</strong>
-                  <span>Respondemos en minutos, a toda hora</span>
-                </button>
-                <button type="button" class="leak-option is-active" role="radio" aria-checked="true" data-coverage="parcial">
-                  <strong>Parcial / lenta</strong>
-                  <span>Alguien mira el celular cuando puede</span>
-                </button>
-                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="no">
-                  <strong>No, solo horario de oficina</strong>
-                  <span>Lo que entra fuera de hora espera al día siguiente</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Columna derecha: diagnóstico en vivo -->
-          <div class="leak-results" aria-live="polite" aria-atomic="false">
-            <div class="leak-results-head">
-              <span class="leak-live-dot" aria-hidden="true"></span>
-              <span>Impacto en vivo en tu operación</span>
-            </div>
-
-            <div class="leak-metric leak-metric--main">
-              <span class="leak-metric-value" id="leak-lost-value" data-count="450">450</span>
-              <span class="leak-metric-label">consultas que hoy se enfrían al mes</span>
-              <span class="leak-metric-note" id="leak-lost-note">Sobre 1.800 consultas mensuales, con respuesta parcial fuera de horario.</span>
-            </div>
-
-            <div class="leak-metrics-row">
-              <div class="leak-metric">
-                <span class="leak-metric-value" id="leak-ops-value">4 a 8</span>
-                <span class="leak-metric-label" id="leak-ops-label">operaciones potenciales perdidas por mes</span>
-              </div>
-              <div class="leak-metric">
-                <span class="leak-metric-value"><span id="leak-hours-value" data-count="105">105</span> h</span>
-                <span class="leak-metric-label">horas hombre por mes consumidas en tareas repetitivas</span>
-                <span class="leak-metric-note" id="leak-hours-note">Equivale a 13 jornadas completas de una persona.</span>
-              </div>
-            </div>
-
-            <p class="leak-results-foot">
-              Estas consultas ya te escribieron. No hace falta invertir más en
-              publicidad: hace falta un sistema que responda cuando tu equipo
-              no puede. En 60 días lo dejamos funcionando.
-            </p>
-
-            <div class="leak-cta-row">
-              <a
-                href="#diagnostico"
-                class="btn-primary btn-large leak-cta"
-                id="leak-cta"
-                onclick="applyLeakSimulatorToForm(); smoothScrollToDiagnostic(event); trackCTAClick('CTA_Simulador')"
-              >
-                Ver el plan para recuperar estas oportunidades en tu negocio →
-              </a>
-              <span class="leak-cta-note">Tus datos del simulador quedan precargados en el formulario.</span>
-            </div>
-
-            <p class="leak-disclaimer">
-              Estimación orientativa basada en promedios de mercado. En la sesión de 30 minutos bajamos estos números a tu operación real.
-            </p>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -782,18 +662,31 @@
       <span id="proceso" class="anchor-alias" aria-hidden="true"></span>
       <div class="container">
         <div class="section-head">
-          <p class="section-eyebrow">La oferta</p>
-          <h2>Programa Piloto Automático 60: tu sistema funcionando en 60 días.</h2>
+          <p class="section-eyebrow">Programa Piloto Automático 60</p>
+          <h2>Tu sistema funcionando en 35&nbsp;días. Los 25 siguientes, de regalo.</h2>
           <p class="section-subtitle">
-            Un programa cerrado, con fecha desde el día que arrancamos. Vos
-            ponés 90 minutos y 2 revisiones cortas. Nosotros hacemos el resto.
+            Un programa cerrado de 60 días, con fecha desde el día que
+            arrancamos: al día 35 tu sistema está funcionando al 100% y hasta
+            el día 60 lo afinamos en vivo, sin costo. Vos ponés 90 minutos y 2
+            revisiones cortas. Nosotros hacemos el resto.
+          </p>
+        </div>
+
+        <div class="program-phases">
+          <p class="program-phase program-phase--build">
+            <strong>35 días</strong>
+            <span>hasta tu sistema funcionando al 100%</span>
+          </p>
+          <p class="program-phase program-phase--gift">
+            <strong>25 días</strong>
+            <span>de Ajuste en Vivo, de regalo</span>
           </p>
         </div>
 
         <ol class="program-timeline" aria-label="Los 60 días del programa">
           <li class="program-milestone program-milestone--gift">
             <span class="program-milestone-dot" aria-hidden="true"></span>
-            <span class="program-milestone-when">Al arrancar</span>
+            <span class="program-milestone-when">Día 1</span>
             <strong>Mapa Operativo 360</strong>
             <span class="program-milestone-what">La auditoría completa de tu empresa, de regalo</span>
           </li>
@@ -811,13 +704,13 @@
           </li>
           <li class="program-milestone">
             <span class="program-milestone-dot" aria-hidden="true"></span>
-            <span class="program-milestone-when">Arranque sin riesgo</span>
-            <strong>De a poco, hasta el 100%</strong>
-            <span class="program-milestone-what">Primero una parte de tus consultas, después todas</span>
+            <span class="program-milestone-when">Día 35</span>
+            <strong>Funcionando al 100%</strong>
+            <span class="program-milestone-what">Con arranque sin riesgo: primero una parte de tus consultas, después todas</span>
           </li>
           <li class="program-milestone program-milestone--live">
             <span class="program-milestone-dot" aria-hidden="true"></span>
-            <span class="program-milestone-when">Hasta el día 60</span>
+            <span class="program-milestone-when">Del día 36 al 60</span>
             <strong>Ajuste en Vivo</strong>
             <span class="program-milestone-what">Lo afinamos todos los días, de regalo</span>
           </li>
@@ -888,10 +781,10 @@
             </div>
             <h3>Ajuste en Vivo</h3>
             <p>
-              Después de salir en vivo, leemos las conversaciones reales todos
-              los días y afinamos respuestas, filtro y seguimiento hasta que el
-              sistema funcione como el mejor de tu equipo. Sin costo hasta el
-              día 60.
+              Desde el día 36, con tu sistema ya en vivo, leemos las
+              conversaciones reales todos los días y afinamos respuestas,
+              filtro y seguimiento hasta que funcione como el mejor de tu
+              equipo. Sin costo hasta el día 60.
             </p>
           </article>
 
@@ -1033,6 +926,206 @@
               sigue las reglas de tu negocio y protege tus datos.
             </p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     FAQ (el acordeón vive en index.js y en el script inline del final)
+============================================================ -->
+    <section class="faq fade-in" id="faq">
+      <div class="container faq-layout">
+        <div class="faq-head">
+          <p class="section-eyebrow">Preguntas frecuentes</p>
+          <h2>Lo que seguramente te estás preguntando.</h2>
+          <p class="section-subtitle">
+            Si tu duda no está acá, la resolvemos en la sesión de 30 minutos.
+          </p>
+        </div>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Funciona para mi negocio?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Sí, si tu empresa vende o atiende por conversación: si el cliente
+                escribe antes de comprar, reservar o avanzar, el sistema aplica.
+                El rubro es secundario. Lo que importa es que haya flujo real de
+                consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas
+                por eso.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿En qué se diferencia de tener WhatsApp Business?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                WhatsApp Business es solo la bandeja de entrada: muestra los
+                mensajes, pero no responde, no califica, no hace seguimiento y no
+                cierra. Velinex es el operador inteligente que atiende, califica y
+                cierra sobre ese mismo canal, las 24 horas, sin que nadie de tu
+                equipo tenga que estar disponible.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿El sistema cierra ventas o solo coordina reuniones?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Depende de cómo vendés. Si tu venta se cierra por chat, el sistema
+                asesora y envía la propuesta con el link de pago en la misma
+                conversación. Si necesita un turno, una visita o una reunión,
+                califica a la persona y la agenda con quien corresponde de tu
+                equipo. En la sesión de 30 minutos vemos cuál aplica a tu caso.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Se conecta con lo que ya usamos?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Sí. Se conecta con tu CRM, tu agenda y las herramientas que ya
+                usás, sin obligarte a cambiar de plataforma. Si algo no tiene
+                conexión directa, usamos la mejor alternativa disponible para que
+                tu operación no se interrumpa.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿El sistema es nuestro o dependemos de Velinex?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Se instala en tu propio servidor y es un activo 100% de tu
+                propiedad. Tus datos y conversaciones son tuyos, y no dependés de
+                nosotros para que funcione día a día.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Cuánto tiempo requiere de mi parte?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                90 minutos al principio y 2 revisiones cortas, una por cada
+                entrega. Nuestro equipo hace todo lo demás.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Cuánto tiempo toma la implementación completa?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Tu sistema queda funcionando al 100% en 35 días desde que
+                arrancamos. Empieza con el Mapa Operativo 360, la auditoría
+                completa de tu empresa, de regalo. Sigue con 2 entregas que probás
+                con tu equipo y un arranque sin riesgo, de a poco hasta el 100%.
+                Después, del día 36 al 60, el Ajuste en Vivo va de regalo: así se
+                completa el Programa Piloto Automático 60.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Qué pasa si no funciona?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Si al día 45 tu sistema no está funcionando en tu negocio,
+                seguimos trabajando gratis hasta que funcione, y no pagás
+                mantenimiento hasta entonces. Aplica cuando los accesos y la
+                información de tu negocio llegan en los plazos acordados.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Cuánto cuesta?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Depende del volumen de consultas y de cómo vende tu empresa. En la
+                sesión de 30 minutos lo calculamos con tus propios números, junto
+                con lo que hoy se te escapa por mes. La lógica es simple: el
+                sistema tiene que pagarse solo con lo que recupera. Si el número
+                no cierra, te lo decimos directo.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Qué pasa después del día 60?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Elegís si seguís con el mantenimiento mensual: el mismo servicio
+                del Ajuste en Vivo, que para entonces ya viste funcionando con tus
+                clientes reales. El sistema sigue siendo tuyo, instalado en tu
+                servidor.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Qué pasa si responde algo que no debería?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                El sistema responde dentro de lo que construimos juntos: nunca
+                improvisa ni inventa información. Si llega una consulta fuera de
+                lo que conoce, la deriva a tu equipo con todo el contexto cargado.
+                Antes de salir en vivo lo probamos con escenarios reales de tu
+                negocio.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question" aria-expanded="false">
+              <span class="faq-question-text">¿Funciona para negocios fuera de Argentina?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Sí. Trabajamos con negocios en Argentina, México, Colombia, España
+                y el resto del mercado hispanohablante. El sistema opera en
+                WhatsApp e Instagram, canales que funcionan en cualquier país.
+                Todo se hace de forma remota.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1271,216 +1364,15 @@
       </div>
     </section>
 
-    <!-- ============================================================
-     FAQ (el acordeón vive en index.js y en el script inline del final)
-============================================================ -->
-    <section class="faq fade-in" id="faq">
-      <div class="container faq-layout">
-        <div class="faq-head">
-          <p class="section-eyebrow">Preguntas frecuentes</p>
-          <h2>Lo que seguramente te estás preguntando.</h2>
-          <p class="section-subtitle">
-            Si tu duda no está acá, la resolvemos en la sesión de 30 minutos.
-          </p>
-        </div>
-        <div class="faq-grid">
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Funciona para mi negocio?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Sí, si tu empresa vende o atiende por conversación: si el cliente
-                escribe antes de comprar, reservar o avanzar, el sistema aplica.
-                El rubro es secundario. Lo que importa es que haya flujo real de
-                consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas
-                por eso.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿En qué se diferencia de tener WhatsApp Business?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                WhatsApp Business es solo la bandeja de entrada: muestra los
-                mensajes, pero no responde, no califica, no hace seguimiento y no
-                cierra. Velinex es el operador inteligente que atiende, califica y
-                cierra sobre ese mismo canal, las 24 horas, sin que nadie de tu
-                equipo tenga que estar disponible.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿El sistema cierra ventas o solo coordina reuniones?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Depende de cómo vendés. Si tu venta se cierra por chat, el sistema
-                asesora y envía la propuesta con el link de pago en la misma
-                conversación. Si necesita un turno, una visita o una reunión,
-                califica a la persona y la agenda con quien corresponde de tu
-                equipo. En la sesión de 30 minutos vemos cuál aplica a tu caso.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Se conecta con lo que ya usamos?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Sí. Se conecta con tu CRM, tu agenda y las herramientas que ya
-                usás, sin obligarte a cambiar de plataforma. Si algo no tiene
-                conexión directa, usamos la mejor alternativa disponible para que
-                tu operación no se interrumpa.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿El sistema es nuestro o dependemos de Velinex?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Se instala en tu propio servidor y es un activo 100% de tu
-                propiedad. Tus datos y conversaciones son tuyos, y no dependés de
-                nosotros para que funcione día a día.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Cuánto tiempo requiere de mi parte?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                90 minutos al principio y 2 revisiones cortas, una por cada
-                entrega. Nuestro equipo hace todo lo demás.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Cuánto tiempo toma la implementación completa?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Es un programa cerrado de 60 días desde que arrancamos. Empieza
-                con el Mapa Operativo 360, la auditoría completa de tu empresa, de
-                regalo. Sigue con 2 entregas que probás con tu equipo y un
-                arranque sin riesgo, de a poco hasta el 100%. Hasta el día 60, el
-                Ajuste en Vivo también va de regalo.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Qué pasa si no funciona?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Si al día 45 tu sistema no está funcionando en tu negocio,
-                seguimos trabajando gratis hasta que funcione, y no pagás
-                mantenimiento hasta entonces. Aplica cuando los accesos y la
-                información de tu negocio llegan en los plazos acordados.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Cuánto cuesta?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Depende del volumen de consultas y de cómo vende tu empresa. En la
-                sesión de 30 minutos lo calculamos con tus propios números, junto
-                con lo que hoy se te escapa por mes. La lógica es simple: el
-                sistema tiene que pagarse solo con lo que recupera. Si el número
-                no cierra, te lo decimos directo.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Qué pasa después del día 60?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Elegís si seguís con el mantenimiento mensual: el mismo servicio
-                del Ajuste en Vivo, que para entonces ya viste funcionando con tus
-                clientes reales. El sistema sigue siendo tuyo, instalado en tu
-                servidor.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Qué pasa si responde algo que no debería?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                El sistema responde dentro de lo que construimos juntos: nunca
-                improvisa ni inventa información. Si llega una consulta fuera de
-                lo que conoce, la deriva a tu equipo con todo el contexto cargado.
-                Antes de salir en vivo lo probamos con escenarios reales de tu
-                negocio.
-              </p>
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-question" aria-expanded="false">
-              <span class="faq-question-text">¿Funciona para negocios fuera de Argentina?</span>
-              <span class="faq-icon" aria-hidden="true"></span>
-            </button>
-            <div class="faq-answer">
-              <p>
-                Sí. Trabajamos con negocios en Argentina, México, Colombia, España
-                y el resto del mercado hispanohablante. El sistema opera en
-                WhatsApp e Instagram, canales que funcionan en cualquier país.
-                Todo se hace de forma remota.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sticky Mobile CTA: en modo "simulador" lleva a #simulador; una vez que
-         el visitante pasó o usó el simulador, cambia a modo "diagnostico" y
-         lleva a #diagnostico (index.js maneja texto, href y .show). -->
-    <div class="sticky-cta-mobile" id="sticky-cta-mobile" data-mode="simulador">
+    <!-- Sticky Mobile CTA: lleva a #diagnostico (index.js maneja .show). -->
+    <div class="sticky-cta-mobile" id="sticky-cta-mobile">
       <a
-        href="#simulador"
+        href="#diagnostico"
         class="btn-primary"
         id="sticky-cta-link"
         onclick="handleStickyCTA(event)"
       >
-        ¿Cuántas consultas perdés? Calcular fuga →
+        Quiero mi plan de transformación →
       </a>
     </div>
 

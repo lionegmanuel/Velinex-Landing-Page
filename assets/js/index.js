@@ -91,6 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const target = document.getElementById("diagnostico");
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      // Páginas sin formulario (calculadora.html): vuelve a la landing.
+      window.location.href = "index.html#diagnostico";
     }
   };
   // Alias histórico: el HTML ya no la llama, queda por compatibilidad.
@@ -269,12 +272,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ============================================================
-  // SIMULADOR DE FUGAS OPERATIVAS (#simulador)
+  // SIMULADOR DE FUGAS OPERATIVAS (#simulador, vive en calculadora.html)
   // Calcula en vivo consultas que se enfrían, operaciones perdidas y
-  // horas del equipo. Expone window.applyLeakSimulatorToForm() para
-  // precargar el formulario de diagnóstico con lo que eligió el
-  // visitante. Los coeficientes son promedios orientativos por rubro.
+  // horas del equipo. Lo elegido se guarda en localStorage
+  // (SIM_STORE_KEY) para que la landing precargue el formulario de
+  // diagnóstico y lo mande en el payload. Expone
+  // window.applyLeakSimulatorToForm(). Los coeficientes son promedios
+  // orientativos por rubro.
   // ============================================================
+  const SIM_STORE_KEY = "velinex_simulador";
+  const SIM_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 días
+  const SIM_COVERAGE_TEXT = {
+    si: "con atención activa a toda hora",
+    parcial: "con respuesta parcial fuera de horario",
+    no: "sin atención fuera del horario de oficina",
+  };
+
   const leakSim = (function () {
     const root = document.getElementById("leak-simulator");
     if (!root) return null;
@@ -293,11 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Porcentaje de consultas que se enfrían según cobertura fuera de hora.
     const FACTOR_FUGA = { si: 0.1, parcial: 0.25, no: 0.45 };
-    const COVERAGE_TEXT = {
-      si: "con atención activa a toda hora",
-      parcial: "con respuesta parcial fuera de horario",
-      no: "sin atención fuera del horario de oficina",
-    };
+    const COVERAGE_TEXT = SIM_COVERAGE_TEXT;
     // Tasa de cierre estimada sobre las consultas enfriadas, por rubro.
     const SECTORS = {
       concesionaria: {
@@ -445,6 +454,24 @@ document.addEventListener("DOMContentLoaded", () => {
           (r.shifts === 1 ? " jornada completa" : " jornadas completas") +
           " de una persona.";
       }
+      if (state.used || state.applied) persist();
+    }
+
+    function persist() {
+      try {
+        localStorage.setItem(
+          SIM_STORE_KEY,
+          JSON.stringify({
+            ts: Date.now(),
+            volume: state.volume,
+            sector: state.sector,
+            coverage: state.coverage,
+            used: state.used,
+            applied: state.applied,
+            snapshot: snapshot(),
+          }),
+        );
+      } catch (e) {}
     }
 
     function markUsed() {
@@ -517,16 +544,72 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
+    // En calculadora.html el CTA lleva a index.html#diagnostico: guarda
+    // la simulación antes de salir para que la landing la precargue.
+    const cta = document.getElementById("leak-cta");
+    if (cta && !document.getElementById("diagnostico")) {
+      cta.addEventListener("click", () => {
+        state.applied = true;
+        persist();
+        if (typeof gtag !== "undefined") {
+          const snap = snapshot();
+          gtag("event", "leak_simulator_apply", {
+            event_category: "Conversion",
+            event_label: "CTA del simulador",
+            rubro: snap.rubro,
+            cobertura: snap.cobertura_fuera_de_hora,
+            consultas_dia: state.volume,
+            consultas_enfriadas_mes: snap.consultas_enfriadas_mes,
+            transport_type: "beacon",
+          });
+        }
+      });
+    }
+
     return { state, compute, snapshot, SECTORS, COVERAGE_TEXT, fmt };
   })();
 
+  // Simulación hecha en calculadora.html (guardada en localStorage), con
+  // la misma forma que leakSim para que la precarga y el payload no
+  // distingan de dónde vino.
+  function loadStoredSim() {
+    let s = null;
+    try {
+      s = JSON.parse(localStorage.getItem(SIM_STORE_KEY) || "null");
+    } catch (e) {}
+    if (
+      !s ||
+      !s.snapshot ||
+      !SIM_COVERAGE_TEXT[s.coverage] ||
+      Date.now() - (s.ts || 0) > SIM_TTL_MS
+    ) {
+      return null;
+    }
+    const label = s.snapshot.rubro;
+    return {
+      state: {
+        volume: parseInt(s.volume, 10) || 0,
+        sector: s.sector,
+        coverage: s.coverage,
+        used: true,
+        applied: false,
+      },
+      snapshot: () => s.snapshot,
+      SECTORS: { [s.sector]: { label, formSector: label } },
+      COVERAGE_TEXT: SIM_COVERAGE_TEXT,
+      fmt: new Intl.NumberFormat("es-AR"),
+    };
+  }
+  const simSource = leakSim || loadStoredSim();
+
   // ------------------------------------------------------------
   // Precarga del formulario de diagnóstico con lo elegido en el
-  // simulador. Solo pisa campos que la persona no tocó a mano.
+  // simulador (en esta página o en calculadora.html). Solo pisa
+  // campos que la persona no tocó a mano.
   // ------------------------------------------------------------
   (function () {
     const form = document.getElementById("diagnostic-form");
-    if (!form || !leakSim) {
+    if (!form || !simSource) {
       window.applyLeakSimulatorToForm = function () {};
       return;
     }
@@ -562,9 +645,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.applyLeakSimulatorToForm = function (opts) {
       const silent = !!(opts && opts.silent);
-      const snap = leakSim.snapshot();
-      const state = leakSim.state;
-      const sector = leakSim.SECTORS[state.sector];
+      const snap = simSource.snapshot();
+      const state = simSource.state;
+      const sector = simSource.SECTORS[state.sector];
       let touched = false;
 
       touched = setIfUntouched(volumeSelect, volumeToOption(state.volume)) || touched;
@@ -575,23 +658,23 @@ document.addEventListener("DOMContentLoaded", () => {
           "Recibo unas " +
           snap.consultas_dia +
           " consultas por día y hoy estamos " +
-          leakSim.COVERAGE_TEXT[state.coverage] +
-          ". Según el simulador se me enfrían cerca de " +
-          leakSim.fmt.format(snap.consultas_enfriadas_mes) +
+          simSource.COVERAGE_TEXT[state.coverage] +
+          ". Según la calculadora se me enfrían cerca de " +
+          simSource.fmt.format(snap.consultas_enfriadas_mes) +
           " consultas al mes y el equipo dedica unas " +
-          leakSim.fmt.format(snap.horas_equipo_mes) +
+          simSource.fmt.format(snap.horas_equipo_mes) +
           " horas mensuales a responder lo mismo.";
         touched = setIfUntouched(bottleneck, draft) || touched;
       }
 
       if (note && noteText && touched) {
         noteText.innerHTML =
-          "Precargamos tu simulación: <strong>" +
+          "Precargamos lo que calculaste: <strong>" +
           snap.consultas_dia +
           " consultas/día</strong> · <strong>" +
           sector.label +
           "</strong> · " +
-          leakSim.COVERAGE_TEXT[state.coverage] +
+          simSource.COVERAGE_TEXT[state.coverage] +
           ". Podés ajustar cualquier dato.";
         note.hidden = false;
       }
@@ -617,7 +700,7 @@ document.addEventListener("DOMContentLoaded", () => {
         (entries) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            if (leakSim.state.used && !leakSim.state.applied) {
+            if (simSource.state.used && !simSource.state.applied) {
               window.applyLeakSimulatorToForm({ silent: true });
             }
           });
@@ -629,29 +712,13 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // ============================================================
-  // STICKY CTA MOBILE (dos modos)
-  // "simulador": lleva a #simulador con "Calcular fuga".
-  // "diagnostico": una vez que pasó o usó el simulador, lleva a #diagnostico.
-  // Se oculta mientras el simulador o el formulario están en pantalla.
+  // STICKY CTA MOBILE
+  // Lleva a #diagnostico. Aparece cuando el hero quedó arriba y se
+  // oculta mientras el formulario está en pantalla.
   // ============================================================
   const stickyCTA = document.getElementById("sticky-cta-mobile");
-  const stickyLink = document.getElementById("sticky-cta-link");
   const heroSection = document.querySelector(".hero");
-  const simuladorSection = document.getElementById("simulador");
   const diagnosticoSection = document.getElementById("diagnostico");
-  const STICKY_MODES = {
-    simulador: { text: "¿Cuántas consultas perdés? Calcular fuga →", href: "#simulador" },
-    diagnostico: { text: "Quiero mi plan de transformación →", href: "#diagnostico" },
-  };
-
-  function setStickyMode(mode) {
-    if (!stickyCTA || !stickyLink) return;
-    if (!simuladorSection) mode = "diagnostico";
-    if (stickyCTA.dataset.mode === mode) return;
-    stickyCTA.dataset.mode = mode;
-    stickyLink.textContent = STICKY_MODES[mode].text;
-    stickyLink.setAttribute("href", STICKY_MODES[mode].href);
-  }
 
   function updateStickyCTA() {
     if (!stickyCTA) return;
@@ -665,34 +732,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const r = diagnosticoSection.getBoundingClientRect();
       enDiagnostico = r.top < vh && r.bottom > 0;
     }
-    let enSimulador = false;
-    let pasoSimulador = false;
-    if (simuladorSection) {
-      const r = simuladorSection.getBoundingClientRect();
-      enSimulador = r.top < vh - 120 && r.bottom > 120;
-      pasoSimulador = r.bottom < vh * 0.5;
-    }
-    const usoSimulador = !!(leakSim && leakSim.state.used);
-    setStickyMode(pasoSimulador || usoSimulador ? "diagnostico" : "simulador");
-    stickyCTA.classList.toggle(
-      "show",
-      pastHero && !enDiagnostico && !enSimulador,
-    );
+    stickyCTA.classList.toggle("show", pastHero && !enDiagnostico);
   }
   window.addEventListener("scroll", updateStickyCTA, { passive: true });
   window.addEventListener("resize", updateStickyCTA, { passive: true });
-  setStickyMode(simuladorSection ? "simulador" : "diagnostico");
 
   window.handleStickyCTA = function (e) {
     if (e) e.preventDefault();
-    const mode = stickyCTA ? stickyCTA.dataset.mode : "diagnostico";
-    if (mode === "simulador" && simuladorSection) {
-      trackCTAClick("CTA_Sticky_Mobile_Simulador");
-      simuladorSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
     trackCTAClick("CTA_Sticky_Mobile");
-    if (leakSim && leakSim.state.used) {
+    if (simSource && simSource.state.used) {
       window.applyLeakSimulatorToForm({ silent: true });
     }
     window.smoothScrollToDiagnostic();
@@ -952,8 +1000,8 @@ document.addEventListener("DOMContentLoaded", () => {
         referrer: attribution.referrer || "",
         // Lo que eligió en el simulador de fugas (null si no lo usó).
         simulador:
-          leakSim && (leakSim.state.used || leakSim.state.applied)
-            ? leakSim.snapshot()
+          simSource && (simSource.state.used || simSource.state.applied)
+            ? simSource.snapshot()
             : null,
       };
 

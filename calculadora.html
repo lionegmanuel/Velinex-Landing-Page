@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Fugas Operativas | Velinex</title>
+    <meta
+      name="description"
+      content="Calculá en menos de un minuto cuántas consultas, ventas y horas de tu equipo se pierden cada mes por responder tarde. Gratis y con tus números."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Velinex" />
+    <meta name="theme-color" content="#050811" />
+    <link rel="canonical" href="https://www.velinex.digital/calculadora.html" />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:url" content="https://www.velinex.digital/calculadora.html" />
+    <meta property="og:title" content="Calculadora de Fugas Operativas | Velinex" />
+    <meta
+      property="og:description"
+      content="Calculá en menos de un minuto cuántas consultas, ventas y horas de tu equipo se pierden cada mes por responder tarde. Gratis y con tus números."
+    />
+    <meta
+      property="og:image"
+      content="https://www.velinex.digital/assets/img/VSL_thumbnail.png"
+    />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
+    <meta property="og:site_name" content="Velinex" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Calculadora de Fugas Operativas | Velinex" />
+    <meta
+      name="twitter:description"
+      content="Calculá en menos de un minuto cuántas consultas, ventas y horas de tu equipo se pierden cada mes por responder tarde. Gratis y con tus números."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.velinex.digital/assets/img/VSL_thumbnail.png"
+    />
+
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-LWKQSM2B03"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-LWKQSM2B03");
+    </script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="assets/img/Velinex%20Full%20Iso%20NBG.webp"
+      type="image/webp"
+    />
+  </head>
+  <body>
+    <!-- Set de íconos SVG (mismo trazo que index.html) -->
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4.5" y="2.5" width="15" height="19" rx="2.5"/><path d="M8 6.5h8M8 11h.01M12 11h.01M16 11h.01M8 14.5h.01M12 14.5h.01M16 14.5h.01M8 18h.01M12 18h.01M16 18h.01"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4.5" rx="1.2"/><path d="M5 12.5v7.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-7.5M12 8v13.5"/><path d="M12 8C10.5 4 7 3.5 7 5.8 7 7.5 9.5 8 12 8zM12 8c1.5-4 5-4.5 5-2.2C17 7.5 14.5 8 12 8z"/></symbol>
+      <symbol id="i-tune" viewBox="0 0 24 24"><path d="M4 6.5h9M17 6.5h3M4 12h3M11 12h9M4 17.5h11M19 17.5h1"/><circle cx="15" cy="6.5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
+    </svg>
+
+    <!-- ============================================================
+     NAVEGACIÓN (misma cápsula que index.html; los links vuelven a la landing)
+============================================================ -->
+    <nav class="site-nav" aria-label="Principal">
+      <div class="container">
+      <div class="site-nav-inner">
+        <a href="index.html" class="site-nav-logo" aria-label="Velinex, ir a la página principal">
+          <img
+            src="assets/img/Velinex Full Iso NBG.webp"
+            alt=""
+            class="logo"
+          />
+          <span class="site-nav-wordmark">Velinex</span>
+        </a>
+        <span class="site-nav-divider" aria-hidden="true"></span>
+        <span class="status-pill">
+          <span class="status-dot-active" aria-hidden="true"></span>
+          Tu sistema funcionando en 35 días
+        </span>
+        <ul class="site-nav-links">
+          <li><a href="index.html#casos">Casos Reales</a></li>
+          <li><a href="index.html#que-contiene">Qué Contiene</a></li>
+          <li><a href="index.html#programa">El Programa</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+        </ul>
+        <a href="calculadora.html" class="nav-resource" aria-current="page">
+          <svg class="icon" aria-hidden="true"><use href="#i-calc" /></svg>
+          <span>Calculadora<span class="nav-resource-extra"> de fugas</span></span>
+        </a>
+        <a
+          href="index.html#diagnostico"
+          class="nav-cta"
+          onclick="trackCTAClick('CTA_Calculadora_Nav')"
+        >
+          Quiero mi plan
+        </a>
+      </div>
+      </div>
+    </nav>
+
+    <main>
+    <!-- ============================================================
+     SIMULADOR DE FUGAS OPERATIVAS (calculadora interactiva)
+     Lógica en assets/js/index.js (bloque "SIMULADOR DE FUGAS"): guarda
+     la simulación en localStorage y la landing la precarga en el
+     formulario de #diagnostico.
+============================================================ -->
+    <section class="leak-simulator-section calc-page" id="simulador">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-eyebrow">Calculadora de fugas · Gratis</p>
+          <h1>¿Cuánto le está costando a tu negocio responder tarde?</h1>
+          <p class="section-subtitle">
+            Ajustá 3 datos y mirá, con tus números, cuántas consultas, ventas
+            y horas de tu equipo se pierden cada mes. Lleva menos de un
+            minuto.
+          </p>
+        </div>
+
+        <div class="leak-simulator" id="leak-simulator">
+          <!-- Columna izquierda: controles -->
+          <div class="leak-controls">
+            <div class="leak-control">
+              <div class="leak-control-head">
+                <label for="leak-volume">Consultas que recibís por día</label>
+                <output class="leak-volume-value" id="leak-volume-value" for="leak-volume">60</output>
+              </div>
+              <input
+                type="range"
+                id="leak-volume"
+                class="leak-range"
+                min="40"
+                max="300"
+                step="5"
+                value="60"
+                aria-describedby="leak-volume-hint"
+              />
+              <div class="leak-range-scale" aria-hidden="true">
+                <span>40</span>
+                <span>100</span>
+                <span>200</span>
+                <span>300+</span>
+              </div>
+              <p class="leak-hint" id="leak-volume-hint">
+                Sumá WhatsApp, Instagram, formularios y llamadas. Si dudás,
+                quedate con el número más bajo.
+              </p>
+            </div>
+
+            <div class="leak-control">
+              <span class="leak-control-label" id="leak-sector-label">¿Cómo vende tu empresa?</span>
+              <div class="leak-chips" role="radiogroup" aria-labelledby="leak-sector-label" id="leak-sector">
+                <button type="button" class="leak-chip is-active" role="radio" aria-checked="true" data-sector="concesionaria">Venta de ticket alto con asesor</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="inmobiliaria">Venta con visita o reunión previa</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="clinica">Servicios con cita previa</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="retail">Venta directa por chat</button>
+                <button type="button" class="leak-chip" role="radio" aria-checked="false" data-sector="b2b">Venta a otras empresas</button>
+              </div>
+            </div>
+
+            <div class="leak-control">
+              <span class="leak-control-label" id="leak-coverage-label">¿Tenés atención activa noches y fines de semana?</span>
+              <div class="leak-options" role="radiogroup" aria-labelledby="leak-coverage-label" id="leak-coverage">
+                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="si">
+                  <strong>Sí, siempre</strong>
+                  <span>Respondemos en minutos, a toda hora</span>
+                </button>
+                <button type="button" class="leak-option is-active" role="radio" aria-checked="true" data-coverage="parcial">
+                  <strong>Parcial / lenta</strong>
+                  <span>Alguien mira el celular cuando puede</span>
+                </button>
+                <button type="button" class="leak-option" role="radio" aria-checked="false" data-coverage="no">
+                  <strong>No, solo horario de oficina</strong>
+                  <span>Lo que entra fuera de hora espera al día siguiente</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna derecha: diagnóstico en vivo -->
+          <div class="leak-results" aria-live="polite" aria-atomic="false">
+            <div class="leak-results-head">
+              <span class="leak-live-dot" aria-hidden="true"></span>
+              <span>Impacto en vivo en tu operación</span>
+            </div>
+
+            <div class="leak-metric leak-metric--main">
+              <span class="leak-metric-value" id="leak-lost-value" data-count="450">450</span>
+              <span class="leak-metric-label">consultas que hoy se enfrían al mes</span>
+              <span class="leak-metric-note" id="leak-lost-note">Sobre 1.800 consultas mensuales, con respuesta parcial fuera de horario.</span>
+            </div>
+
+            <div class="leak-metrics-row">
+              <div class="leak-metric">
+                <span class="leak-metric-value" id="leak-ops-value">4 a 8</span>
+                <span class="leak-metric-label" id="leak-ops-label">operaciones potenciales perdidas por mes</span>
+              </div>
+              <div class="leak-metric">
+                <span class="leak-metric-value"><span id="leak-hours-value" data-count="105">105</span> h</span>
+                <span class="leak-metric-label">horas hombre por mes consumidas en tareas repetitivas</span>
+                <span class="leak-metric-note" id="leak-hours-note">Equivale a 13 jornadas completas de una persona.</span>
+              </div>
+            </div>
+
+            <p class="leak-results-foot">
+              Estas consultas ya te escribieron. No hace falta invertir más en
+              publicidad: hace falta un sistema que responda cuando tu equipo
+              no puede. En 35 días lo dejamos funcionando.
+            </p>
+
+            <div class="leak-cta-row">
+              <a
+                href="index.html#diagnostico"
+                class="btn-primary btn-large leak-cta"
+                id="leak-cta"
+                onclick="trackCTAClick('CTA_Simulador')"
+              >
+                Quiero mi plan para recuperarlas →
+              </a>
+              <span class="leak-cta-note">Te llevamos al formulario con tus números ya cargados.</span>
+            </div>
+
+            <p class="leak-disclaimer">
+              Estimación orientativa basada en promedios de mercado. En la sesión de 30 minutos bajamos estos números a tu operación real.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     PUENTE A LA OFERTA (sin precio ni garantía: viven en index.html)
+============================================================ -->
+    <section class="calc-next">
+      <div class="container">
+        <div class="calc-next-card">
+          <p class="section-eyebrow">Programa Piloto Automático 60</p>
+          <h2>Así recuperás esas consultas sin sumar personal.</h2>
+          <ul class="calc-next-list">
+            <li>
+              <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-clock" /></svg></span>
+              <span><strong>35 días</strong> hasta tu sistema funcionando al 100%, respondiendo cada consulta en segundos.</span>
+            </li>
+            <li>
+              <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-gift" /></svg></span>
+              <span><strong>25 días de Ajuste en Vivo</strong> de regalo, hasta el día 60, con tus clientes reales.</span>
+            </li>
+            <li>
+              <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-tune" /></svg></span>
+              <span><strong>90 minutos y 2 revisiones cortas</strong> de tu parte. Nosotros hacemos el resto.</span>
+            </li>
+          </ul>
+          <div class="cta-group">
+            <a
+              href="index.html#diagnostico"
+              class="btn-primary btn-contrast"
+              onclick="trackCTAClick('CTA_Calculadora_Programa')"
+            >
+              Quiero mi plan de transformación →
+            </a>
+            <a href="index.html#programa" class="btn-secondary">
+              Ver cómo es el programa
+            </a>
+          </div>
+          <p class="cta-disclaimer">
+            30 minutos · Con tus propios números · Te lo llevás listo,
+            trabajemos juntos o no
+          </p>
+        </div>
+      </div>
+    </section>
+    </main>
+
+    <!-- WhatsApp Floating -->
+    <a
+      id="whatsapp-float"
+      href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20😃&type=phone_number&app_absent=0"
+      target="_blank"
+      class="whatsapp-float"
+      aria-label="Contactar por WhatsApp"
+      onclick="trackCTAClick('WhatsApp_Floating')"
+    >
+      <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+        />
+      </svg>
+    </a>
+
+    <footer>
+      <div class="container footer-inner">
+        <img
+          src="assets/img/Velinex Full Iso NBG.webp"
+          alt="Velinex"
+          class="footer-logo"
+          loading="lazy"
+        />
+        <p>&copy; 2026 Velinex · Infraestructura de inteligencia comercial y operativa</p>
+      </div>
+    </footer>
+
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

@@ -400,6 +400,34 @@ section h2 {
   color: var(--text);
   background: rgba(255, 255, 255, 0.07);
 }
+/* Recurso en el nav: abre calculadora.html (página aparte) */
+.nav-resource {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-subtle);
+  transition:
+    color var(--duration) var(--ease),
+    background var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+.nav-resource .icon {
+  width: 16px;
+  height: 16px;
+}
+.nav-resource:hover {
+  color: var(--text);
+  border-color: rgba(56, 189, 248, 0.55);
+  background: rgba(56, 189, 248, 0.14);
+}
 .nav-cta {
   flex-shrink: 0;
   font-size: 0.86rem;
@@ -1364,6 +1392,57 @@ section h2 {
   z-index: 1;
 }
 
+/* calculadora.html: el simulador es la página, arranca bajo el nav */
+.leak-simulator-section.calc-page {
+  padding-top: calc(var(--nav-h) + var(--nav-offset) + clamp(2.5rem, 5vw, 4rem));
+}
+.calc-page .section-head h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  color: var(--text);
+  margin-bottom: 1.1rem;
+}
+.calc-next {
+  background: var(--canvas);
+  padding: 0 0 var(--section-pad);
+}
+.calc-next-card {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+  background: var(--surface-card);
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--edge-light);
+}
+.calc-next-card h2 {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  margin-bottom: 1.75rem;
+}
+.calc-next-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 2rem;
+  text-align: left;
+}
+.calc-next-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.calc-next-list strong {
+  color: var(--text);
+}
+
 .leak-simulator {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -1873,6 +1952,44 @@ section h2 {
   line-height: 1.5;
   color: var(--text-secondary);
   max-width: 24ch;
+}
+
+/* Tramos del programa sobre la línea de tiempo: 35 días + 25 de regalo */
+.program-phases {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0 0 1.75rem;
+}
+.program-phase {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.15rem 0.5rem;
+  padding: 0.7rem 0.75rem 0;
+  border-top: 2px solid rgba(56, 189, 248, 0.6);
+  text-align: center;
+}
+.program-phase--build {
+  grid-column: 1 / span 4;
+}
+.program-phase--gift {
+  grid-column: 5;
+  border-top-color: rgba(34, 197, 94, 0.7);
+}
+.program-phase strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.program-phase--gift strong {
+  color: #86efac;
+}
+.program-phase span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
 /* Componentes del programa */
@@ -2554,8 +2671,8 @@ footer em {
   white-space: normal;
   line-height: 1.25;
 }
-/* Modo "diagnostico": el visitante ya vio o usó el simulador */
-.sticky-cta-mobile[data-mode="diagnostico"] .btn-primary {
+/* Botón blanco de contraste, igual que el CTA principal */
+.sticky-cta-mobile .btn-primary {
   background: var(--pill-contrast-bg);
   color: var(--pill-contrast-text);
   box-shadow: 0 10px 30px -10px rgba(255, 255, 255, 0.45);
@@ -2707,7 +2824,7 @@ footer em {
   .site-nav-links {
     display: none;
   }
-  .nav-cta {
+  .nav-resource {
     margin-left: auto;
   }
 }
@@ -2779,6 +2896,13 @@ footer em {
 
 /* ≤768px */
 @media (max-width: 768px) {
+  .calc-next-list {
+    grid-template-columns: 1fr;
+  }
+  .calc-next-list li {
+    flex-direction: row;
+    align-items: flex-start;
+  }
   :root {
     --nav-h: 54px;
     --nav-offset: 10px;
@@ -2829,9 +2953,12 @@ footer em {
     font-size: 1rem;
   }
   .nav-cta {
-    margin-left: auto;
     font-size: 0.78rem;
     padding: 0.55rem 0.95rem;
+  }
+  .nav-resource {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.75rem;
   }
   .status-pill,
   .site-nav-divider {
@@ -3000,6 +3127,21 @@ footer em {
     height: 30px;
   }
 
+  .program-phases {
+    grid-template-columns: 7fr 5fr;
+    gap: 0.75rem;
+  }
+  .program-phase--build,
+  .program-phase--gift {
+    grid-column: auto;
+  }
+  .program-phase {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0.6rem 0 0;
+    text-align: left;
+  }
   .program-timeline {
     grid-template-columns: 1fr;
     gap: 1.35rem;
@@ -3122,6 +3264,9 @@ footer em {
 @media (max-width: 480px) {
   html {
     font-size: 14px;
+  }
+  .nav-resource-extra {
+    display: none;
   }
   .hero {
     padding: 1.75rem 1rem 4rem;

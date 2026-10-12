@@ -2,18 +2,6 @@
 
 Registro de sesiones de trabajo sobre este repo. Retención: últimos 3 días completos.
 
-## 2026-09-21
-
-### Dual CTA en el hero: acceso al Centro de Recursos
-
-Implementación de `PROMPT_DUAL_CTA_RECURSOS.md` (patrón de doble llamada a la acción, referencia Australis AI vía mentoría de Facu Corengia) para capturar tráfico tibio en el primer scroll sin tocar el CTA principal.
-
-- **`index.html`**: dentro de `.cta-block` del hero se agrega el contenedor `.cta-group` con dos botones. El principal queda idéntico (`smoothScrollToDiagnostic(event)` + `trackCTAClick('CTA_Hero_Diagnostico')`). El secundario "Recursos gratis" (`.btn-secondary`) apunta a `recursos.html?utm_source=landing&utm_medium=hero_secondary&utm_campaign=recursos_cta` y dispara `trackCTAClick('CTA_Hero_Recursos_Gratis')`. Las UTM viajan por URL: `recursos.html` las guarda en `velinex_attribution` y las manda a n8n.
-- **`style.css`**: nuevas clases `.cta-group` y `.btn-secondary` sobre los tokens existentes (`--radius-sm`, `--duration`, `--ease`, `--accent`, `--accent-subtle`), con hover, `:active`, `:focus-visible` y la misma animación de entrada del botón principal con un delay mayor. En `max-width: 640px` los botones se apilan en columna al 100% de ancho y con `white-space: normal` (el `nowrap` de `.btn-primary` desbordaba el texto largo a 390px).
-- **`assets/js/index.js`**: sin cambios. `smoothScrollToDiagnostic` y `trackCTAClick` siguen intactas.
-- Validado en Edge headless: escritorio (1440px) con los dos botones alineados en horizontal, móvil (390px) apilados sin desborde horizontal, sin guion largo en los archivos. No se probó el envío real a n8n / Sheet `leads_base` con este origen.
-- Limpieza del repo: se eliminan los prompts ya ejecutados (`PROMPT_DUAL_CTA_RECURSOS.md`, `PROMPT_IMPLEMENTACION_vFINAL.md`, `PROMPT_OPTIMIZACION_CONVERSION_Y_WIDGET.md`).
-
 ## 2026-10-02
 
 ### Refactor integral v3.0: estética enterprise y nueva arquitectura
@@ -88,3 +76,17 @@ Decisión de Manuel: los 60 días suenan largos para el prospecto. Revisado cont
 - QA en Edge headless: 28/28 (calculadora, ida a la landing con el formulario precargado, envío con la simulación en el payload, CTAs, nav, anclas, FAQ, sticky), sin errores de consola ni scroll horizontal en 1440/1024/390, sin guion largo. `recursos.html` y `puente.html` idénticas a las capturas previas. No se probó el envío real contra n8n.
 
 Commit: `feat(landing): plazo de 35 días y calculadora de fugas como página aparte`.
+
+## 2026-10-12
+
+### Umami: segunda medición de visitas, propia y sin cookies
+
+Pedido de Manuel: sumar Umami a la landing siempre que no se vea al público ni perjudique los resultados actuales.
+
+- Se agregó el script de Umami antes del cierre de `<head>` en `index.html`, `recursos.html`, `calculadora.html` y `puente.html`. Carga con `defer` desde `https://app-analytics.velinex.digital/script.js` (4,6 KB), no muestra nada en la página y no usa cookies.
+- Google Analytics (`G-LWKQSM2B03`) queda igual: Umami mide en paralelo, no lo reemplaza. No se tocó copy, estilos, formularios ni `assets/js/index.js`.
+- Umami corre en el VPS propio; sitio "Velinex - Landing", website id `731b9c80-a08e-4046-bf20-d252dc0449bc`. Acceso y detalle de infraestructura en `Contabo - Infraestructura.md` del repo `Velinex-Engineering-Bussines`.
+- Solo mide páginas vistas. Los clics en CTAs siguen midiéndose con lo que ya había; sumar eventos de Umami queda como mejora opcional.
+- Se quitó el día 2026-09-21 por la regla de retención de 3 días.
+
+Commit: `feat(analytics): suma Umami a las cuatro páginas de la landing`.

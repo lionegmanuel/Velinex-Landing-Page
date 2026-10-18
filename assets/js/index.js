@@ -940,7 +940,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const WEBHOOK_URL =
       "https://webhook-n8n.velinex.digital/webhook/lead-magnet";
     const WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
-    const SUBMIT_LABEL = "Quiero mi plan de transformación →";
+    const SUBMIT_LABEL = "Quiero mi plan →";
 
     const submitBtn = document.getElementById("diag-submit-btn");
     const feedback = document.getElementById("form-feedback");
@@ -1062,7 +1062,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       showFeedback(
         "ok",
-        "<strong>Solicitud recibida.</strong> Te contactamos en menos de 24 horas para coordinar tu sesión de 30 minutos.",
+        "<strong>Solicitud recibida.</strong> Te contactamos en menos de 24 horas para coordinar la llamada.",
       );
       if (feedback) {
         feedback.scrollIntoView({ behavior: "smooth", block: "center" });

@@ -180,7 +180,7 @@
     <script>
       (function () {
         // Parámetros que manda recursos.html en el redirect:
-        //   ?n= primer nombre   ?s= situación (chip)   ?i= 1|0 interés comercial
+        //   ?n= primer nombre   ?s= situación (chip)   ?r= rubro   ?i= 1|0 interés comercial
         // Si algo viene raro (merge field sin resolver, basura, vacío), la
         // página sigue en modo genérico sin romperse.
         function qp(k) {
@@ -206,16 +206,20 @@
           document.getElementById("greeting").textContent = "Listo, " + nombre;
         }
 
-        // ── Situación: solo aceptamos los 4 valores del formulario ────
-        var SITUACIONES = [
-          "Tengo negocio y no usamos IA todavía",
-          "Tengo negocio y probamos pero sin resultados",
-          "Tengo negocio y queremos escalar en serio",
-          "No tengo negocio / Curiosidad personal",
-        ];
+        // ── Situación: solo aceptamos los valores del formulario ──────
+        // (perfil "Tengo negocio y" / "Trabajo en un negocio y" + estado con la IA)
+        var ESTADOS_IA = ["no usamos IA todavía", "probamos pero sin resultados", "queremos escalar en serio"];
+        var PERFILES = ["Tengo negocio y ", "Trabajo en un negocio y "];
         var situacionRaw = limpiarTexto(qp("s"), 80);
-        var situacion = SITUACIONES.indexOf(situacionRaw) !== -1 ? situacionRaw : "";
-        var tieneNegocio = situacion !== "" && situacion.indexOf("Tengo negocio") === 0;
+        var perfilNegocio = "";
+        PERFILES.forEach(function (p) {
+          if (situacionRaw.indexOf(p) === 0 && ESTADOS_IA.indexOf(situacionRaw.slice(p.length)) !== -1) perfilNegocio = p;
+        });
+        var tieneNegocio = perfilNegocio !== "";
+        var trabajaEnNegocio = perfilNegocio === "Trabajo en un negocio y ";
+
+        // ── Rubro (texto libre si eligió "Otro") ──────────────────────
+        var rubro = limpiarTexto(qp("r"), 70).replace(/^Otro · /, "");
 
         // ── Interés comercial ─────────────────────────────────────────
         var interesComercial = qp("i") === "1";
@@ -226,19 +230,26 @@
           msg =
             "Hola Manuel! " +
             (nombre ? "Soy " + nombre + ". " : "") +
-            "Vengo del Centro de Recursos, tengo un negocio (" +
-            situacion +
-            ") y me interesa que veamos el cuello de botella comercial de mi empresa 🙌";
+            "Vengo del Centro de Recursos, " +
+            (trabajaEnNegocio ? "trabajo en un negocio" : "tengo un negocio") +
+            (rubro ? " (" + rubro + ")" : "") +
+            " y me interesa que veamos cómo hacer que funcione sin que todo dependa de " +
+            (trabajaEnNegocio ? "una persona" : "mí") +
+            " 🙌";
         } else if (interesComercial) {
           msg =
             "Hola Manuel! " +
             (nombre ? "Soy " + nombre + ". " : "") +
-            "Vengo del Centro de Recursos y me interesa que veamos el cuello de botella comercial de mi empresa 🙌";
+            "Vengo del Centro de Recursos y me interesa que veamos mi caso 🙌";
         } else {
           msg =
             "Hola Manuel! " +
             (nombre ? "Soy " + nombre + ", te" : "Te") +
-            " escribo para recibir la carpeta de recursos 🙌";
+            " escribo para recibir la carpeta de recursos" +
+            (tieneNegocio && rubro
+              ? ". " + (trabajaEnNegocio ? "Trabajo en un negocio" : "Tengo un negocio") + " (" + rubro + ")"
+              : "") +
+            " 🙌";
         }
         document.getElementById("waCta").href =
           "https://api.whatsapp.com/send/?phone=5493534270844&text=" +

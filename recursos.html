@@ -181,6 +181,84 @@
       .chip-group.chip-group--error .chip {
         border-color: var(--red);
       }
+      .group-error {
+        display: none;
+        color: var(--red);
+        font-size: 0.82rem;
+        margin: 0.4rem 0 0;
+      }
+      .chip-group--error + .group-error {
+        display: block;
+      }
+
+      /* ── Selector de rubro ── */
+      .field select {
+        width: 100%;
+        background-color: var(--card-bg);
+        border: var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text);
+        color-scheme: dark;
+        font-family: inherit;
+        font-size: 0.98rem;
+        padding: 0.8rem 2.6rem 0.8rem 1rem;
+        min-height: 52px;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2399aec8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        transition:
+          border-color 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .field select:focus {
+        outline: none;
+        border-color: var(--accent-border);
+        background-color: var(--card-bg-hover);
+      }
+      .field select:invalid {
+        color: var(--text-secondary);
+      }
+      .field select option,
+      .field select optgroup {
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      /* ── Bloque de negocio: aparece al elegir que tiene o trabaja en uno ── */
+      .negocio-block {
+        border: none;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: inherit;
+      }
+      .negocio-block[hidden],
+      .field[hidden] {
+        display: none;
+      }
+      .negocio-block.is-revealed {
+        animation: revelar 0.32s ease-out;
+      }
+      @keyframes revelar {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .negocio-block.is-revealed {
+          animation: none;
+        }
+      }
 
       /* Honeypot - invisible para personas, visible para bots que completan todo */
       .hp-field {
@@ -258,41 +336,129 @@
               pattern="\+[1-9][\d\s]{7,17}"
               required
             />
-            <p class="field-hint" id="f-telefono-hint">Empezá con + y el código de tu país (+54, +34, +52...) - sin el + no lo aceptamos.</p>
+            <p class="field-hint" id="f-telefono-hint">Empezá con + y el código de tu país (+54, +34, +52...). Sin el + no lo aceptamos.</p>
           </div>
 
           <div class="field">
             <fieldset>
-              <legend>¿Cuál de estas te describe mejor hoy?</legend>
-              <div class="chip-group" id="situacionGroup">
+              <legend><strong>¿Tenés un negocio?</strong></legend>
+              <div class="chip-group" id="perfilGroup">
                 <label class="chip">
-                  <input type="radio" name="situacion" value="Tengo negocio y no usamos IA todavía" required />
+                  <input type="radio" name="perfil" value="dueno" required />
                   <span class="chip-dot" aria-hidden="true"></span>
-                  <span>Tengo negocio y no usamos IA todavía</span>
+                  <span>Sí, tengo un negocio</span>
                 </label>
                 <label class="chip">
-                  <input type="radio" name="situacion" value="Tengo negocio y probamos pero sin resultados" />
+                  <input type="radio" name="perfil" value="trabaja" />
                   <span class="chip-dot" aria-hidden="true"></span>
-                  <span>Tengo negocio y probamos pero sin resultados</span>
+                  <span>Trabajo en un negocio, no soy el dueño</span>
                 </label>
                 <label class="chip">
-                  <input type="radio" name="situacion" value="Tengo negocio y queremos escalar en serio" />
+                  <input type="radio" name="perfil" value="curioso" />
                   <span class="chip-dot" aria-hidden="true"></span>
-                  <span>Tengo negocio y queremos escalar en serio</span>
-                </label>
-                <label class="chip">
-                  <input type="radio" name="situacion" value="No tengo negocio / Curiosidad personal" />
-                  <span class="chip-dot" aria-hidden="true"></span>
-                  <span>No tengo negocio / Curiosidad personal</span>
+                  <span>No, me interesa la IA para mí</span>
                 </label>
               </div>
+              <p class="group-error">Elegí una opción para seguir.</p>
+            </fieldset>
+          </div>
+
+          <!-- Solo aparece si tiene o trabaja en un negocio. Un fieldset
+               deshabilitado no se valida ni se envía. -->
+          <fieldset class="negocio-block" id="negocioBlock" disabled hidden>
+          <div class="field">
+            <label for="f-rubro">¿De qué rubro es?</label>
+            <select id="f-rubro" name="rubro" required>
+              <option value="" selected disabled>Elegí el rubro</option>
+              <optgroup label="Salud y bienestar">
+                <option>Clínica odontológica</option>
+                <option>Clínica o centro médico</option>
+                <option>Medicina estética</option>
+                <option>Kinesiología o fisioterapia</option>
+                <option>Psicología o salud mental</option>
+                <option>Nutrición</option>
+                <option>Laboratorio o diagnóstico por imágenes</option>
+                <option>Centro de estética o spa</option>
+                <option>Peluquería o barbería</option>
+                <option>Gimnasio o centro deportivo</option>
+              </optgroup>
+              <optgroup label="Automotriz">
+                <option>Concesionaria de autos o motos</option>
+                <option>Taller o servicios del automotor</option>
+                <option>Repuestos y accesorios</option>
+              </optgroup>
+              <optgroup label="Inmobiliario y construcción">
+                <option>Inmobiliaria</option>
+                <option>Desarrolladora o loteos</option>
+                <option>Constructora o reformas</option>
+                <option>Arquitectura o diseño de interiores</option>
+                <option>Materiales, aberturas o muebles</option>
+                <option>Servicios técnicos para el hogar</option>
+              </optgroup>
+              <optgroup label="Gastronomía, turismo y eventos">
+                <option>Restaurante o bar</option>
+                <option>Delivery o comida para llevar</option>
+                <option>Catering</option>
+                <option>Hotel o alojamiento</option>
+                <option>Agencia de viajes o turismo</option>
+                <option>Salón o productora de eventos</option>
+              </optgroup>
+              <optgroup label="Educación">
+                <option>Instituto, academia o capacitación</option>
+                <option>Escuela de idiomas</option>
+                <option>Cursos o formación online</option>
+              </optgroup>
+              <optgroup label="Servicios profesionales">
+                <option>Estudio contable</option>
+                <option>Estudio jurídico</option>
+                <option>Seguros o finanzas</option>
+                <option>Consultoría o agencia</option>
+              </optgroup>
+              <optgroup label="Comercio, mascotas y logística">
+                <option>Comercio o tienda con asesoramiento</option>
+                <option>Tecnología o electrónica</option>
+                <option>Indumentaria o moda</option>
+                <option>Mayorista o distribuidora</option>
+                <option>Veterinaria o pet shop</option>
+                <option>Logística, transporte o envíos</option>
+              </optgroup>
+              <option value="otro">Otro rubro (lo escribo)</option>
+            </select>
+          </div>
+
+          <div class="field" id="rubroOtroField" hidden>
+            <label for="f-rubro-otro">Escribí tu rubro</label>
+            <input type="text" id="f-rubro-otro" name="rubro_otro" maxlength="60" placeholder="Ej: fábrica de muebles, óptica, agencia de seguros" disabled required />
+          </div>
+
+          <div class="field">
+            <fieldset>
+              <legend>¿Cómo vienen con la IA hoy?</legend>
+              <div class="chip-group" id="iaGroup">
+                <label class="chip">
+                  <input type="radio" name="ia" value="no usamos IA todavía" required />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Todavía no la usamos</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="ia" value="probamos pero sin resultados" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>La probamos y no dio resultados</span>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="ia" value="queremos escalar en serio" />
+                  <span class="chip-dot" aria-hidden="true"></span>
+                  <span>Queremos escalar en serio</span>
+                </label>
+              </div>
+              <p class="group-error">Elegí una opción para seguir.</p>
             </fieldset>
           </div>
 
           <div class="field">
             <fieldset>
               <legend>
-                Si te mostramos cómo lograr que <strong>tu negocio funcione sin que
+                Si te mostramos cómo lograr que <strong id="interesNegocio">tu negocio funcione sin que
                 todo dependa de vos</strong>, ¿te interesaría ver tu caso?
               </legend>
               <div class="chip-group" id="interesGroup">
@@ -307,8 +473,10 @@
                   <span>Solo quiero la carpeta de recursos</span>
                 </label>
               </div>
+              <p class="group-error">Elegí una opción para seguir.</p>
             </fieldset>
           </div>
+          </fieldset>
 
           <div class="hp-field" aria-hidden="true" style="display:none!important;position:absolute;left:-9999px;opacity:0;pointer-events:none;">
             <label for="f-empresa-web" style="display:none!important;">No completar</label>
@@ -377,8 +545,14 @@
         var form = document.getElementById("recursosForm");
         var submitBtn = document.getElementById("submitBtn");
         var formError = document.getElementById("formError");
-        var situacionGroup = document.getElementById("situacionGroup");
+        var perfilGroup = document.getElementById("perfilGroup");
+        var iaGroup = document.getElementById("iaGroup");
         var interesGroup = document.getElementById("interesGroup");
+        var negocioBlock = document.getElementById("negocioBlock");
+        var rubroSelect = document.getElementById("f-rubro");
+        var rubroOtroField = document.getElementById("rubroOtroField");
+        var rubroOtroInput = document.getElementById("f-rubro-otro");
+        var interesNegocio = document.getElementById("interesNegocio");
         var SUBMIT_LABEL = "Quiero acceder →";
         var formInitTime = Date.now();
 
@@ -392,11 +566,42 @@
         }
 
         // Al elegir un chip se limpia el estado de error de ese grupo
-        [situacionGroup, interesGroup].forEach(function (group) {
+        [perfilGroup, iaGroup, interesGroup].forEach(function (group) {
           group.addEventListener("change", function () {
             group.classList.remove("chip-group--error");
           });
         });
+
+        // Rubro, IA e interés solo se preguntan a quien tiene o trabaja en un
+        // negocio. El curioso termina en una sola pregunta.
+        perfilGroup.addEventListener("change", function () {
+          var perfil = radioValue("perfil");
+          var conNegocio = perfil === "dueno" || perfil === "trabaja";
+          var estabaOculto = negocioBlock.hidden;
+          negocioBlock.hidden = !conNegocio;
+          negocioBlock.disabled = !conNegocio;
+          if (conNegocio && estabaOculto) {
+            negocioBlock.classList.remove("is-revealed");
+            void negocioBlock.offsetWidth;
+            negocioBlock.classList.add("is-revealed");
+          }
+          interesNegocio.textContent =
+            perfil === "trabaja"
+              ? "el negocio donde trabajás funcione sin que todo dependa de una persona"
+              : "tu negocio funcione sin que todo dependa de vos";
+        });
+
+        rubroSelect.addEventListener("change", function () {
+          var esOtro = rubroSelect.value === "otro";
+          rubroOtroField.hidden = !esOtro;
+          rubroOtroInput.disabled = !esOtro;
+          if (esOtro) rubroOtroInput.focus();
+        });
+
+        // Texto que se guarda en la columna Situacion_IA. Para el dueño se
+        // mantienen los valores históricos, así la planilla sigue comparable.
+        var PREFIJO_PERFIL = { dueno: "Tengo negocio y ", trabaja: "Trabajo en un negocio y " };
+        var SITUACION_CURIOSO = "No tengo negocio / Curiosidad personal";
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
@@ -414,10 +619,21 @@
             );
           }
 
-          var situacion = radioValue("situacion");
-          var interesComercial = radioValue("interes_comercial");
-          situacionGroup.classList.toggle("chip-group--error", !situacion);
-          interesGroup.classList.toggle("chip-group--error", !interesComercial);
+          var perfil = radioValue("perfil");
+          var conNegocio = perfil === "dueno" || perfil === "trabaja";
+          var ia = conNegocio ? radioValue("ia") : "";
+          var interesComercial = conNegocio ? radioValue("interes_comercial") : "No aplica, no tiene negocio";
+          perfilGroup.classList.toggle("chip-group--error", !perfil);
+          iaGroup.classList.toggle("chip-group--error", conNegocio && !ia);
+          interesGroup.classList.toggle("chip-group--error", conNegocio && !radioValue("interes_comercial"));
+
+          var situacion = conNegocio ? PREFIJO_PERFIL[perfil] + ia : perfil ? SITUACION_CURIOSO : "";
+          var rubro = "";
+          if (conNegocio) {
+            rubro = rubroSelect.value === "otro"
+              ? "Otro · " + rubroOtroInput.value.trim()
+              : rubroSelect.value;
+          }
 
           if (!form.checkValidity()) {
             form.reportValidity();
@@ -438,6 +654,8 @@
             email: form.email.value.trim().toLowerCase(),
             telefono: telefonoLimpio,
             calificacion: situacion,
+            perfil: perfil,
+            rubro: rubro,
             interes_comercial: interesComercial,
             utmSource: attribution.utm_source || "",
             utmMedium: attribution.utm_medium || "",
@@ -453,7 +671,7 @@
           var isBot = Boolean(honeypot) && submissionDuration < 1200;
 
           if (isBot) {
-            redirectToPuente(primerNombre, situacion, interesComercial);
+            redirectToPuente(primerNombre, situacion, interesComercial, rubro);
             return;
           }
 
@@ -473,8 +691,10 @@
               gtag("event", "generate_lead", {
                 form_name: "centro_recursos",
                 interes_comercial: interesComercial,
+                perfil: perfil,
+                rubro: rubro,
               });
-              redirectToPuente(primerNombre, situacion, interesComercial);
+              redirectToPuente(primerNombre, situacion, interesComercial, rubro);
             })
             .catch(function (err) {
               console.error(err);
@@ -484,12 +704,13 @@
             });
         });
 
-        // puente.html lee ?n= (nombre), ?s= (situación) e ?i= (1 = interés
-        // comercial) para armar el mensaje de WhatsApp personalizado.
-        function redirectToPuente(primerNombre, situacion, interesComercial) {
+        // puente.html lee ?n= (nombre), ?s= (situación), ?r= (rubro) e ?i=
+        // (1 = interés comercial) para armar el mensaje de WhatsApp personalizado.
+        function redirectToPuente(primerNombre, situacion, interesComercial, rubro) {
           var params = new URLSearchParams();
           if (primerNombre) params.set("n", primerNombre);
           if (situacion) params.set("s", situacion);
+          if (rubro) params.set("r", rubro);
           params.set("i", /^s[ií]/i.test(interesComercial) ? "1" : "0");
           location.href = "puente.html?" + params.toString();
         }

@@ -942,6 +942,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
     const SUBMIT_LABEL = "Quiero mi plan →";
 
+    // Quién califica para agendar (BASES §05 y mentoría de Facu del 20/10):
+    // dueño, socio o director, con 5 personas o más y 40 consultas por día
+    // o más. El resto recibe el mensaje de siempre y Manuel lo mira a mano.
+    const ROLES_QUE_CALIFICAN = ["Dueño o socio", "Director o gerente"];
+    const EQUIPOS_QUE_CALIFICAN = ["5-19", "20+"];
+    const VOLUMEN_QUE_NO_CALIFICA = "menos-40";
+    const CAL_LINK = "velinex/velinex-diagnostico";
+
     const submitBtn = document.getElementById("diag-submit-btn");
     const feedback = document.getElementById("form-feedback");
 
@@ -988,6 +996,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cargo: form.cargo.value.trim(),
         empresa: form.empresa.value.trim(),
         sector: form.sector.value,
+        personas: form.personas.value,
         consultas_diarias: form.consultas_diarias.value,
         freno_operativo: form.freno.value.trim(),
         origen: "landing_diagnostico",
@@ -1004,6 +1013,10 @@ document.addEventListener("DOMContentLoaded", () => {
             ? simSource.snapshot()
             : null,
       };
+      payload.califica =
+        ROLES_QUE_CALIFICAN.indexOf(payload.cargo) !== -1 &&
+        EQUIPOS_QUE_CALIFICAN.indexOf(payload.personas) !== -1 &&
+        payload.consultas_diarias !== VOLUMEN_QUE_NO_CALIFICA;
 
       // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
       if (form.empresa_web.value.trim()) {
@@ -1049,24 +1062,113 @@ document.addEventListener("DOMContentLoaded", () => {
           utm_campaign: attribution.utm_campaign || "(none)",
         });
       }
-      if (track && typeof fbq !== "undefined") {
-        fbq("track", "Lead", {
-          content_name: "Diagnostico_Estrategico",
-          source: "landing_page",
-        });
-      }
       form
         .querySelectorAll(".form-step-block, .form-action-row")
         .forEach((el) => {
           el.style.display = "none";
         });
+
+      if (track && payload.califica) {
+        if (typeof gtag !== "undefined") {
+          gtag("event", "diagnostic_qualified", {
+            event_category: "Conversion",
+            consultas_diarias: payload.consultas_diarias,
+            personas: payload.personas,
+          });
+        }
+        if (typeof fbq !== "undefined") {
+          fbq("track", "Lead", { content_name: "Formulario_Califica" });
+        }
+        showFeedback(
+          "ok",
+          "<strong>Listo, " +
+            escapeHTML(payload.nombre.split(/\s+/)[0]) +
+            ".</strong> Ya recibimos tus datos. Elegí abajo el día y la hora de tu llamada.",
+        );
+        showCalendar(payload);
+        return;
+      }
+
       showFeedback(
         "ok",
-        "<strong>Solicitud recibida.</strong> Te contactamos en menos de 24 horas para coordinar la llamada.",
+        "<strong>Solicitud recibida.</strong> Revisamos tu caso y te escribimos por mail en menos de 24 horas. Mientras tanto, " +
+          '<a href="calculadora.html">calculá cuánto te está costando hoy</a>.',
       );
       if (feedback) {
         feedback.scrollIntoView({ behavior: "smooth", block: "center" });
       }
+    }
+
+    function escapeHTML(text) {
+      const div = document.createElement("div");
+      div.textContent = text || "";
+      return div.innerHTML;
+    }
+
+    // Cal.com embebido con nombre y mail ya cargados. Se carga recién acá,
+    // así quien no califica no descarga nada de Cal.com.
+    function showCalendar(payload) {
+      const wrap = document.getElementById("diag-calendar");
+      const embed = document.getElementById("diag-calendar-embed");
+      if (!wrap || !embed) return;
+      wrap.hidden = false;
+
+      (function (C, A, L) {
+        const p = function (a, ar) {
+          a.q.push(ar);
+        };
+        const d = C.document;
+        C.Cal =
+          C.Cal ||
+          function () {
+            const cal = C.Cal;
+            const ar = arguments;
+            if (!cal.loaded) {
+              cal.ns = {};
+              cal.q = cal.q || [];
+              d.head.appendChild(d.createElement("script")).src = A;
+              cal.loaded = true;
+            }
+            if (ar[0] === L) {
+              const api = function () {
+                p(api, arguments);
+              };
+              const namespace = ar[1];
+              api.q = api.q || [];
+              if (typeof namespace === "string") {
+                cal.ns[namespace] = cal.ns[namespace] || api;
+                p(cal.ns[namespace], ar);
+                p(cal, ["initNamespace", namespace]);
+              } else p(cal, ar);
+              return;
+            }
+            p(cal, ar);
+          };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      window.Cal("init", { origin: "https://cal.com" });
+      window.Cal("inline", {
+        elementOrSelector: "#diag-calendar-embed",
+        calLink: CAL_LINK,
+        config: {
+          name: payload.nombre,
+          email: payload.email,
+          notes: "Empresa: " + payload.empresa + ". Freno: " + payload.freno_operativo,
+          layout: "month_view",
+          theme: "dark",
+        },
+      });
+      window.Cal("on", {
+        action: "bookingSuccessful",
+        callback: function () {
+          if (typeof gtag !== "undefined") {
+            gtag("event", "call_booked", { event_category: "Conversion" });
+          }
+          if (typeof fbq !== "undefined") fbq("track", "Schedule");
+        },
+      });
+
+      wrap.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   })();
 
@@ -1092,12 +1194,9 @@ document.addEventListener("DOMContentLoaded", () => {
         utm_campaign: attribution.utm_campaign || "(none)",
       });
     }
-    if (typeof fbq !== "undefined") {
-      fbq("track", "Lead", {
-        content_name: buttonName,
-        source: "landing_page",
-      });
-    }
+    // Sin fbq acá: un clic no es un prospecto. Meta recibe "Lead" solo
+    // cuando el formulario califica y "Schedule" cuando agenda (criterio
+    // Facu Corengia, mentoría 20/10).
     console.log("🎯 CTA:", buttonName);
   }
 

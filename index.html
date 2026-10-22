@@ -308,13 +308,6 @@
               >
                 Quiero mi plan →
               </a>
-              <a
-                href="recursos.html?utm_source=landing&utm_medium=hero_secondary&utm_campaign=recursos_cta"
-                class="btn-secondary"
-                onclick="trackCTAClick('CTA_Hero_Recursos_Gratis')"
-              >
-                Ver casos y recursos gratis
-                </a>
               </div>
               <p class="cta-disclaimer">
                 Para vender más y crecer sin sumar gente
@@ -1294,6 +1287,8 @@
               <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Tu negocio recién arranca y todavía no tiene consultas todos los días.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Vendés solo por carrito, sin hablar con nadie.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Querés probar gratis antes de decidir, o no podés dedicarle 90 minutos al arranque.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Querés aprender a armarlo vos mismo: para eso están nuestros videos. Acá lo construimos por vos.</li>
+              <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Tenés una agencia o sos consultor y buscás el método para revenderlo.</li>
             </ul>
           </div>
         </div>
@@ -1315,6 +1310,15 @@
             <span class="scarcity-dot" aria-hidden="true"></span>
             3 cupos disponibles para implementación este mes
           </span>
+          <ol class="entry-steps" aria-label="Cómo sigue después de enviar">
+            <li><strong>1</strong><span>Completás esto en 2 minutos.</span></li>
+            <li><strong>2</strong><span>Si tu negocio encaja, elegís día y hora ahí mismo.</span></li>
+            <li><strong>3</strong><span>En la llamada miramos cómo trabaja hoy tu negocio y te llevás el plan exacto.</span></li>
+          </ol>
+          <p class="entry-steps-note">
+            Tomamos pocos negocios por mes para hacerlo bien. Si hoy no encaja,
+            te lo decimos de frente.
+          </p>
         </div>
 
         <div class="diagnostic-form-wrapper">
@@ -1361,15 +1365,14 @@
                   >
                 </div>
                 <div class="form-group">
-                  <label for="diag-role">Cargo en la empresa *</label>
-                  <input
-                    type="text"
-                    id="diag-role"
-                    name="cargo"
-                    autocomplete="organization-title"
-                    placeholder="Ej: Socio / Director General"
-                    required
-                  />
+                  <label for="diag-role">¿Qué rol tenés en el negocio? *</label>
+                  <select id="diag-role" name="cargo" required>
+                    <option value="" disabled selected>Seleccioná tu rol</option>
+                    <option value="Dueño o socio">Soy dueño o socio</option>
+                    <option value="Director o gerente">Dirijo el negocio o un área</option>
+                    <option value="Trabajo en el negocio">Trabajo en el negocio</option>
+                    <option value="Agencia o consultor">Tengo una agencia o soy consultor</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -1412,6 +1415,16 @@
                       Venta a otras empresas
                     </option>
                     <option value="Otro">Otro modelo de venta</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="diag-team">¿Cuántas personas trabajan en tu negocio? *</label>
+                  <select id="diag-team" name="personas" required>
+                    <option value="" disabled selected>Seleccioná el tamaño</option>
+                    <option value="1">Solo yo</option>
+                    <option value="2-4">De 2 a 4</option>
+                    <option value="5-19">De 5 a 19</option>
+                    <option value="20+">20 o más</option>
                   </select>
                 </div>
               </div>
@@ -1496,6 +1509,19 @@
               style="display: none"
             ></div>
           </form>
+
+          <!-- Agenda: solo se muestra si el formulario califica (index.js).
+               Criterio Facu Corengia, mentoría 20/10: el que califica agenda
+               en el calendario, no por WhatsApp. -->
+          <div class="diag-calendar" id="diag-calendar" hidden>
+            <p class="diag-calendar-eyebrow">Tu negocio encaja</p>
+            <h3>Elegí el día y la hora de tu llamada.</h3>
+            <p class="diag-calendar-sub">
+              Tus datos ya están cargados. Si no ves un horario que te sirva,
+              escribinos por WhatsApp con el botón verde y lo coordinamos.
+            </p>
+            <div class="diag-calendar-embed" id="diag-calendar-embed"></div>
+          </div>
         </div>
       </div>
     </section>

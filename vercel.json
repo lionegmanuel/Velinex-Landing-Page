@@ -1,0 +1,7 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "borrador/iman-y-recursos": false
+    }
+  }
+}

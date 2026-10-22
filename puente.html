@@ -6,7 +6,7 @@
     <title>Tus Recursos Gratis para Escalar con IA</title>
     <meta
       name="description"
-      content="Último paso: tus recursos te llegan por WhatsApp."
+      content="Listo: tu carpeta de recursos ya está disponible."
     />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="https://www.velinex.digital/puente.html" />
@@ -112,17 +112,20 @@
           />
         </div>
 
-        <span class="hero-badge">Centro de Recursos · Último paso</span>
+        <span class="hero-badge">Centro de Recursos · Gratis</span>
 
         <h1>
           <span id="greeting">Listo</span>.
-          <span class="h1-highlight">Tus recursos te llegan por WhatsApp</span>
+          <span class="h1-highlight">Tu carpeta ya está lista</span>
         </h1>
 
         <p class="hero-subtitle" id="subtitle">
-          Tocá el botón: el mensaje ya sale escrito y te los paso por ahí.
+          Abrila acá abajo. También te la dejamos en tu mail para que la tengas a mano.
         </p>
 
+        <!-- VSL del Centro de Recursos ("Antes de pedirlo") en pausa desde
+             2026-10-22: explica el pedido por WhatsApp, que ya no existe.
+             Volver a activarlo cuando se regrabe con la entrega directa.
         <div
           class="yt-lazy"
           role="button"
@@ -140,48 +143,46 @@
             </svg>
           </div>
         </div>
+        -->
 
         <div class="cta-block">
+          <!-- Entrega directa, sin pedir que escriban por WhatsApp (criterio
+               Facu Corengia, mentoría 20/10: "que llegue sola"). -->
           <a
-            id="waCta"
-            href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20Te%20escribo%20para%20recibir%20la%20carpeta%20de%20recursos%20%F0%9F%99%8C&type=phone_number&app_absent=0"
+            id="folderCta"
+            href="https://drive.google.com/drive/folders/1FlyTKKdmZO3wjytSspks6QD8ZV3LArf7"
             target="_blank"
             rel="noopener"
             class="btn-primary btn-large"
-            onclick="gtag('event', 'cta_click', { cta_name: 'Puente_WhatsApp_Recursos' }); gtag('event', 'generate_lead');"
+            onclick="gtag('event', 'cta_click', { cta_name: 'Puente_Abrir_Carpeta' }); gtag('event', 'resource_open');"
           >
-            Escribime por WhatsApp
+            Abrir la carpeta de recursos →
           </a>
-          <p class="cta-disclaimer">Te respondo yo, Manuel. No es un bot.</p>
+          <p class="cta-disclaimer">Se abre directo en Google Drive, sin pasos extra.</p>
         </div>
 
         <div class="puente-steps">
           <div class="puente-step">
             <span class="puente-step-num">1</span>
-            <p><strong>Escribime.</strong> El botón abre WhatsApp con el mensaje listo, con tu nombre y tu situación.</p>
+            <p><strong>Abrí la carpeta</strong> con el botón de arriba. Es tuya, sin vencimiento.</p>
           </div>
           <div class="puente-step">
             <span class="puente-step-num">2</span>
-            <p><strong>Recibís los recursos</strong> para escalar con IA y hacer en minutos lo que hoy te lleva horas.</p>
+            <p><strong>Empezá por el archivo "Empezá por acá".</strong> Te ordena los recursos según cómo venís con la IA.</p>
           </div>
           <div class="puente-step">
             <span class="puente-step-num">3</span>
-            <p id="step3"><strong>Si marcaste que te interesa analizar tu caso,</strong> te hago dos preguntas sobre tu operación y vemos si tiene sentido seguir.</p>
+            <p><strong>Revisá tu mail.</strong> Te dejamos el mismo link para que vuelvas cuando quieras.</p>
           </div>
         </div>
-
-        <p class="puente-filter">
-          <strong>Importante:</strong> los recursos salen únicamente por este chat.
-          Si el número que cargaste no es real, no hay forma de que la recibas.
-        </p>
       </div>
     </section>
 
     <script>
       (function () {
-        // Parámetros que manda recursos.html en el redirect:
-        //   ?n= primer nombre   ?s= situación (chip)   ?r= rubro   ?i= 1|0 interés comercial
-        // Si algo viene raro (merge field sin resolver, basura, vacío), la
+        // recursos.html y el mail de n8n mandan ?n= (primer nombre); ?s=, ?r=
+        // e ?i= se siguen recibiendo pero ya no se usan (la carpeta se entrega
+        // directo, sin mensaje de WhatsApp). Si el nombre viene raro, la
         // página sigue en modo genérico sin romperse.
         function qp(k) {
           try {
@@ -204,66 +205,6 @@
         if (nombre) {
           nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
           document.getElementById("greeting").textContent = "Listo, " + nombre;
-        }
-
-        // ── Situación: solo aceptamos los valores del formulario ──────
-        // (perfil "Tengo negocio y" / "Trabajo en un negocio y" + estado con la IA)
-        var ESTADOS_IA = ["no usamos IA todavía", "probamos pero sin resultados", "queremos escalar en serio"];
-        var PERFILES = ["Tengo negocio y ", "Trabajo en un negocio y "];
-        var situacionRaw = limpiarTexto(qp("s"), 80);
-        var perfilNegocio = "";
-        PERFILES.forEach(function (p) {
-          if (situacionRaw.indexOf(p) === 0 && ESTADOS_IA.indexOf(situacionRaw.slice(p.length)) !== -1) perfilNegocio = p;
-        });
-        var tieneNegocio = perfilNegocio !== "";
-        var trabajaEnNegocio = perfilNegocio === "Trabajo en un negocio y ";
-
-        // ── Rubro (texto libre si eligió "Otro") ──────────────────────
-        var rubro = limpiarTexto(qp("r"), 70).replace(/^Otro · /, "");
-
-        // ── Interés comercial ─────────────────────────────────────────
-        var interesComercial = qp("i") === "1";
-
-        // ── Mensaje de WhatsApp ───────────────────────────────────────
-        var msg;
-        if (interesComercial && tieneNegocio) {
-          msg =
-            "Hola Manuel! " +
-            (nombre ? "Soy " + nombre + ". " : "") +
-            "Vengo del Centro de Recursos, " +
-            (trabajaEnNegocio ? "trabajo en un negocio" : "tengo un negocio") +
-            (rubro ? " (" + rubro + ")" : "") +
-            " y me interesa que veamos cómo hacer que funcione sin que todo dependa de " +
-            (trabajaEnNegocio ? "una persona" : "mí") +
-            " 🙌";
-        } else if (interesComercial) {
-          msg =
-            "Hola Manuel! " +
-            (nombre ? "Soy " + nombre + ". " : "") +
-            "Vengo del Centro de Recursos y me interesa que veamos mi caso 🙌";
-        } else {
-          msg =
-            "Hola Manuel! " +
-            (nombre ? "Soy " + nombre + ", te" : "Te") +
-            " escribo para recibir la carpeta de recursos" +
-            (tieneNegocio && rubro
-              ? ". " + (trabajaEnNegocio ? "Trabajo en un negocio" : "Tengo un negocio") + " (" + rubro + ")"
-              : "") +
-            " 🙌";
-        }
-        document.getElementById("waCta").href =
-          "https://api.whatsapp.com/send/?phone=5493534270844&text=" +
-          encodeURIComponent(msg) +
-          "&type=phone_number&app_absent=0";
-
-        // ── Copy adaptado al perfil ───────────────────────────────────
-        var step3 = document.getElementById("step3");
-        if (!interesComercial) {
-          step3.innerHTML =
-            "<strong>Sin vueltas.</strong> Recibís los recursos y listo. Si más adelante querés revisar cómo opera tu negocio, ya tenés mi número.";
-        } else if (!tieneNegocio) {
-          step3.innerHTML =
-            "<strong>Marcaste que te interesa analizar tu caso.</strong> Contame en una línea qué estás armando y vemos si tiene sentido seguir.";
         }
 
         // ── VSL Centro de Recursos (lazy-load YouTube, no listado) ────

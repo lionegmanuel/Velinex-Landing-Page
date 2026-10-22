@@ -455,27 +455,6 @@
             </fieldset>
           </div>
 
-          <div class="field">
-            <fieldset>
-              <legend>
-                Si te mostramos cómo lograr que <strong id="interesNegocio">tu negocio funcione sin que
-                todo dependa de vos</strong>, ¿te interesaría ver tu caso?
-              </legend>
-              <div class="chip-group" id="interesGroup">
-                <label class="chip">
-                  <input type="radio" name="interes_comercial" value="Sí, me interesa charlarlo" required />
-                  <span class="chip-dot" aria-hidden="true"></span>
-                  <span>Sí, me interesa charlarlo</span>
-                </label>
-                <label class="chip">
-                  <input type="radio" name="interes_comercial" value="Solo quiero la carpeta de recursos" />
-                  <span class="chip-dot" aria-hidden="true"></span>
-                  <span>Solo quiero la carpeta de recursos</span>
-                </label>
-              </div>
-              <p class="group-error">Elegí una opción para seguir.</p>
-            </fieldset>
-          </div>
           </fieldset>
 
           <div class="hp-field" aria-hidden="true" style="display:none!important;position:absolute;left:-9999px;opacity:0;pointer-events:none;">
@@ -547,12 +526,10 @@
         var formError = document.getElementById("formError");
         var perfilGroup = document.getElementById("perfilGroup");
         var iaGroup = document.getElementById("iaGroup");
-        var interesGroup = document.getElementById("interesGroup");
         var negocioBlock = document.getElementById("negocioBlock");
         var rubroSelect = document.getElementById("f-rubro");
         var rubroOtroField = document.getElementById("rubroOtroField");
         var rubroOtroInput = document.getElementById("f-rubro-otro");
-        var interesNegocio = document.getElementById("interesNegocio");
         var SUBMIT_LABEL = "Quiero acceder →";
         var formInitTime = Date.now();
 
@@ -566,14 +543,14 @@
         }
 
         // Al elegir un chip se limpia el estado de error de ese grupo
-        [perfilGroup, iaGroup, interesGroup].forEach(function (group) {
+        [perfilGroup, iaGroup].forEach(function (group) {
           group.addEventListener("change", function () {
             group.classList.remove("chip-group--error");
           });
         });
 
-        // Rubro, IA e interés solo se preguntan a quien tiene o trabaja en un
-        // negocio. El curioso termina en una sola pregunta.
+        // Rubro e IA solo se preguntan a quien tiene o trabaja en un negocio.
+        // El curioso termina en una sola pregunta.
         perfilGroup.addEventListener("change", function () {
           var perfil = radioValue("perfil");
           var conNegocio = perfil === "dueno" || perfil === "trabaja";
@@ -585,10 +562,6 @@
             void negocioBlock.offsetWidth;
             negocioBlock.classList.add("is-revealed");
           }
-          interesNegocio.textContent =
-            perfil === "trabaja"
-              ? "el negocio donde trabajás funcione sin que todo dependa de una persona"
-              : "tu negocio funcione sin que todo dependa de vos";
         });
 
         rubroSelect.addEventListener("change", function () {
@@ -622,10 +595,12 @@
           var perfil = radioValue("perfil");
           var conNegocio = perfil === "dueno" || perfil === "trabaja";
           var ia = conNegocio ? radioValue("ia") : "";
-          var interesComercial = conNegocio ? radioValue("interes_comercial") : "No aplica, no tiene negocio";
+          // La carpeta ya no pregunta si quiere charlar su caso (criterio Facu,
+          // mentoría 20/10: no mezclar la carpeta con la venta). Se manda el
+          // valor histórico para que n8n y la planilla sigan comparables.
+          var interesComercial = conNegocio ? "Solo quiero la carpeta de recursos" : "No aplica, no tiene negocio";
           perfilGroup.classList.toggle("chip-group--error", !perfil);
           iaGroup.classList.toggle("chip-group--error", conNegocio && !ia);
-          interesGroup.classList.toggle("chip-group--error", conNegocio && !radioValue("interes_comercial"));
 
           var situacion = conNegocio ? PREFIJO_PERFIL[perfil] + ia : perfil ? SITUACION_CURIOSO : "";
           var rubro = "";

@@ -1153,6 +1153,11 @@ document.addEventListener("DOMContentLoaded", () => {
         config: {
           name: payload.nombre,
           email: payload.email,
+          // Lo que ya respondió en el formulario no se le vuelve a preguntar
+          // (campos "role" y "quantity" del evento de Cal.com).
+          attendeePhoneNumber: payload.telefono,
+          role: payload.cargo,
+          quantity: { "5-19": "5 a 20 personas", "20+": "20 o más" }[payload.personas] || "",
           notes: "Empresa: " + payload.empresa + ". Freno: " + payload.freno_operativo,
           layout: "month_view",
           theme: "dark",

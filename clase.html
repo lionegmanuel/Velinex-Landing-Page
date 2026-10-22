@@ -726,7 +726,7 @@
             (constante CLASE_VIDEO_ID del script).
           </p>
         </div>
-        <p class="clase-mail-note">La guía, el PDF y el audio de la clase te llegan por mail.</p>
+        <p class="clase-mail-note">La guía en PDF y el audio de la clase te llegan por mail.</p>
 
         <!-- Solo si califica -->
         <div class="clase-next" id="claseCalifica" hidden>
@@ -957,6 +957,26 @@
           }
         }
 
+        // ── Vuelve desde el mail (?acceso=1): la clase directo, sin pedir
+        // los datos otra vez. '&c=1' (lo pone n8n solo al que calificó)
+        // muestra la agenda; el resto ve la calculadora.
+        var q = new URLSearchParams(location.search);
+        if (q.get("acceso") === "1") {
+          var desdeMail = { nombre: q.get("n") || "", email: "", califica: q.get("c") === "1", calificacion: "Vuelve desde el mail" };
+          showClass(desdeMail, false);
+          document.querySelector("#vista-clase .clase-pill").hidden = true;
+          document.querySelector("#vista-clase h1").innerHTML = 'Tu clase, <span class="hero-badge-highlight">cuando quieras.</span>';
+          document.querySelector("#vista-clase .clase-mail-note").textContent = "La guía en PDF está en el mail que te mandamos.";
+          track("iman_reopened", { califica: desdeMail.califica });
+          if (desdeMail.califica) {
+            document.querySelector("#claseCalifica .clase-next-eyebrow").textContent = "Para acelerarlo";
+            document.getElementById("claseCalifica").hidden = false;
+            loadCalendar(desdeMail);
+          } else {
+            document.getElementById("claseNoCalifica").hidden = false;
+          }
+        }
+
         // ── Cal.com embebido, solo para quien califica ─────────────────
         function loadCalendar(payload) {
           (function (C, A, L) {
@@ -986,17 +1006,27 @@
             };
           })(window, "https://app.cal.com/embed/embed.js", "init");
 
+          // Lo que ya respondió en el formulario va precargado en la reserva
+          // (campos "role" y "quantity" del evento de Cal.com), así no lo
+          // pregunta dos veces.
+          var CAL_ROL = { dueno: "Dueño o socio", dirige: "Director o gerente" };
+          var CAL_EQUIPO = { "5-19": "5 a 20 personas", "20+": "20 o más" };
+          var config = {
+            name: payload.nombre,
+            notes: "Vengo de la clase.",
+            layout: "month_view",
+            theme: "dark",
+          };
+          if (payload.email) config.email = payload.email;
+          if (payload.telefono) config.attendeePhoneNumber = payload.telefono;
+          if (CAL_ROL[payload.rol]) config.role = CAL_ROL[payload.rol];
+          if (CAL_EQUIPO[payload.personas]) config.quantity = CAL_EQUIPO[payload.personas];
+
           window.Cal("init", { origin: "https://cal.com" });
           window.Cal("inline", {
             elementOrSelector: "#claseCal",
             calLink: CAL_LINK,
-            config: {
-              name: payload.nombre,
-              email: payload.email,
-              notes: "Viene de la clase. " + payload.calificacion,
-              layout: "month_view",
-              theme: "dark",
-            },
+            config: config,
           });
           window.Cal("on", {
             action: "bookingSuccessful",

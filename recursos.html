@@ -316,13 +316,13 @@
 
         <form class="recursos-form" id="recursosForm" novalidate>
           <div class="field">
-            <label for="f-nombre">Nombre completo</label>
-            <input type="text" id="f-nombre" name="nombre" autocomplete="name" required />
+            <label for="f-nombre">Nombre y apellido</label>
+            <input type="text" id="f-nombre" name="nombre" autocomplete="name" maxlength="80" placeholder="Ej: Carla Domínguez" required />
           </div>
 
           <div class="field">
             <label for="f-email">Email</label>
-            <input type="email" id="f-email" name="email" autocomplete="email" required />
+            <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" maxlength="120" required />
           </div>
 
           <div class="field">
@@ -332,8 +332,9 @@
               id="f-telefono"
               name="telefono"
               autocomplete="tel"
-              placeholder="+54 9 11 1234 5678"
-              pattern="\+[1-9][\d\s]{7,17}"
+              inputmode="tel"
+              maxlength="25"
+              placeholder="+54 9 351 000 0000"
               required
             />
             <p class="field-hint" id="f-telefono-hint">Empezá con + y el código de tu país (+54, +34, +52...). Sin el + no lo aceptamos.</p>
@@ -482,6 +483,7 @@
       </div>
     </section>
 
+    <script src="assets/js/datos-reales.js"></script>
     <script>
       (function () {
         // ── UTM (mismo mecanismo y misma clave que assets/js/index.js,
@@ -531,11 +533,14 @@
         var rubroOtroField = document.getElementById("rubroOtroField");
         var rubroOtroInput = document.getElementById("f-rubro-otro");
         var SUBMIT_LABEL = "Quiero acceder →";
-        var formInitTime = Date.now();
+        var formErrorTexto = formError.textContent;
+        var enviando = false;
 
-        // E.164 estricto: + seguido de 8 a 15 digitos, sin importar el pais.
-        // Garantiza que SIEMPRE quede guardado el codigo de pais, sea cual sea.
-        var TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
+        // Nombre, mail y WhatsApp tienen que ser reales (assets/js/datos-reales.js):
+        // se revisan al salir de cada campo y de nuevo al enviar.
+        var guardia = window.VelinexDatos
+          ? VelinexDatos.conectar(form, { nombre: "nombre", email: "email", telefono: "telefono" })
+          : null;
 
         function radioValue(name) {
           var el = form.querySelector('input[name="' + name + '"]:checked');
@@ -578,20 +583,34 @@
 
         form.addEventListener("submit", function (e) {
           e.preventDefault();
+          if (enviando) return;
           formError.classList.remove("visible");
-          form.telefono.setCustomValidity("");
+          formError.textContent = formErrorTexto;
 
-          var telefonoRaw = form.telefono.value.trim();
-          var telefonoLimpio = "+" + telefonoRaw.replace(/[^\d]/g, "");
-          // El "+" tiene que estar escrito por la persona (no lo sintetizamos):
-          // si no lo puso, no sabemos si el numero tiene codigo de pais o no.
-          var telefonoValido = telefonoRaw.charAt(0) === "+" && TELEFONO_E164.test(telefonoLimpio);
-          if (telefonoRaw && !telefonoValido) {
-            form.telefono.setCustomValidity(
-              "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678."
-            );
+          // Trampa invisible llena: es un programa. Se lo despide sin enviar nada.
+          if (form.empresa_web.value.trim()) {
+            redirectToPuente("", "", "", "");
+            return;
           }
 
+          enviando = true;
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Revisando tus datos...";
+          (guardia ? guardia.validar() : Promise.resolve({ ok: true, datos: {} })).then(function (rev) {
+            enviando = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = SUBMIT_LABEL;
+            if (!rev.ok) return;
+            if (guardia && guardia.esBot()) {
+              formError.textContent = "Revisá que tus datos estén bien y volvé a tocar el botón.";
+              formError.classList.add("visible");
+              return;
+            }
+            enviar(rev.datos);
+          });
+        });
+
+        function enviar(datos) {
           var perfil = radioValue("perfil");
           var conNegocio = perfil === "dueno" || perfil === "trabaja";
           var ia = conNegocio ? radioValue("ia") : "";
@@ -615,8 +634,7 @@
             return;
           }
 
-          var honeypot = form.empresa_web.value.trim();
-          var nombreCompleto = form.nombre.value.trim();
+          var nombreCompleto = datos.nombre || form.nombre.value.trim();
           var primerNombreRaw = nombreCompleto.split(/\s+/)[0] || "";
           var primerNombre = primerNombreRaw
             ? primerNombreRaw.charAt(0).toUpperCase() + primerNombreRaw.slice(1).toLowerCase()
@@ -626,8 +644,8 @@
             formId: "zxy1Oa",
             responseId: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
             nombre: nombreCompleto,
-            email: form.email.value.trim().toLowerCase(),
-            telefono: telefonoLimpio,
+            email: datos.email || form.email.value.trim().toLowerCase(),
+            telefono: datos.telefono || form.telefono.value.replace(/[^\d+]/g, ""),
             calificacion: situacion,
             perfil: perfil,
             rubro: rubro,
@@ -639,17 +657,7 @@
             timestamp: new Date().toISOString(),
           };
 
-          // Verificacion anti-bot robusta:
-          // Un bot automatizado llena campos ocultos y envia el formulario en menos de 1.2 segundos.
-          // Si una persona real tardo mas de 1.2s y tiene datos validos, jamas se descarta.
-          var submissionDuration = Date.now() - formInitTime;
-          var isBot = Boolean(honeypot) && submissionDuration < 1200;
-
-          if (isBot) {
-            redirectToPuente(primerNombre, situacion, interesComercial, rubro);
-            return;
-          }
-
+          enviando = true;
           submitBtn.disabled = true;
           submitBtn.textContent = "Enviando...";
 
@@ -673,11 +681,12 @@
             })
             .catch(function (err) {
               console.error(err);
+              enviando = false;
               formError.classList.add("visible");
               submitBtn.disabled = false;
               submitBtn.textContent = SUBMIT_LABEL;
             });
-        });
+        }
 
         // puente.html lee ?n= (nombre), ?s= (situación), ?r= (rubro) e ?i=
         // (1 = interés comercial) para armar el mensaje de WhatsApp personalizado.

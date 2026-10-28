@@ -26,6 +26,7 @@
       gtag("js", new Date());
       gtag("config", "G-LWKQSM2B03");
     </script>
+    <script src="assets/js/medicion.js"></script>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -806,8 +807,10 @@
           }
         } catch (e) {}
 
+        // Todo lo que pasa en la clase queda atado a la persona (medicion.js).
         function track(name, data) {
-          if (typeof gtag !== "undefined") gtag("event", name, data || {});
+          if (window.VelinexMedicion) VelinexMedicion.evento(name, data || {});
+          else if (typeof gtag !== "undefined") gtag("event", name, data || {});
         }
 
         // ── Pasos ──────────────────────────────────────────────────────
@@ -944,6 +947,7 @@
             utmCampaign: attribution.utm_campaign || "",
             utmContent: attribution.utm_content || "",
             referrer: attribution.referrer || "",
+            visitante: window.VelinexMedicion ? VelinexMedicion.visitante() : "",
             timestamp: new Date().toISOString(),
           };
 
@@ -961,6 +965,8 @@
               console.error(err);
             })
             .then(function () {
+              if (window.VelinexMedicion) VelinexMedicion.marcarLead(payload.responseId, { formulario: "clase", califica: payload.califica });
+              recordar(payload);
               showClass(payload, true);
             });
         }
@@ -977,12 +983,15 @@
           if (CLASE_VIDEO_ID) {
             var box = document.getElementById("claseVideo");
             var iframe = document.createElement("iframe");
-            iframe.src = "https://www.youtube-nocookie.com/embed/" + CLASE_VIDEO_ID + "?rel=0&modestbranding=1";
+            iframe.id = "claseIframe";
+            iframe.src = "https://www.youtube-nocookie.com/embed/" + CLASE_VIDEO_ID + "?rel=0&modestbranding=1&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
             iframe.title = "La clase";
             iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
             iframe.allowFullscreen = true;
             box.innerHTML = "";
             box.appendChild(iframe);
+            // Hasta dónde mira cada uno: 10, 25, 50, 75, 90 y 100%, y segundos.
+            if (window.VelinexMedicion) VelinexMedicion.seguirVideo(iframe, "clase");
           }
 
           if (!real) return;
@@ -999,24 +1008,55 @@
           }
         }
 
-        // ── Vuelve desde el mail (?acceso=1): la clase directo, sin pedir
-        // los datos otra vez. '&c=1' (lo pone n8n solo al que calificó)
-        // muestra la agenda; el resto ve la calculadora.
-        var q = new URLSearchParams(location.search);
-        if (q.get("acceso") === "1") {
-          var desdeMail = { nombre: q.get("n") || "", email: "", califica: q.get("c") === "1", calificacion: "Vuelve desde el mail" };
-          showClass(desdeMail, false);
+        // ── Si vuelve, entra directo a la clase (como Facu) ────────────
+        // Desde el mail (?acceso=1; '&c=1' lo pone n8n solo al que calificó)
+        // o porque ya dejó sus datos en este navegador: no se le pide nada.
+        var GUARDADO = "velinex_iman";
+        function recordar(payload) {
+          try {
+            localStorage.setItem(GUARDADO, JSON.stringify({
+              nombre: (payload.nombre || "").split(/\s+/)[0],
+              califica: !!payload.califica,
+              ts: Date.now(),
+            }));
+          } catch (e) {}
+        }
+        function abrirDirecto(datos, desde) {
+          showClass(datos, false);
           document.querySelector("#vista-clase .clase-pill").hidden = true;
           document.querySelector("#vista-clase h1").innerHTML = 'Tu clase, <span class="hero-badge-highlight">cuando quieras.</span>';
           document.querySelector("#vista-clase .clase-mail-note").textContent = "La guía en PDF está en el mail que te mandamos.";
-          track("iman_reopened", { califica: desdeMail.califica });
-          if (desdeMail.califica) {
+          track("iman_reopened", { califica: datos.califica, desde: desde });
+          if (datos.califica) {
             document.querySelector("#claseCalifica .clase-next-eyebrow").textContent = "Para acelerarlo";
             document.getElementById("claseCalifica").hidden = false;
-            loadCalendar(desdeMail);
+            loadCalendar(datos);
           } else {
             document.getElementById("claseNoCalifica").hidden = false;
           }
+          if (desde === "navegador" && datos.nombre) {
+            var otro = document.createElement("p");
+            otro.className = "clase-hint";
+            otro.style.textAlign = "center";
+            otro.innerHTML = '¿No sos ' + datos.nombre.replace(/[<>&"]/g, "") + '? <a href="#" id="claseOtro">Dejá tus datos</a>';
+            document.getElementById("claseHello").insertAdjacentElement("afterend", otro);
+            document.getElementById("claseOtro").addEventListener("click", function (e) {
+              e.preventDefault();
+              try { localStorage.removeItem(GUARDADO); } catch (er) {}
+              location.href = location.pathname + location.search.replace(/[?&]acceso=1/, "");
+            });
+          }
+        }
+
+        var q = new URLSearchParams(location.search);
+        var yaVino = null;
+        try { yaVino = JSON.parse(localStorage.getItem(GUARDADO) || "null"); } catch (e) {}
+        if (q.get("acceso") === "1") {
+          var desdeMail = { nombre: q.get("n") || "", email: "", califica: q.get("c") === "1", calificacion: "Vuelve desde el mail" };
+          recordar(desdeMail);
+          abrirDirecto(desdeMail, "mail");
+        } else if (yaVino && Date.now() - yaVino.ts < 180 * 24 * 60 * 60 * 1000) {
+          abrirDirecto({ nombre: yaVino.nombre || "", email: "", califica: !!yaVino.califica, calificacion: "Vuelve desde el navegador" }, "navegador");
         }
 
         // ── Cal.com embebido, solo para quien califica ─────────────────

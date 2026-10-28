@@ -328,8 +328,9 @@
       el.className = "dato-msg";
       el.setAttribute("aria-live", "polite");
       input.setAttribute("aria-describedby", ((input.getAttribute("aria-describedby") || "") + " " + id).trim());
-      var ancla = input.closest(".field, .form-group, .clase-step-field") || input.parentNode;
-      ancla.appendChild(el);
+      var ancla = input.closest(".field, .form-group");
+      if (ancla) ancla.appendChild(el);
+      else input.insertAdjacentElement("afterend", el);
     }
     return el;
   }

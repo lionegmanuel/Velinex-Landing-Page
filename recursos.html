@@ -23,6 +23,7 @@
       gtag("js", new Date());
       gtag("config", "G-LWKQSM2B03");
     </script>
+    <script src="assets/js/medicion.js"></script>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -679,6 +680,7 @@
             utmMedium: attribution.utm_medium || "",
             utmCampaign: attribution.utm_campaign || "",
             utmContent: attribution.utm_content || "",
+            visitante: window.VelinexMedicion ? VelinexMedicion.visitante() : "",
             timestamp: new Date().toISOString(),
           };
 
@@ -696,6 +698,7 @@
           })
             .then(function (res) {
               if (!res.ok) throw new Error("Webhook respondió " + res.status);
+              if (window.VelinexMedicion) VelinexMedicion.marcarLead(payload.responseId, { formulario: "recursos", perfil: perfil });
               gtag("event", "generate_lead", {
                 form_name: "centro_recursos",
                 interes_comercial: interesComercial,

@@ -2560,6 +2560,132 @@ section h2 {
   margin: 1rem auto 0;
 }
 
+/* ── CONTACTO POR WHATSAPP (28/10) ───────────────────────── */
+.icon.icon-wa {
+  fill: currentColor;
+  stroke: none;
+  width: 1.15em;
+  height: 1.15em;
+}
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.nav-cta .icon-wa {
+  color: #128c7e;
+}
+.btn-wa-cta {
+  gap: 0.6rem;
+}
+.btn-wa-cta .icon-wa {
+  color: #128c7e;
+  transition: transform var(--duration) var(--ease-spring);
+}
+.btn-wa-cta:hover .icon-wa {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+/* Cómo se arranca (#diagnostico) */
+.apply-steps {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1040px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  counter-reset: none;
+}
+.apply-step {
+  position: relative;
+  text-align: left;
+  padding: 1.6rem 1.5rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  border: var(--border-subtle);
+  box-shadow: var(--edge-light);
+  transition:
+    border-color var(--duration) var(--ease),
+    transform var(--duration) var(--ease),
+    background var(--duration) var(--ease);
+}
+.apply-step:hover {
+  border-color: rgba(56, 189, 248, 0.28);
+  background: var(--surface-card-hover);
+  transform: translateY(-3px);
+}
+.apply-step + .apply-step::before {
+  content: "";
+  position: absolute;
+  top: 2.35rem;
+  left: -1rem;
+  width: 1rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0), rgba(56, 189, 248, 0.5));
+}
+.apply-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 1.6rem;
+  padding: 0 0.6rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent-border);
+}
+.apply-step h3 {
+  font-size: 1.12rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.apply-step p {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.apply-cta {
+  text-align: center;
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+.apply-cta .btn-primary {
+  font-size: 1.12rem;
+  padding: 1.15rem 2.8rem;
+}
+.apply-cta-note {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-top: 0.9rem;
+}
+@media (max-width: 768px) {
+  .apply-steps {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .apply-step {
+    padding: 1.25rem 1.2rem;
+  }
+  .apply-step + .apply-step::before {
+    display: none;
+  }
+  .apply-cta .btn-primary {
+    width: 100%;
+    padding: 1.1rem 1.5rem;
+  }
+  /* En el celular el botón fijo de abajo ya abre WhatsApp. */
+  .whatsapp-float {
+    display: none;
+  }
+}
+
 /* Agenda para quien califica (#diag-calendar) */
 .diag-calendar {
   margin-top: 1.5rem;

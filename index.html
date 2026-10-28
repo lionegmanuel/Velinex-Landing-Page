@@ -228,6 +228,7 @@
       <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4.5l-5.5 2v13l5.5-2 6 2 5.5-2v-13l-5.5 2z"/><path d="M9 4.5v13M15 6.5v13"/></symbol>
       <symbol id="i-tune" viewBox="0 0 24 24"><path d="M4 6.5h9M17 6.5h3M4 12h3M11 12h9M4 17.5h11M19 17.5h1"/><circle cx="15" cy="6.5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
       <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+      <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
     </svg>
 
     <!-- ============================================================
@@ -265,10 +266,11 @@
           <span>Calculadora<span class="nav-resource-extra"> de fugas</span></span>
         </a>
         <a
-          href="#diagnostico"
+          href="https://wa.me/5493534270844"
           class="nav-cta"
-          onclick="smoothScrollToDiagnostic(event); trackCTAClick('CTA_Nav_Diagnostico')"
+          data-wa="nav"
         >
+          <svg class="icon icon-wa" aria-hidden="true"><use href="#i-wa" /></svg>
           Quiero mi plan
         </a>
       </div>
@@ -293,25 +295,25 @@
           </h1>
 
           <p class="hero-subtitle">
-            En 35 días transformamos cómo opera tu empresa: cada consulta
-            respondida en segundos, las 24 horas, calificada, agendada y con
-            seguimiento solo. Y alrededor, tus presupuestos, cobros, datos y
-            procesos internos ordenados en un solo sistema. Tu equipo entra
-            cuando hay una venta esperando.
+            En 35 días cada consulta se responde en segundos, se califica, se
+            agenda y tiene seguimiento solo, y tus presupuestos, cobros y datos
+            quedan en un solo sistema. Tu equipo entra cuando hay una venta
+            esperando.
           </p>
 
           <div class="cta-block">
             <div class="cta-group">
               <a
-                href="#diagnostico"
-                class="btn-primary btn-contrast"
-                onclick="smoothScrollToDiagnostic(event); trackCTAClick('CTA_Hero_Diagnostico')"
+                href="https://wa.me/5493534270844"
+                class="btn-primary btn-large btn-contrast btn-wa-cta"
+                data-wa="hero"
               >
-                Quiero mi plan →
+                <svg class="icon icon-wa" aria-hidden="true"><use href="#i-wa" /></svg>
+                Quiero mi plan
               </a>
               </div>
               <p class="cta-disclaimer">
-                Para vender más y crecer sin sumar gente
+                Me escribís por WhatsApp y te respondo yo, Manuel. Sin formularios.
               </p>
             </div>
         </div>
@@ -941,14 +943,15 @@
 
         <div class="program-cta">
           <a
-            href="#diagnostico"
-            class="btn-primary btn-large btn-contrast"
-            onclick="smoothScrollToDiagnostic(event); trackCTAClick('CTA_Programa')"
+            href="https://wa.me/5493534270844"
+            class="btn-primary btn-large btn-contrast btn-wa-cta"
+            data-wa="programa"
           >
-            Quiero mi plan →
+            <svg class="icon icon-wa" aria-hidden="true"><use href="#i-wa" /></svg>
+            Quiero mi plan
           </a>
           <p class="cta-disclaimer">
-            Para vender más y crecer sin sumar gente
+            Para vender más y crecer sin sumar gente. Te respondo yo por WhatsApp.
           </p>
         </div>
       </div>
@@ -1311,18 +1314,44 @@
             <span class="scarcity-dot" aria-hidden="true"></span>
             3 cupos disponibles para implementación este mes
           </span>
-          <ol class="entry-steps" aria-label="Cómo sigue después de enviar">
-            <li><strong>1</strong><span>Completás esto en 2 minutos.</span></li>
-            <li><strong>2</strong><span>Si tu negocio encaja, elegís día y hora ahí mismo.</span></li>
-            <li><strong>3</strong><span>En la llamada miramos cómo trabaja hoy tu negocio y te llevás el plan exacto.</span></li>
-          </ol>
-          <p class="entry-steps-note">
-            Tomamos pocos negocios por mes para hacerlo bien. Si hoy no encaja,
-            te lo decimos de frente.
+        </div>
+
+        <ol class="apply-steps" aria-label="Cómo se arranca">
+          <li class="apply-step">
+            <span class="apply-step-num">01</span>
+            <h3>Me escribís por WhatsApp</h3>
+            <p>Contame cómo atienden hoy las consultas y qué se les escapa. Con un par de mensajes alcanza.</p>
+          </li>
+          <li class="apply-step">
+            <span class="apply-step-num">02</span>
+            <h3>Vemos si tu negocio encaja</h3>
+            <p>Miramos cuántas consultas reciben y cómo venden. Si hoy no encaja, te lo digo de frente.</p>
+          </li>
+          <li class="apply-step">
+            <span class="apply-step-num">03</span>
+            <h3>Llamada y plan exacto</h3>
+            <p>Si encaja, coordinamos una llamada y te llevás el plan para vender más y crecer sin sumar gente.</p>
+          </li>
+        </ol>
+
+        <div class="apply-cta">
+          <a
+            href="https://wa.me/5493534270844"
+            class="btn-primary btn-large btn-contrast btn-wa-cta"
+            data-wa="cierre"
+          >
+            <svg class="icon icon-wa" aria-hidden="true"><use href="#i-wa" /></svg>
+            Quiero mi plan
+          </a>
+          <p class="apply-cta-note">
+            Tomamos pocos negocios por mes para hacerlo bien.
           </p>
         </div>
 
-        <div class="diagnostic-form-wrapper">
+        <!-- Formulario en pausa desde el 28/10 (mentoría 1 a 1 con Facu: el
+             contacto es por WhatsApp, sin formularios). Queda oculto para
+             poder volver atrás quitando "hidden". -->
+        <div class="diagnostic-form-wrapper" hidden>
           <form id="diagnostic-form" novalidate>
             <!-- Paso 1: Contacto -->
             <div class="form-step-block">
@@ -1528,26 +1557,26 @@
       </div>
     </section>
 
-    <!-- Sticky Mobile CTA: lleva a #diagnostico (index.js maneja .show). -->
+    <!-- Sticky Mobile CTA: abre WhatsApp (whatsapp.js); index.js maneja .show. -->
     <div class="sticky-cta-mobile" id="sticky-cta-mobile">
       <a
-        href="#diagnostico"
-        class="btn-primary"
+        href="https://wa.me/5493534270844"
+        class="btn-primary btn-wa-cta"
         id="sticky-cta-link"
-        onclick="handleStickyCTA(event)"
+        data-wa="sticky"
       >
-        Quiero mi plan →
+        <svg class="icon icon-wa" aria-hidden="true"><use href="#i-wa" /></svg>
+        Quiero mi plan
       </a>
     </div>
 
     <!-- WhatsApp Floating -->
     <a
       id="whatsapp-float"
-      href="https://api.whatsapp.com/send/?phone=5493534270844&text=Hola%20Manuel!%20😃&type=phone_number&app_absent=0"
-      target="_blank"
+      href="https://wa.me/5493534270844"
       class="whatsapp-float"
-      aria-label="Contactar por WhatsApp"
-      onclick="trackCTAClick('WhatsApp_Floating')"
+      aria-label="Escribir por WhatsApp"
+      data-wa="flotante"
     >
       <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
         <path
@@ -1577,6 +1606,7 @@
 
     <script src="assets/js/datos-reales.js"></script>
     <script src="assets/js/index.js"></script>
+    <script src="assets/js/whatsapp.js"></script>
 
     <!-- FAQ accordion (copia inline; index.js tiene su propio handler con
          la clase .active). Esta copia maneja .open y aria-expanded. -->

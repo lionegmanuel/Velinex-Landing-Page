@@ -601,6 +601,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
   const simSource = leakSim || loadStoredSim();
+  // Para whatsapp.js: los números de la calculadora van en el mensaje.
+  window.getSimInfo = () =>
+    simSource && simSource.state.used ? simSource.snapshot() : null;
 
   // ------------------------------------------------------------
   // Precarga del formulario de diagnóstico con lo elegido en el
@@ -737,19 +740,14 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("scroll", updateStickyCTA, { passive: true });
   window.addEventListener("resize", updateStickyCTA, { passive: true });
 
-  window.handleStickyCTA = function (e) {
-    if (e) e.preventDefault();
-    trackCTAClick("CTA_Sticky_Mobile");
-    if (simSource && simSource.state.used) {
-      window.applyLeakSimulatorToForm({ silent: true });
-    }
-    window.smoothScrollToDiagnostic();
-  };
+  // El botón fijo del celular abre WhatsApp (whatsapp.js); se conserva
+  // por compatibilidad con páginas viejas que la llamen.
+  window.handleStickyCTA = function () {};
 
   // ============================================================
-  // NOTA: la atribución (utm_source) NO se concatena al texto de los
-  // links de WhatsApp. Viaja por localStorage, GA4 y el payload del
-  // formulario de diagnóstico. Nunca en el mensaje que ve el prospecto.
+  // NOTA: los códigos UTM nunca van en el mensaje de WhatsApp. El
+  // mensaje lo arma whatsapp.js en palabras: nombra el video solo si
+  // la persona llegó de un video de YouTube identificado.
   // ============================================================
 
   // ============================================================

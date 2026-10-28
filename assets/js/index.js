@@ -793,6 +793,9 @@ document.addEventListener("DOMContentLoaded", () => {
                   new window.YT.Player("vsl-video", {
                     events: {
                       onReady(event) {
+                        if (window.VelinexMedicion) {
+                          window.VelinexMedicion.seguirReproductor(event.target, "vsl_landing");
+                        }
                         try {
                           event.target.setPlaybackQuality("hd1080p");
                           event.target.playVideo();
@@ -1023,6 +1026,7 @@ document.addEventListener("DOMContentLoaded", () => {
         consultas_diarias: form.consultas_diarias.value,
         freno_operativo: form.freno.value.trim(),
         origen: "landing_diagnostico",
+        visitante: window.VelinexMedicion ? window.VelinexMedicion.visitante() : "",
         timestamp: new Date().toISOString(),
         utmSource: attribution.utm_source || "",
         utmMedium: attribution.utm_medium || "",
@@ -1070,6 +1074,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function onSuccess(track, payload) {
+      if (track && payload && window.VelinexMedicion) {
+        window.VelinexMedicion.marcarLead(payload.responseId, {
+          formulario: "landing",
+          califica: payload.califica,
+        });
+      }
       if (track && typeof gtag !== "undefined") {
         gtag("event", "diagnostic_submitted", {
           event_category: "Conversion",

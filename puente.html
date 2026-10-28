@@ -23,6 +23,7 @@
       gtag("js", new Date());
       gtag("config", "G-LWKQSM2B03");
     </script>
+    <script src="assets/js/medicion.js"></script>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -227,6 +228,7 @@
             iframe.style.height = "100%";
             vslContainer.innerHTML = "";
             vslContainer.appendChild(iframe);
+            if (window.VelinexMedicion) VelinexMedicion.seguirVideo(iframe, "vsl_recursos");
             if (typeof gtag !== "undefined") {
               gtag("event", "vsl_play", {
                 event_category: "Video",

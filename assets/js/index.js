@@ -953,8 +953,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = document.getElementById("diag-submit-btn");
     const feedback = document.getElementById("form-feedback");
 
-    // E.164 estricto: + seguido de 8 a 15 dígitos. Garantiza código de país.
-    const TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
+    // Nombre, mail y WhatsApp tienen que ser reales (assets/js/datos-reales.js).
+    const guardia = window.VelinexDatos
+      ? window.VelinexDatos.conectar(form, {
+          nombre: "nombre",
+          email: "email",
+          telefono: "telefono",
+        })
+      : null;
+    let enviando = false;
 
     function showFeedback(type, html) {
       if (!feedback) return;
@@ -965,21 +972,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      form.telefono.setCustomValidity("");
+      if (enviando) return;
       if (feedback) feedback.style.display = "none";
 
-      const telefonoRaw = form.telefono.value.trim();
-      const telefonoLimpio = "+" + telefonoRaw.replace(/[^\d]/g, "");
-      // El "+" lo tiene que escribir la persona: si no está, no sabemos
-      // si el número trae código de país o no.
-      const telefonoValido =
-        telefonoRaw.charAt(0) === "+" && TELEFONO_E164.test(telefonoLimpio);
-      if (telefonoRaw && !telefonoValido) {
-        form.telefono.setCustomValidity(
-          "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678.",
-        );
+      // Trampa invisible llena = programa. Simulamos éxito y no pegamos al webhook.
+      if (form.empresa_web.value.trim()) {
+        onSuccess(false);
+        return;
       }
 
+      enviando = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Revisando tus datos...";
+      (guardia ? guardia.validar() : Promise.resolve({ ok: true, datos: {} })).then(
+        (rev) => {
+          enviando = false;
+          submitBtn.disabled = false;
+          submitBtn.textContent = SUBMIT_LABEL;
+          if (!rev.ok) return;
+          if (guardia && guardia.esBot()) {
+            showFeedback(
+              "error",
+              "Revisá que tus datos estén bien y volvé a tocar el botón.",
+            );
+            return;
+          }
+          enviar(rev.datos);
+        },
+      );
+    });
+
+    function enviar(datos) {
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
@@ -990,9 +1013,9 @@ document.addEventListener("DOMContentLoaded", () => {
         responseId: crypto.randomUUID
           ? crypto.randomUUID()
           : String(Date.now()),
-        nombre: form.nombre.value.trim(),
-        email: form.email.value.trim().toLowerCase(),
-        telefono: telefonoLimpio,
+        nombre: datos.nombre || form.nombre.value.trim(),
+        email: datos.email || form.email.value.trim().toLowerCase(),
+        telefono: datos.telefono || form.telefono.value.replace(/[^\d+]/g, ""),
         cargo: form.cargo.value.trim(),
         empresa: form.empresa.value.trim(),
         sector: form.sector.value,
@@ -1018,12 +1041,7 @@ document.addEventListener("DOMContentLoaded", () => {
         EQUIPOS_QUE_CALIFICAN.indexOf(payload.personas) !== -1 &&
         payload.consultas_diarias !== VOLUMEN_QUE_NO_CALIFICA;
 
-      // Honeypot lleno = bot. Simulamos éxito y no pegamos al webhook.
-      if (form.empresa_web.value.trim()) {
-        onSuccess(false);
-        return;
-      }
-
+      enviando = true;
       submitBtn.disabled = true;
       submitBtn.textContent = "Enviando...";
 
@@ -1041,6 +1059,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch((err) => {
           console.error(err);
+          enviando = false;
           submitBtn.disabled = false;
           submitBtn.textContent = SUBMIT_LABEL;
           showFeedback(
@@ -1048,7 +1067,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "No pudimos enviar tu solicitud. Reintentá en un momento o escribinos por WhatsApp con el botón verde de la esquina.",
           );
         });
-    });
+    }
 
     function onSuccess(track, payload) {
       if (track && typeof gtag !== "undefined") {

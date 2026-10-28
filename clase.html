@@ -616,21 +616,21 @@
 
             <div class="clase-step" data-step="1">
               <h2>¿Cómo te llamás?</h2>
-              <input type="text" name="nombre" autocomplete="name" placeholder="Juan Pérez" required />
+              <input type="text" name="nombre" autocomplete="name" maxlength="80" placeholder="Nombre y apellido" required />
               <button type="button" class="clase-btn" data-next>Empezar →</button>
               <p class="clase-hint" style="text-align: center">Gratis. La ves acá mismo, al instante.</p>
             </div>
 
             <div class="clase-step" data-step="2" hidden>
               <h2>¿A qué mail te mandamos la guía?</h2>
-              <input type="email" name="email" autocomplete="email" placeholder="juan@tunegocio.com" required />
+              <input type="email" name="email" autocomplete="email" inputmode="email" maxlength="120" placeholder="juan@tunegocio.com" required />
               <button type="button" class="clase-btn" data-next>Seguir →</button>
               <button type="button" class="clase-back" data-back>← Volver</button>
             </div>
 
             <div class="clase-step" data-step="3" hidden>
               <h2>¿Cuál es tu WhatsApp?</h2>
-              <input type="tel" name="telefono" autocomplete="tel" placeholder="+54 9 11 1234 5678" required />
+              <input type="tel" name="telefono" autocomplete="tel" inputmode="tel" maxlength="25" placeholder="+54 9 351 000 0000" required />
               <p class="clase-hint">Con el código de país adelante (+54, +52, +34...).</p>
               <label class="clase-consent">
                 <input type="checkbox" name="acepta" required />
@@ -771,6 +771,7 @@
       </div>
     </footer>
 
+    <script src="assets/js/datos-reales.js"></script>
     <script>
       (function () {
         // ID de YouTube de la clase. Vacío = se muestra el aviso de prueba.
@@ -778,7 +779,6 @@
         var CAL_LINK = "velinex/velinex-diagnostico";
         var WEBHOOK_URL = "https://webhook-n8n.velinex.digital/webhook/lead-magnet";
         var WEBHOOK_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
-        var TELEFONO_E164 = /^\+[1-9]\d{7,14}$/;
 
         // Quién califica (BASES §05 y mentoría de Facu del 20/10): dueño,
         // socio o director, con 5 personas o más y 40 consultas por día o
@@ -814,7 +814,15 @@
         var form = document.getElementById("claseForm");
         var steps = form.querySelectorAll(".clase-step");
         var errorBox = document.getElementById("claseError");
+        var errorTexto = errorBox.textContent;
         var current = 1;
+        var avanzando = false;
+
+        // Nombre, mail y WhatsApp tienen que ser reales (assets/js/datos-reales.js).
+        var guardia = window.VelinexDatos
+          ? VelinexDatos.conectar(form, { nombre: "nombre", email: "email", telefono: "telefono" })
+          : null;
+        var CAMPO_DEL_PASO = { 1: "nombre", 2: "email", 3: "telefono" };
 
         function showStep(n) {
           current = n;
@@ -827,17 +835,31 @@
           track("iman_step", { step: n });
         }
 
+        // Primero el dato real del paso (puede tardar: revisa el mail con
+        // Google), después el resto de lo obligatorio del paso.
+        function avanzar() {
+          if (avanzando) return;
+          var campo = CAMPO_DEL_PASO[current];
+          if (!campo || !guardia) {
+            if (stepValid(current)) showStep(current + 1);
+            return;
+          }
+          avanzando = true;
+          var btn = form.querySelector('.clase-step[data-step="' + current + '"] [data-next]');
+          var texto = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = "Revisando...";
+          guardia.validar([campo]).then(function (r) {
+            avanzando = false;
+            btn.disabled = false;
+            btn.textContent = texto;
+            if (!r.ok) { errorBox.textContent = errorTexto; errorBox.classList.add("visible"); return; }
+            if (stepValid(current)) showStep(current + 1);
+          });
+        }
+
         function stepValid(n) {
           var step = form.querySelector('.clase-step[data-step="' + n + '"]');
-          if (n === 3) {
-            var raw = form.telefono.value.trim();
-            var limpio = "+" + raw.replace(/[^\d]/g, "");
-            form.telefono.setCustomValidity(
-              raw.charAt(0) === "+" && TELEFONO_E164.test(limpio)
-                ? ""
-                : "Escribí tu número con el código de país adelante, ej: +54 9 11 1234 5678."
-            );
-          }
           var fields = step.querySelectorAll("input[required]");
           for (var i = 0; i < fields.length; i++) {
             if (!fields[i].checkValidity()) {
@@ -850,13 +872,13 @@
         }
 
         form.addEventListener("click", function (e) {
-          if (e.target.hasAttribute("data-next") && stepValid(current)) showStep(current + 1);
+          if (e.target.hasAttribute("data-next")) avanzar();
           if (e.target.hasAttribute("data-back")) showStep(current - 1);
         });
         form.addEventListener("keydown", function (e) {
           if (e.key === "Enter" && current < 4 && e.target.tagName === "INPUT") {
             e.preventDefault();
-            if (stepValid(current)) showStep(current + 1);
+            avanzar();
           }
         });
 
@@ -869,21 +891,47 @@
         form.addEventListener("submit", function (e) {
           e.preventDefault();
           if (!stepValid(4)) return;
+          // Honeypot lleno = bot: se le muestra la clase sin pegarle al webhook.
+          if (form.empresa_web.value.trim()) {
+            showClass({ nombre: "", califica: false }, false);
+            return;
+          }
+          if (!guardia) return enviar({});
+          var btn = document.getElementById("claseSubmit");
+          btn.disabled = true;
+          guardia.validar().then(function (r) {
+            btn.disabled = false;
+            if (!r.ok) {
+              // Algo de los pasos anteriores no es real: se vuelve a ese paso.
+              var paso = r.motivos[0].indexOf("nombre") === 0 ? 1 : r.motivos[0].indexOf("mail") === 0 ? 2 : 3;
+              showStep(paso);
+              guardia.validar([CAMPO_DEL_PASO[paso]]);
+              return;
+            }
+            if (guardia.esBot()) {
+              errorBox.textContent = "Revisá que tus datos estén bien y volvé a tocar el botón.";
+              errorBox.classList.add("visible");
+              return;
+            }
+            enviar(r.datos);
+          });
+        });
 
+        function enviar(datos) {
           var rol = radio("rol");
           var personas = radio("personas");
           var consultas = radio("consultas");
           var perfilOk = ROLES_OK.indexOf(rol) !== -1 && EQUIPOS_OK.indexOf(personas) !== -1;
           var califica = perfilOk && CONSULTAS_OK.indexOf(consultas) !== -1;
-          var nombre = form.nombre.value.trim();
+          var nombre = datos.nombre || form.nombre.value.trim();
 
           var payload = {
             formId: "iman_clase",
             origen: "iman_clase",
             responseId: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
             nombre: nombre,
-            email: form.email.value.trim().toLowerCase(),
-            telefono: "+" + form.telefono.value.replace(/[^\d]/g, ""),
+            email: datos.email || form.email.value.trim().toLowerCase(),
+            telefono: datos.telefono || "+" + form.telefono.value.replace(/[^\d]/g, ""),
             rol: rol,
             personas: personas,
             consultas_diarias: consultas,
@@ -898,12 +946,6 @@
             referrer: attribution.referrer || "",
             timestamp: new Date().toISOString(),
           };
-
-          // Honeypot lleno = bot: se muestra la clase sin pegarle al webhook.
-          if (form.empresa_web.value.trim()) {
-            showClass(payload, false);
-            return;
-          }
 
           var btn = document.getElementById("claseSubmit");
           btn.disabled = true;
@@ -921,7 +963,7 @@
             .then(function () {
               showClass(payload, true);
             });
-        });
+        }
 
         function showClass(payload, real) {
           document.getElementById("vista-inicio").hidden = true;

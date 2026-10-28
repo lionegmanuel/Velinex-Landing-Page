@@ -22,9 +22,9 @@
   "use strict";
 
   // Microsoft Clarity: el ID del proyecto (clarity.microsoft.com > Settings).
-  var CLARITY_ID = "";
+  var CLARITY_ID = "z4rj9uj3fs";
   // Webhook de n8n que guarda los eventos por persona. Vacío = solo GA4.
-  var EVENTO_URL = "";
+  var EVENTO_URL = "https://webhook-n8n.velinex.digital/webhook/evento";
   var EVENTO_TOKEN = "86C5N_6-692TcmqrUmWnjOlzzYDy5f-X";
 
   function leer(clave) {

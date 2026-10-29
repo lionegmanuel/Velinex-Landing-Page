@@ -52,7 +52,13 @@
     "4In71ihWiv4": "el método de prompts para dominar Claude",
     "qQl1SgEHKr4": "cómo Claude Code edita por vos",
     "0HPSVYYkfOo": "el cambio de Meta en WhatsApp",
-    "4YJmJ0Ln0mM": "cómo gastar 90% menos de tokens en Claude Code"
+    "4YJmJ0Ln0mM": "cómo gastar 90% menos de tokens en Claude Code",
+    "vsl": "la transformación operativa con Software y Agentes de IA",
+    "vsl-oficial": "la transformación operativa con Software y Agentes de IA",
+    "vsl-octubre-2026": "la transformación operativa con Software y Agentes de IA",
+    "CvYPRjrf_Bk": "la transformación operativa con Software y Agentes de IA",
+    "video_37": "el agente de WhatsApp para negocios que atiende solo y agenda visitas",
+    "whatsapp-negocio-ia": "el agente de WhatsApp para negocios que atiende solo y agenda visitas"
   };
 
   var REDES = [

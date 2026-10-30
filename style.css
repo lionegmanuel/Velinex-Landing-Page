@@ -4384,3 +4384,92 @@ body.lp footer p {
     animation: none;
   }
 }
+
+/* ── Cómo te ayudo: tres puertas de entrada (body.lp) ───── */
+body.lp .solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+  align-items: stretch;
+}
+body.lp .solution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.9rem 1.7rem 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006));
+}
+body.lp .solution--core {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, #0a1120, #060910) padding-box,
+    linear-gradient(150deg, rgba(125, 211, 252, 0.7), rgba(56, 189, 248, 0.12) 45%, rgba(123, 95, 255, 0.45)) border-box;
+  box-shadow: 0 30px 80px -40px rgba(56, 189, 248, 0.45);
+}
+body.lp .solution-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+body.lp .solution-core-mark {
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  background: rgba(56, 189, 248, 0.08);
+  color: #bae6fd;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+}
+body.lp .solution h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+body.lp .solution p:not(.solution-tag):not(.solution-for) {
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+}
+body.lp .solution-for {
+  margin-top: auto;
+  padding-top: 0.95rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+body.lp .solutions-note {
+  margin-top: 1.6rem;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  max-width: 62ch;
+}
+body.lp .honest-cta {
+  margin-top: 1.3rem;
+  display: inline-flex;
+}
+@media (max-width: 1024px) {
+  body.lp .solutions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+  body.lp .solution {
+    padding: 1.5rem 1.25rem 1.3rem;
+  }
+  body.lp .solution h3 {
+    font-size: 1.15rem;
+  }
+  body.lp .honest-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}

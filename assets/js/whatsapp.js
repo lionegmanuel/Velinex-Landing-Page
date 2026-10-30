@@ -58,6 +58,7 @@
     "vsl-octubre-2026": "la transformación operativa con Software y Agentes de IA",
     "CvYPRjrf_Bk": "la transformación operativa con Software y Agentes de IA",
     "video_37": "el agente de WhatsApp para negocios que atiende solo y agenda visitas",
+    "c0jrbYYxTMo": "el agente de WhatsApp para negocios que atiende solo y agenda visitas",
     "whatsapp-negocio-ia": "el agente de WhatsApp para negocios que atiende solo y agenda visitas"
   };
 

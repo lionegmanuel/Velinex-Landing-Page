@@ -4035,8 +4035,9 @@ body.lp .demo-clip {
 body.lp .demo-clip video {
   display: block;
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
+  object-position: center bottom;
   border-radius: 18px;
   background: #000;
   border: 1px solid var(--line-strong);

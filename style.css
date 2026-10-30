@@ -3820,3 +3820,566 @@ footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ============================================================
+   CAPA EDITORIAL · landing (body.lp) · 2026-10-30
+   Toque propio para que la web no parezca hecha con una plantilla:
+   titulares en crema cálido, una palabra en serif itálica con
+   degradé celeste, etiquetas en mono numeradas, menos cajas y más
+   líneas finas. Solo aplica a index.html (body.lp); recursos.html
+   y puente.html no cambian.
+============================================================ */
+body.lp {
+  --ink: #f3eee6;
+  --ink-soft: #cfc9bf;
+  --line: rgba(243, 238, 230, 0.09);
+  --line-strong: rgba(243, 238, 230, 0.16);
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --text-secondary: #9fabbd;
+  counter-reset: seccion;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(56, 189, 248, 0.09), transparent 60%),
+    radial-gradient(900px 600px at -10% 30%, rgba(14, 165, 233, 0.05), transparent 60%),
+    #04060c;
+}
+
+/* Grano fino: le saca el brillo "digital" plano al fondo */
+body.lp::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── Tipografía ─────────────────────────────────────────── */
+body.lp h1,
+body.lp section h2,
+body.lp .case-hero h3 {
+  color: var(--ink);
+}
+body.lp .serif-accent {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 1.1em;
+  line-height: 0.95;
+  padding-right: 0.08em;
+  background: linear-gradient(100deg, #e0f2fe 0%, #7dd3fc 40%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Etiquetas de sección: mono, numeradas solas (las secciones ocultas no cuentan) */
+body.lp .section-eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  gap: 0;
+}
+body.lp .section-eyebrow::before {
+  display: none;
+}
+body.lp section:not([hidden]) .section-eyebrow .idx::before {
+  counter-increment: seccion;
+  content: counter(seccion, decimal-leading-zero);
+  color: var(--accent);
+}
+body.lp .section-eyebrow .idx::after {
+  content: "";
+  display: inline-block;
+  width: 26px;
+  height: 1px;
+  margin: 0 0.7rem;
+  vertical-align: middle;
+  background: var(--line-strong);
+}
+
+/* Cabeceras alineadas a la izquierda, como una revista */
+body.lp .section-head {
+  text-align: left;
+  margin-left: 0;
+  max-width: 860px;
+}
+body.lp .section-head .section-subtitle {
+  margin: 0;
+}
+body.lp .section-head--split {
+  max-width: none;
+}
+
+/* Separación entre secciones: una línea fina, sin bloques de color */
+body.lp main > section,
+body.lp > section {
+  border-top: 1px solid var(--line);
+}
+
+/* ── Nav ────────────────────────────────────────────────── */
+body.lp .site-nav-links a {
+  font-size: 0.86rem;
+}
+
+/* ── Hero ───────────────────────────────────────────────── */
+body.lp .hero-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.6rem;
+  animation: fadeInUp 0.6s var(--ease-out) both;
+}
+body.lp .hero h1 {
+  font-size: clamp(2.3rem, 5.4vw, 4.4rem);
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+}
+body.lp .hero-subtitle {
+  font-weight: 400;
+  color: var(--ink-soft);
+  opacity: 0.85;
+}
+
+/* Cifras del hero: sin caja, separadas por líneas */
+body.lp .stats-strip {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+body.lp .stats-strip-item {
+  background: none;
+}
+body.lp .stats-strip-item + .stats-strip-item {
+  border-left: 1px solid var(--line);
+}
+body.lp .stats-strip-num {
+  color: var(--ink);
+}
+body.lp .stats-strip-label {
+  color: var(--text-muted);
+}
+body.lp .vsl-title {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+body.lp .hero-media .yt-lazy {
+  border-radius: 10px;
+}
+
+/* ── Superficies: menos redondeo, menos brillo ─────────── */
+body.lp .case-hero,
+body.lp .puv-card,
+body.lp .filter-card {
+  border-radius: 10px;
+  background: rgba(10, 14, 23, 0.72);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+body.lp .puv-card:hover,
+body.lp .filter-card:hover {
+  background: rgba(10, 14, 23, 0.72);
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Caso real ──────────────────────────────────────────── */
+body.lp .case-badge {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+body.lp .case-hero-metrics {
+  background: none;
+}
+body.lp .case-metric-value {
+  color: var(--ink);
+  text-shadow: none;
+}
+body.lp .case-metric-label {
+  color: var(--text-muted);
+}
+body.lp .case-outcomes .icon {
+  color: var(--accent);
+}
+
+/* ── Demos en clips verticales ──────────────────────────── */
+body.lp .demos-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2rem);
+  max-width: 960px;
+}
+body.lp .demo-clip {
+  margin: 0;
+}
+body.lp .demo-clip video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: 18px;
+  background: #000;
+  border: 1px solid var(--line-strong);
+}
+body.lp .demo-clip figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+body.lp .clip-when {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+/* ── Dolor: un día normal ───────────────────────────────── */
+body.lp .pain-day {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+}
+body.lp .pain-row {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 11rem;
+  gap: 1.5rem 2.5rem;
+  align-items: baseline;
+  padding: clamp(1.4rem, 2.6vw, 2rem) 0;
+  border-top: 1px solid var(--line);
+}
+body.lp .pain-when {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  line-height: 1;
+  color: var(--accent);
+}
+body.lp .pain-what h3 {
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin-bottom: 0.35rem;
+}
+body.lp .pain-what p {
+  color: var(--text-secondary);
+  max-width: 60ch;
+}
+body.lp .pain-what q {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+body.lp .pain-cost {
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fca5a5;
+  white-space: nowrap;
+}
+
+/* ── Qué contiene: lista numerada sin cajas ─────────────── */
+body.lp .feature-list {
+  counter-reset: feature;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+}
+body.lp .feature-list li {
+  counter-increment: feature;
+  position: relative;
+  padding: 1.6rem 0 1.6rem 3.2rem;
+  border-top: 1px solid var(--line);
+}
+body.lp .feature-list li::before {
+  content: counter(feature, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+body.lp .feature-list h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  margin-bottom: 0.4rem;
+}
+body.lp .feature-list p {
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+}
+
+/* ── Comparación ────────────────────────────────────────── */
+body.lp .puv-grid {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: start;
+}
+body.lp .puv-card--highlight {
+  grid-row: auto;
+}
+body.lp .puv-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+body.lp .puv-also li {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--line);
+  color: var(--text-secondary);
+  font-size: 0.97rem;
+}
+body.lp .puv-also li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+body.lp .puv-also strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+body.lp .honest-note {
+  padding-top: 0.5rem;
+}
+body.lp .honest-lead {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 0.9rem;
+}
+body.lp .honest-note p:not(.honest-lead) {
+  color: var(--ink-soft);
+  opacity: 0.85;
+  max-width: 46ch;
+}
+
+/* ── Quién lo hace ──────────────────────────────────────── */
+body.lp .founder-section {
+  padding: var(--section-pad) 0;
+}
+body.lp .founder-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 6vw, 5.5rem);
+  align-items: center;
+}
+body.lp .founder-photo {
+  margin: 0;
+}
+body.lp .founder-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+}
+body.lp .founder-photo figcaption {
+  margin-top: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+body.lp .founder-copy h2 {
+  margin-bottom: 1.2rem;
+}
+body.lp .founder-intro {
+  font-size: clamp(1.02rem, 1.4vw, 1.12rem);
+  color: var(--ink-soft);
+  max-width: 58ch;
+  margin-bottom: 1.8rem;
+}
+body.lp .founder-steps li {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 0.4rem 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line);
+}
+body.lp .founder-steps li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+body.lp .founder-when {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-top: 0.25rem;
+}
+body.lp .founder-steps p {
+  color: var(--text-secondary);
+}
+body.lp .founder-sign {
+  margin-top: 1.4rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+}
+
+/* ── Preguntas: filas numeradas en lugar de tarjetas ───── */
+body.lp .faq-grid {
+  counter-reset: faq;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+}
+body.lp .faq-item,
+body.lp .faq-item:hover,
+body.lp .faq-item.open {
+  counter-increment: faq;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+body.lp .faq-question-text::before {
+  content: counter(faq, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--accent);
+  margin-right: 1rem;
+}
+
+/* ── Cierre ─────────────────────────────────────────────── */
+body.lp .closing-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+body.lp .apply-cta-note,
+body.lp .cta-disclaimer {
+  color: var(--text-muted);
+}
+
+/* ── Pie ────────────────────────────────────────────────── */
+body.lp footer {
+  border-top: 1px solid var(--line);
+}
+body.lp footer p {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* ── Tablet ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  body.lp .puv-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.lp .pain-row {
+    grid-template-columns: 7rem minmax(0, 1fr);
+  }
+  body.lp .pain-cost {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ── Celular ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body.lp .hero-kicker {
+    margin-bottom: 1.1rem;
+  }
+  body.lp .hero-kicker-long {
+    display: none;
+  }
+  body.lp .hero h1 {
+    font-size: clamp(2.1rem, 9.6vw, 2.7rem);
+  }
+  body.lp .hero-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.6rem;
+  }
+  body.lp .stats-strip-item + .stats-strip-item {
+    border-left: 0;
+  }
+  body.lp .feature-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.lp .feature-list li {
+    padding: 1.25rem 0 1.25rem 2.6rem;
+  }
+  body.lp .feature-list li::before {
+    top: 1.45rem;
+  }
+  body.lp .pain-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 1.4rem 0;
+  }
+  body.lp .pain-when {
+    font-size: 2.2rem;
+  }
+  body.lp .pain-cost {
+    grid-column: auto;
+    order: -1;
+  }
+  body.lp .demos-row {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-right: -1.5rem;
+    padding-right: 1.5rem;
+    scrollbar-width: none;
+  }
+  body.lp .demos-row::-webkit-scrollbar {
+    display: none;
+  }
+  body.lp .demo-clip {
+    flex: 0 0 68%;
+    scroll-snap-align: start;
+  }
+  body.lp .founder-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.lp .founder-photo {
+    max-width: 230px;
+  }
+  body.lp .founder-steps li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  body.lp .honest-lead {
+    font-size: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.lp .demo-clip video {
+    animation: none;
+  }
+}

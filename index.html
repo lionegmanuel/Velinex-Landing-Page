@@ -69,7 +69,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link
@@ -101,7 +101,7 @@
             "name": "¿Funciona para mi negocio?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Sí, si tu empresa vende o atiende por conversación: si el cliente escribe antes de comprar, reservar o avanzar, el sistema aplica. El rubro es secundario. Lo que importa es que haya flujo real de consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas por eso."
+              "text": "Sí, si tu negocio vende o atiende por conversación: si el cliente escribe antes de comprar, reservar o avanzar, el sistema aplica. El rubro es secundario. Lo que importa es que haya flujo real de consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas por eso."
             }
           },
           {
@@ -154,7 +154,7 @@
       data-website-id="731b9c80-a08e-4046-bf20-d252dc0449bc"
     ></script>
   </head>
-  <body>
+  <body class="lp">
     <!-- Set de íconos SVG (trazo único 1.6). Se usan con <use href="#i-..."> -->
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
       <symbol id="i-crm" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5" rx="1.5"/><rect x="13.5" y="11" width="7.5" height="10" rx="1.5"/><rect x="3" y="15" width="7.5" height="6" rx="1.5"/></symbol>
@@ -195,25 +195,12 @@
           />
           <span class="site-nav-wordmark">Velinex</span>
         </a>
-        <span class="site-nav-divider" aria-hidden="true"></span>
-        <span class="status-pill">
-          <span class="status-dot-active" aria-hidden="true"></span>
-          Tu sistema funcionando en 35 días
-        </span>
         <ul class="site-nav-links">
-          <li><a href="#casos">Casos Reales</a></li>
-          <li><a href="#que-contiene">Qué Contiene</a></li>
-          <li><a href="#programa">El Programa</a></li>
-          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#casos">Caso real</a></li>
+          <li><a href="#programa">El programa</a></li>
+          <li><a href="#quien">Quién lo hace</a></li>
+          <li><a href="#faq">Preguntas</a></li>
         </ul>
-        <a
-          href="calculadora.html"
-          class="nav-resource"
-          onclick="trackCTAClick('CTA_Nav_Calculadora')"
-        >
-          <svg class="icon" aria-hidden="true"><use href="#i-calc" /></svg>
-          <span>Calculadora<span class="nav-resource-extra"> de fugas</span></span>
-        </a>
         <a
           href="https://wa.me/5493534270844"
           class="nav-cta"
@@ -233,18 +220,17 @@
       <div class="hero-bg-glow" aria-hidden="true"></div>
       <div class="container">
         <div class="hero-copy">
-          <div class="hero-badge hero-eyebrow">
-            <span class="status-dot-active" aria-hidden="true"></span>
-            Consultoría e Infraestructura de IA · Cupos para 3 empresas por mes
-          </div>
+          <p class="hero-kicker">
+            <span class="hero-kicker-long">Transformación operativa y comercial · </span>3 negocios por mes
+          </p>
 
           <h1>
             Tu negocio atendiendo, calificando y operando en
-            <span class="text-gradient-velinex">piloto automático.</span>
+            <em class="serif-accent">piloto automático.</em>
           </h1>
 
           <p class="hero-subtitle">
-            Automatizaciones a medida, software y sistemas con IA para que tu empresa venda más y funcione sin que todo dependa de vos. Desde resolver un canal de WhatsApp o tus correos, hasta una infraestructura comercial completa.
+            Sistemas con IA y software a medida para que tu negocio venda más y funcione sin que todo dependa de vos. Desde ordenar tu WhatsApp hasta toda la operación comercial.
           </p>
 
           <div class="cta-block">
@@ -259,7 +245,7 @@
               </a>
             </div>
             <p class="cta-disclaimer">
-              Atención directa por WhatsApp. Sin formularios ni demoras.
+              Me escribís por WhatsApp y te respondo yo. Sin formularios.
             </p>
           </div>
         </div>
@@ -315,10 +301,10 @@
     <section class="cases-section fade-in" id="casos">
       <div class="container">
         <div class="section-head">
-          <p class="section-eyebrow">Resultados demostrables</p>
-          <h2>Resultados reales de una operación en marcha.</h2>
+          <p class="section-eyebrow"><span class="idx"></span>Caso real</p>
+          <h2>Una operación real, <em class="serif-accent">funcionando hoy.</em></h2>
           <p class="section-subtitle">
-            Cifras tomadas del panel de la operación en vivo. Sin estimaciones teóricas ni números inflados.
+            Cifras tomadas del panel de la operación en vivo. Sin estimaciones ni números inflados.
           </p>
         </div>
 
@@ -360,153 +346,98 @@
     </section>
 
     <!-- ============================================================
-     DOLOR: EL LÍMITE OPERATIVO (Sintético con puente a la calculadora)
+     DEMOS REALES EN CLIPS VERTICALES
+     Oculta hasta tener los clips. Para activarla: dejar los MP4 en
+     assets/video/demos/ (demo-1.mp4, demo-2.mp4, demo-3.mp4 y su
+     .webp de portada) y borrar el atributo hidden de la sección.
 ============================================================ -->
-            <section class="pain-section fade-in" id="dolor">
+    <section class="demos-section fade-in" id="demos" hidden>
       <div class="container">
         <div class="section-head section-head--split">
           <div>
-            <p class="section-eyebrow">El límite operativo · Infraestructura y procesos</p>
+            <p class="section-eyebrow"><span class="idx"></span>Así se ve funcionando</p>
+            <h2>Conversaciones reales, <em class="serif-accent">sin actuar.</em></h2>
+          </div>
+          <p class="section-subtitle">
+            Grabaciones de sistemas que hoy atienden clientes de verdad. Los datos de cada persona están tapados.
+          </p>
+        </div>
+        <div class="demos-row">
+          <figure class="demo-clip">
+            <video muted loop playsinline preload="none" data-poster="assets/video/demos/demo-1.webp" data-src="assets/video/demos/demo-1.mp4" aria-label="Demo: consulta respondida fuera de horario"></video>
+            <figcaption><span class="clip-when">23:47</span>Entra una consulta de noche y se responde al instante</figcaption>
+          </figure>
+          <figure class="demo-clip">
+            <video muted loop playsinline preload="none" data-poster="assets/video/demos/demo-2.webp" data-src="assets/video/demos/demo-2.mp4" aria-label="Demo: el sistema califica y agenda"></video>
+            <figcaption><span class="clip-when">2 min</span>Pregunta lo justo y deja la visita agendada</figcaption>
+          </figure>
+          <figure class="demo-clip">
+            <video muted loop playsinline preload="none" data-poster="assets/video/demos/demo-3.webp" data-src="assets/video/demos/demo-3.mp4" aria-label="Demo: seguimiento y aviso al asesor"></video>
+            <figcaption><span class="clip-when">48 hs</span>Retoma al que dejó de contestar y avisa al asesor</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     DOLOR: EL LÍMITE OPERATIVO (Sintético con puente a la calculadora)
+============================================================ -->
+    <section class="pain-section fade-in" id="dolor">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="section-eyebrow"><span class="idx"></span>Un día normal en tu negocio</p>
             <h2 class="pain-title">
-              Tu empresa tiene demanda. Pero tus procesos siguen dependiendo de personas disponibles.
+              Tu negocio tiene demanda. <em class="serif-accent">Lo que falla es todo lo que pasa a mano.</em>
             </h2>
           </div>
           <p class="section-subtitle">
-            El cuello de botella no es el mercado. Es que tu operación se frena cada vez que para calificar una venta, mover datos entre sistemas o atender a un cliente, alguien de tu equipo tiene que estar pegado a una pantalla.
+            El cuello de botella no es el mercado. Es que cada venta, cada dato y cada respuesta depende de que alguien de tu equipo esté disponible.
           </p>
         </div>
 
-        <div class="pain-console" role="region" aria-label="Diagnóstico de límites operativos">
-          <article class="pain-panel">
-            <div class="pain-panel-cab">
-              <span class="pain-hud-tag">SEÑAL <b class="text-cyan">01</b> <span class="pain-hud-div">/ 04</span></span>
-              <span class="pain-badge-micro pain-badge--danger">Fuga de ventas</span>
+        <ol class="pain-day">
+          <li class="pain-row">
+            <span class="pain-when">21:18</span>
+            <div class="pain-what">
+              <h3>Entra una consulta fuera de horario.</h3>
+              <p>A las 9:12 alguien la ve y contesta. Del otro lado: <q>ya lo coordiné con otro, gracias</q>. El que responde primero, vende.</p>
             </div>
-            <div class="pain-mini" aria-hidden="true">
-              <div class="pain-mini-badge">-20 min</div>
-              <div class="pain-bubble pain-bubble--in">
-                <span class="pain-bubble-time">21:18</span>
-                "Hola, me interesa contratar / coordinar un servicio."
-              </div>
-              <div class="pain-bubble pain-bubble--out">
-                <span class="pain-bubble-time">09:12</span>
-                "Ya lo coordiné con otra empresa, gracias."
-              </div>
-              <div class="pain-mini-status">
-                <span class="pain-pulse-dot pain-pulse-dot--amber"></span>
-                <span>Demora en primer contacto · Venta perdida</span>
-              </div>
+            <span class="pain-cost">Venta perdida</span>
+          </li>
+          <li class="pain-row">
+            <span class="pain-when">4 hs</span>
+            <div class="pain-what">
+              <h3>Tu equipo pasa el día copiando datos.</h3>
+              <p>Planillas, confirmaciones y avisos uno por uno. Sueldos caros en trabajo que se resuelve solo.</p>
             </div>
-            <div class="pain-body">
-              <h3 class="pain-label">Demora en el flujo comercial</h3>
-              <p class="pain-cause">
-                Las oportunidades entran fuera de hora, en feriados o cuando tu equipo está colapsado atendiendo a otros.
-              </p>
+            <span class="pain-cost">Por día</span>
+          </li>
+          <li class="pain-row">
+            <span class="pain-when">0</span>
+            <div class="pain-what">
+              <h3>Nadie sabe cuánto se pierde.</h3>
+              <p>WhatsApp por un lado, planillas por otro y programas que no se hablan. Decidís sin ver los números.</p>
             </div>
-            <div class="pain-impact">
-              <span class="pain-impact-arrow">→</span>
-              <span>El que califica y responde primero cierra. Si demorás 20 minutos, el cliente ya le compró a tu competencia.</span>
+            <span class="pain-cost">Registro real</span>
+          </li>
+          <li class="pain-row">
+            <span class="pain-when">+1</span>
+            <div class="pain-what">
+              <h3>Para crecer, sumás otro sueldo.</h3>
+              <p>Más costo fijo, más errores y más capacitación. El negocio sigue dependiendo de personas.</p>
             </div>
-          </article>
-
-          <article class="pain-panel">
-            <div class="pain-panel-cab">
-              <span class="pain-hud-tag">SEÑAL <b class="text-cyan">02</b> <span class="pain-hud-div">/ 04</span></span>
-              <span class="pain-badge-micro pain-badge--warning">4 hs / día</span>
-            </div>
-            <div class="pain-mini" aria-hidden="true">
-              <div class="pain-mini-badge">Manual</div>
-              <div class="pain-chips">
-                <span class="pain-chip">Carga manual en planillas y Excel</span>
-                <span class="pain-chip">Traspaso de datos entre herramientas</span>
-                <span class="pain-chip">Avisos y confirmaciones a mano</span>
-              </div>
-              <div class="pain-mini-status">
-                <span class="pain-pulse-dot pain-pulse-dot--red"></span>
-                <span>Tareas mecánicas repetitivas sin automatizar</span>
-              </div>
-            </div>
-            <div class="pain-body">
-              <h3 class="pain-label">Carga en tareas manuales</h3>
-              <p class="pain-cause">
-                Tu equipo capacitado pasa horas copiando datos entre sistemas, actualizando planillas y persiguiendo confirmaciones.
-              </p>
-            </div>
-            <div class="pain-impact">
-              <span class="pain-impact-arrow">→</span>
-              <span>Sueldos caros quemados en trabajo administrativo mecánico que una automatización resuelve en segundos.</span>
-            </div>
-          </article>
-
-          <article class="pain-panel">
-            <div class="pain-panel-cab">
-              <span class="pain-hud-tag">SEÑAL <b class="text-cyan">03</b> <span class="pain-hud-div">/ 04</span></span>
-              <span class="pain-badge-micro pain-badge--info">Desconexión</span>
-            </div>
-            <div class="pain-mini" aria-hidden="true">
-              <div class="pain-chips">
-                <span class="pain-chip">WhatsApp Web desconectado</span>
-                <span class="pain-chip">Software rígido que no se adapta</span>
-                <span class="pain-chip">Datos dispersos sin control central</span>
-              </div>
-              <div class="pain-mini-status">
-                <span class="pain-pulse-dot pain-pulse-dot--cyan"></span>
-                <span>Sin visibilidad real de los números del negocio</span>
-              </div>
-            </div>
-            <div class="pain-body">
-              <h3 class="pain-label">Programas sueltos y desorden</h3>
-              <p class="pain-cause">
-                Herramientas que no se hablan entre sí. Información fragmentada y software genérico que frena la operación.
-              </p>
-            </div>
-            <div class="pain-impact">
-              <span class="pain-impact-arrow">→</span>
-              <span>Sin una infraestructura centralizada y software a medida, operás a ciegas y perdés el control del margen.</span>
-            </div>
-          </article>
-
-          <article class="pain-panel">
-            <div class="pain-panel-cab">
-              <span class="pain-hud-tag">SEÑAL <b class="text-cyan">04</b> <span class="pain-hud-div">/ 04</span></span>
-              <span class="pain-badge-micro pain-badge--neutral">Techo humano</span>
-            </div>
-            <div class="pain-mini" aria-hidden="true">
-              <div class="pain-meter-row">
-                <span class="pain-meter-label">Volumen</span>
-                <div class="pain-meter-bar"><span style="width: 85%;"></span></div>
-                <span class="pain-meter-val">+85%</span>
-              </div>
-              <div class="pain-meter-row">
-                <span class="pain-meter-label">Nómina fija</span>
-                <div class="pain-meter-bar pain-meter-bar--danger"><span style="width: 90%;"></span></div>
-                <span class="pain-meter-val">↑ Alto</span>
-              </div>
-              <div class="pain-mini-status">
-                <span class="pain-pulse-dot pain-pulse-dot--amber"></span>
-                <span>Más costo y estrés · Mismo margen neto</span>
-              </div>
-            </div>
-            <div class="pain-body">
-              <h3 class="pain-label">La trampa de contratar</h3>
-              <p class="pain-cause">
-                Para crecer en volumen o sucursales, la única salida que encontrás es sumar más personal al mismo caos manual.
-              </p>
-            </div>
-            <div class="pain-impact">
-              <span class="pain-impact-arrow">→</span>
-              <span>Sumás costos fijos, errores humanos y capacitación sin resolver el fondo: el negocio depende de personas.</span>
-            </div>
-          </article>
-        </div>
+            <span class="pain-cost">Cada vez que crecés</span>
+          </li>
+        </ol>
 
         <p class="pain-closer">
-          <strong>No necesitás más personas haciendo tareas mecánicas.</strong> Necesitás una infraestructura que atienda, procese datos y opere tu negocio en piloto automático.
+          <strong>No necesitás más gente haciendo tareas mecánicas.</strong> Necesitás un sistema que atienda, ordene los datos y haga funcionar tu negocio sin que todo pase por vos.
           <a
             href="calculadora.html"
             class="pain-closer-link"
             onclick="trackCTAClick('CTA_Dolor_Calculadora')"
-            >Calculá cuánta plata se le está escapando a tu empresa hoy →</a>
+            >Calculá cuánta plata se te está escapando hoy →</a>
         </p>
       </div>
     </section>
@@ -518,93 +449,40 @@
       <span id="transformacion" class="anchor-alias" aria-hidden="true"></span>
       <div class="container">
         <div class="section-head">
-          <p class="section-eyebrow">Infraestructura integral</p>
-          <h2>Qué contiene tu nuevo sistema.</h2>
+          <p class="section-eyebrow"><span class="idx"></span>Qué contiene</p>
+          <h2>Lo que queda funcionando <em class="serif-accent">en tu negocio.</em></h2>
           <p class="section-subtitle">
-            No te dejamos con un software suelto ni con respuestas automáticas genéricas. Diseñamos, construimos e implementamos una solución llave en mano instalada en tu propia empresa.
+            No es un programa suelto ni respuestas automáticas genéricas. Lo diseñamos, lo construimos y lo dejamos andando con tu equipo.
           </p>
         </div>
 
-        <div class="bento-grid">
-          <article class="bento-card bento-card--feature">
-            <div class="bento-card-copy">
-              <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-crm" /></svg></span>
-              <h3>Cada contacto y conversación en un solo lugar</h3>
-              <p>
-                Cada consulta de WhatsApp o Instagram queda registrada con su estado y seguimiento en lo que ya usás: tu CRM o una planilla. Tu equipo sabe exactamente quién escribió, qué necesita y quién está listo para comprar.
-              </p>
-            </div>
-            <div class="pipeline-mock" aria-hidden="true">
-              <div class="pipeline-col">
-                <span class="pipeline-col-head">Nuevo</span>
-                <span class="pipeline-card"></span>
-                <span class="pipeline-card"></span>
-                <span class="pipeline-card"></span>
-              </div>
-              <div class="pipeline-col">
-                <span class="pipeline-col-head">Calificado</span>
-                <span class="pipeline-card is-hot"></span>
-                <span class="pipeline-card"></span>
-              </div>
-              <div class="pipeline-col">
-                <span class="pipeline-col-head">Agendado</span>
-                <span class="pipeline-card is-hot"></span>
-                <span class="pipeline-card is-hot"></span>
-              </div>
-              <div class="pipeline-col">
-                <span class="pipeline-col-head">Cerrado</span>
-                <span class="pipeline-card is-won"></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="bento-card">
-            <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-agent" /></svg></span>
-            <h3>Atención 24/7 con el criterio de tu empresa</h3>
-            <p>
-              Responde en segundos de día, de noche y en fin de semana. Aplica tus políticas, precios y objeciones sin improvisar. Asesora y precalifica antes de pasar al asesor.
-            </p>
-          </article>
-
-          <article class="bento-card">
-            <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg></span>
-            <h3>Agenda y citas coordinadas al instante</h3>
-            <p>
-              Sincronizado con el calendario de tu equipo. Reserva visitas, turnos o reuniones solo para prospectos calificados, envía recordatorios y reprograma si cancelan.
-            </p>
-          </article>
-
-          <article class="bento-card">
-            <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-repeat" /></svg></span>
-            <h3>Seguimiento activo que recupera ventas</h3>
-            <p>
-              Retoma a quien dejó de responder a las 48-72 horas y a la semana, recordando el contexto exacto de la charla. Rescata ventas que antes se enfriaban para siempre.
-            </p>
-          </article>
-
-          <article class="bento-card">
-            <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-flow" /></svg></span>
-            <h3>Cierre comercial, presupuestos y cobros</h3>
-            <p>
-              Si tu venta cierra por chat, envía presupuestos y links de pago al momento. Si requiere un asesor, le entrega la conversación con el resumen listo para cerrar.
-            </p>
-          </article>
-
-          <article class="bento-card bento-card--ownership">
-            <span class="bento-icon"><svg class="icon" aria-hidden="true"><use href="#i-server" /></svg></span>
-            <div>
-              <h3>Propiedad 100% tuya, en tu servidor</h3>
-              <p>
-                El sistema, la lógica, el código y los datos quedan instalados en tu infraestructura. Tus clientes y conversaciones son tuyos, sin licencias cautivas ni intermediarios.
-              </p>
-            </div>
-            <span class="ownership-tag">
-              <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>
-              Instalado en tu servidor
-            </span>
-          </article>
-        </div>
-</div>
+        <ol class="feature-list">
+          <li>
+            <h3>Atención al instante, con tu criterio</h3>
+            <p>Responde en segundos, de día, de noche y el fin de semana. Aplica tus precios, tus políticas y tu forma de vender, sin improvisar.</p>
+          </li>
+          <li>
+            <h3>Cada contacto ordenado en un solo lugar</h3>
+            <p>Cada consulta de WhatsApp o Instagram queda registrada con su estado en lo que ya usás. Sabés quién escribió, qué necesita y quién está listo para comprar.</p>
+          </li>
+          <li>
+            <h3>Agenda sin ida y vuelta</h3>
+            <p>Reserva turnos, visitas o reuniones solo para quien califica, manda recordatorios y reprograma si alguien cancela.</p>
+          </li>
+          <li>
+            <h3>Seguimiento que recupera ventas</h3>
+            <p>Retoma a quien dejó de responder a las 48 horas y a la semana, con el contexto exacto de la charla.</p>
+          </li>
+          <li>
+            <h3>Cierre, presupuestos y cobros</h3>
+            <p>Si tu venta cierra por chat, manda el presupuesto y el link de pago. Si necesita a una persona, le pasa la charla con el resumen listo.</p>
+          </li>
+          <li>
+            <h3>Es tuyo, en tu servidor</h3>
+            <p>El sistema, la lógica y los datos quedan a nombre de tu negocio. Sin licencias de por vida ni intermediarios.</p>
+          </li>
+        </ol>
+      </div>
     </section>
 
     <!-- ============================================================
@@ -614,10 +492,10 @@
       <span id="proceso" class="anchor-alias" aria-hidden="true"></span>
       <div class="container">
         <div class="section-head">
-          <p class="section-eyebrow">Programa Piloto Automático 60</p>
-          <h2>Tu sistema funcionando en 35 días. Los 25 siguientes, de regalo.</h2>
+          <p class="section-eyebrow"><span class="idx"></span>Programa Piloto Automático 60</p>
+          <h2>Tu sistema funcionando en 35 días. <em class="serif-accent">Los 25 siguientes, de regalo.</em></h2>
           <p class="section-subtitle">
-            Un programa cerrado de 60 días con fecha desde el día que arrancamos: al día 35 tu sistema está funcionando al 100% y hasta el día 60 lo afinamos en vivo con tus clientes reales, sin costo. Vos ponés 90 minutos y 2 revisiones cortas. Nosotros hacemos el resto.
+            Un programa cerrado de 60 días, con fecha desde que arrancamos. Vos ponés 90 minutos y 2 revisiones cortas. Del resto nos encargamos nosotros.
           </p>
         </div>
 
@@ -637,7 +515,7 @@
             <span class="program-milestone-dot" aria-hidden="true"></span>
             <span class="program-milestone-when">Día 1</span>
             <strong>Mapa Operativo 360</strong>
-            <span class="program-milestone-what">La auditoría completa de tu empresa, de regalo</span>
+            <span class="program-milestone-what">La auditoría completa de tu negocio, de regalo</span>
           </li>
           <li class="program-milestone">
             <span class="program-milestone-dot" aria-hidden="true"></span>
@@ -665,18 +543,6 @@
           </li>
         </ol>
 
-        <aside class="program-guarantee" aria-labelledby="program-guarantee-title">
-          <span class="program-guarantee-icon" aria-hidden="true">
-            <svg class="icon"><use href="#i-lock" /></svg>
-          </span>
-          <div class="program-guarantee-copy">
-            <p class="program-guarantee-eyebrow">Propiedad total de tu empresa</p>
-            <h3 id="program-guarantee-title">Instalado en tu servidor, sin ataduras</h3>
-            <p class="program-guarantee-text">
-              Todo el software, las automatizaciones y las conversaciones quedan instaladas en tu propia infraestructura. Tu negocio es el único dueño de su operación, sin pagar licencias cautivas de por vida.
-            </p>
-          </div>
-        </aside>
 
         <div class="program-cta">
           <a
@@ -688,7 +554,7 @@
             Quiero mi plan
           </a>
           <p class="cta-disclaimer">
-            Coordinamos directo por WhatsApp. Respuesta en el día.
+            Te respondo yo por WhatsApp, en el día.
           </p>
         </div>
       </div>
@@ -701,19 +567,19 @@
       <div class="container">
         <div class="section-head section-head--split">
           <div>
-            <p class="section-eyebrow">La diferencia que importa</p>
-            <h2>Lo mismo, contratando a alguien, te costaría más y te daría menos.</h2>
+            <p class="section-eyebrow"><span class="idx"></span>La comparación que importa</p>
+            <h2>Sumar a alguien te costaría más <em class="serif-accent">y te daría menos.</em></h2>
           </div>
           <p class="section-subtitle">
-            La comparación real no es contra otra herramienta. Es contra sumar gente para sostener el mismo cuello de botella.
+            La comparación real no es contra otra herramienta. Es contra contratar gente para sostener el mismo cuello de botella.
           </p>
         </div>
 
         <div class="puv-grid">
           <article class="puv-card puv-card--highlight">
-            <span class="puv-vs">vs. Contratar más personal</span>
+            <span class="puv-vs">Una persona más contra el sistema</span>
             <p>
-              Una persona trabaja 8 horas, atiende pocos chats a la vez, se enferma, se va, hay que capacitarla y no mide nada. El sistema atiende 10 o 500 consultas a la vez, a toda hora, siempre igual, y deja todo medido en tu CRM. Su mantenimiento cuesta una fracción de un sueldo.
+              Una persona trabaja 8 horas, atiende pocos chats a la vez, se enferma, se va y hay que volver a capacitarla. El sistema atiende 10 o 500 consultas a la vez, siempre igual, y deja todo medido.
             </p>
             <div class="compare-table" role="table" aria-label="Una persona más contra el sistema Velinex">
               <div class="compare-row compare-row--head" role="row">
@@ -749,26 +615,20 @@
             </div>
           </article>
 
-          <article class="puv-card">
-            <span class="puv-vs">vs. Plataformas para armar por tu cuenta</span>
-            <p>
-              No tenés que aprender a programar ni pasar meses configurando herramientas. Lo entregamos 100% probado y funcionando con tu equipo.
-            </p>
-          </article>
+          <div class="puv-side">
+            <ul class="puv-also">
+              <li><strong>No es una plataforma para armar vos.</strong> Te lo entregamos probado y funcionando con tu equipo.</li>
+              <li><strong>No es una agencia de marketing.</strong> El marketing trae gente; esto la atiende, la califica y la convierte en ventas.</li>
+              <li><strong>No es un menú de respuestas automáticas.</strong> Recuerda cada charla, aplica tus reglas y cuida tus datos.</li>
+            </ul>
 
-          <article class="puv-card">
-            <span class="puv-vs">vs. Agencias de marketing tradicionales</span>
-            <p>
-              El marketing atrae miradas. Nosotros construimos la infraestructura que atiende, califica y convierte ese tráfico en ventas reales.
-            </p>
-          </article>
-
-          <article class="puv-card">
-            <span class="puv-vs">vs. Chatbots básicos o freelancers</span>
-            <p>
-              Un menú rígido aleja clientes. Velinex deja un sistema inteligente que recuerda conversaciones, aplica tus políticas y protege tus datos.
-            </p>
-          </article>
+            <aside class="honest-note" aria-label="Sobre los números">
+              <p class="honest-lead">No te prometo <em class="serif-accent">un número.</em></p>
+              <p>
+                Lo sacamos con los tuyos: cuántas consultas te entran, cuántas se enfrían sin respuesta y cuánto vale cada venta. Si la cuenta no da, te lo digo antes de que pongas un peso.
+              </p>
+            </aside>
+          </div>
         </div>
       </div>
     </section>
@@ -779,13 +639,13 @@
     <section class="qualification-section fade-in">
       <div class="container">
         <div class="section-head">
-          <p class="section-eyebrow">Para quién es</p>
-          <h2>¿Para quién es y para quién no es?</h2>
+          <p class="section-eyebrow"><span class="idx"></span>Para quién es</p>
+          <h2>Para quién es <em class="serif-accent">y para quién no.</em></h2>
         </div>
 
         <div class="qualification-filter">
           <div class="filter-card filter-yes">
-            <h3>Es para tu empresa si:</h3>
+            <h3>Es para tu negocio si:</h3>
             <ul>
               <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>Tu WhatsApp o redes reciben consultas todos los días y no das abasto para responder y hacer seguimiento a tiempo.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>Tu venta necesita una conversación: asesorar, cotizar o coordinar un turno, visita o reunión.</li>
@@ -793,7 +653,7 @@
             </ul>
           </div>
           <div class="filter-card filter-no">
-            <h3>NO es para tu empresa si:</h3>
+            <h3>No es para tu negocio si:</h3>
             <ul>
               <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Tu negocio recién arranca y todavía no tiene un flujo diario de consultas.</li>
               <li><svg class="icon" aria-hidden="true"><use href="#i-x" /></svg>Vendés solo por carrito de compras online sin hablar con nadie.</li>
@@ -805,15 +665,55 @@
     </section>
 
     <!-- ============================================================
+     QUIÉN LO HACE
+============================================================ -->
+    <section class="founder-section fade-in" id="quien">
+      <div class="container founder-layout">
+        <figure class="founder-photo">
+          <img
+            src="assets/img/manuel-lione.webp"
+            alt="Manuel Lione, fundador de Velinex"
+            width="720"
+            height="900"
+            loading="lazy"
+          />
+          <figcaption>Manuel Lione · Villa María, Córdoba</figcaption>
+        </figure>
+        <div class="founder-copy">
+          <p class="section-eyebrow"><span class="idx"></span>Quién lo hace</p>
+          <h2>Soy Manuel Lione. <em class="serif-accent">Tu sistema lo armo yo.</em></h2>
+          <p class="founder-intro">
+            Trabajo con dueños de negocios que tienen más consultas de las que su equipo puede atender bien. No te paso a un vendedor ni te dejo con un ticket de soporte: hablás conmigo desde el primer mensaje hasta que el sistema está atendiendo a tus clientes.
+          </p>
+          <ol class="founder-steps">
+            <li>
+              <span class="founder-when">El primer mensaje</span>
+              <p>Me escribís por WhatsApp y te respondo yo. Vemos juntos si tiene sentido, y si no lo tiene, te lo digo.</p>
+            </li>
+            <li>
+              <span class="founder-when">La construcción</span>
+              <p>Lo armo con tus reglas, tus precios y tu forma de vender. Nada de plantillas copiadas de otro rubro.</p>
+            </li>
+            <li>
+              <span class="founder-when">Después</span>
+              <p>Sigo cerca: lo ajusto mientras atiende clientes reales y te muestro los números cada mes.</p>
+            </li>
+          </ol>
+          <p class="founder-sign">En YouTube muestro cómo construyo estos sistemas, con casos reales y sin humo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
      FAQ (Las 6 preguntas decisorias)
 ============================================================ -->
     <section class="faq fade-in" id="faq">
       <div class="container faq-layout">
         <div class="faq-head">
-          <p class="section-eyebrow">Preguntas frecuentes</p>
-          <h2>Lo que seguramente te estás preguntando.</h2>
+          <p class="section-eyebrow"><span class="idx"></span>Preguntas frecuentes</p>
+          <h2>Lo que me suelen preguntar <em class="serif-accent">antes de arrancar.</em></h2>
           <p class="section-subtitle">
-            Si tu duda no está acá, la resolvemos cuando hablemos por WhatsApp.
+            Si tu duda no está acá, escribime por WhatsApp y la vemos.
           </p>
         </div>
         <div class="faq-grid">
@@ -824,7 +724,7 @@
             </button>
             <div class="faq-answer">
               <p>
-                Sí, si tu empresa vende o atiende por conversación: si el cliente escribe antes de comprar, reservar o avanzar, el sistema aplica. Lo que importa es que haya flujo real de consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas por eso.
+                Sí, si tu negocio vende o atiende por conversación: si el cliente escribe antes de comprar, reservar o avanzar, el sistema aplica. Lo que importa es que haya flujo real de consultas y que hoy se gestionen a mano, perdiendo tiempo o ventas por eso.
               </p>
             </div>
           </div>
@@ -872,7 +772,7 @@
             </button>
             <div class="faq-answer">
               <p>
-                Trabajamos en etapas y validamos cada entrega junto con tu equipo antes de salir a clientes reales. El sistema se prueba y ajusta en un entorno seguro hasta que responda con los criterios exactos de tu empresa.
+                Trabajamos en etapas y validamos cada entrega junto con tu equipo antes de salir a clientes reales. El sistema se prueba y ajusta en un entorno seguro hasta que responda con los criterios exactos de tu negocio.
               </p>
             </div>
           </div>
@@ -884,7 +784,7 @@
             </button>
             <div class="faq-answer">
               <p>
-                Depende del volumen de consultas y de cómo vende tu negocio. Cuando hablemos lo calculamos para tu caso, junto con lo que hoy se te escapa por mes. La lógica es simple: el sistema tiene que pagarse solo con lo que recupera. Si el número no cierra, te lo decimos directo.
+                Depende del volumen de consultas y de cómo vende tu negocio. Cuando hablemos lo calculamos para tu caso, junto con lo que hoy se te escapa por mes. La lógica es simple: el sistema tiene que pagarse solo con lo que recupera. Si el número no cierra, te lo digo directo.
               </p>
             </div>
           </div>
@@ -898,13 +798,10 @@
     <section class="diagnostic-flow-section fade-in" id="diagnostico">
       <div class="container">
         <div class="closing-cta-head closing-cta-head--seamless">
-          <span class="scarcity-tag">
-            <span class="scarcity-dot" aria-hidden="true"></span>
-            3 cupos disponibles para implementación este mes
-          </span>
-          <h2>¿Querés que tu negocio funcione <span class="text-gradient-velinex">sin que todo dependa de vos?</span></h2>
+          <p class="closing-kicker">3 cupos para este mes</p>
+          <h2>¿Querés que tu negocio funcione <em class="serif-accent">sin que todo dependa de vos?</em></h2>
           <p class="closing-cta-sub">
-            Hablemos por WhatsApp: miramos juntos cómo trabaja hoy tu negocio y te llevás el plan exacto para vender más y crecer sin sumar gente. Si hoy no encaja, te lo decimos de frente.
+            Hablemos: miramos juntos cómo trabaja hoy tu negocio y te llevás el plan exacto para vender más y crecer sin sumar gente. Si hoy no encaja, te lo digo de frente.
           </p>
           <div class="apply-cta">
             <a
@@ -916,7 +813,7 @@
               Quiero mi plan por WhatsApp
             </a>
             <p class="apply-cta-note">
-              Atención directa por WhatsApp. Sin formularios ni demoras.
+              Te respondo yo, en el día. Sin formularios.
             </p>
           </div>
         </div>
@@ -939,21 +836,6 @@
       </a>
     </div>
 
-    <!-- WhatsApp Floating -->
-    <a
-      id="whatsapp-float"
-      href="https://wa.me/5493534270844"
-      class="whatsapp-float"
-      aria-label="Escribir por WhatsApp"
-      data-wa="flotante"
-    >
-      <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
-        <path
-          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
-        />
-      </svg>
-    </a>
-
     <!-- Modal -->
     <div class="image-modal" id="imageModal">
       <div class="modal-content">
@@ -969,13 +851,36 @@
           class="footer-logo"
           loading="lazy"
         />
-        <p>&copy; 2026 Velinex · Infraestructura de inteligencia comercial y operativa</p>
+        <p>&copy; 2026 Velinex · Manuel Lione · Villa María, Córdoba, Argentina</p>
       </div>
     </footer>
 
-    <script src="assets/js/datos-reales.js"></script>
     <script src="assets/js/index.js"></script>
     <script src="assets/js/whatsapp.js"></script>
+
+    <!-- Clips de demo: cargan y se reproducen solo cuando están a la vista -->
+    <script>
+      (function () {
+        var vids = document.querySelectorAll("#demos:not([hidden]) video[data-src]");
+        if (!vids.length || !("IntersectionObserver" in window)) return;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var v = e.target;
+            if (e.isIntersecting) {
+              if (!v.src) v.src = v.dataset.src;
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+            } else {
+              v.pause();
+            }
+          });
+        }, { threshold: 0.35 });
+        vids.forEach(function (v) {
+          if (v.dataset.poster) v.poster = v.dataset.poster;
+          io.observe(v);
+        });
+      })();
+    </script>
 
     <!-- FAQ accordion -->
     <script>

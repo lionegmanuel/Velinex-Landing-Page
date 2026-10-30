@@ -996,7 +996,10 @@ section h2 {
 }
 /* ── DOLOR (#dolor) ─────────────────────────────────────── */
 .pain-section {
-  background: var(--alt-bg);
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56, 189, 248, 0.06) 0%, transparent 65%),
+    var(--canvas);
   padding: var(--section-pad) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);

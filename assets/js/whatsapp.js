@@ -11,9 +11,12 @@
    Si usó la calculadora, suma sus números. El botón del cierre suma
    "Vi la web entera" (señal de que leyó todo).
 
-   Cada video nuevo que se publica con link a la web se suma a VIDEOS
-   (ID del video y el tema como lo diría quien lo vio). Si falta, el
-   mensaje cae en "te vi en YouTube", nunca nombra un video equivocado. */
+   Videos nuevos: no hace falta cargarlos. Si el ID no está en VIDEOS, la
+   web le pide a YouTube el título (oEmbed) y, si el video es del canal de
+   Manuel, el mensaje lo nombra por su título. Si YouTube no responde o el
+   video es de otro canal, cae en "te vi en YouTube", nunca nombra un video
+   equivocado. VIDEOS queda solo para elegir un tema más natural que el
+   título, cuando valga la pena. */
 (function () {
   var TELEFONO = "5493534270844";
 
@@ -91,7 +94,7 @@
   function canal(o) {
     var f = String(o.fuente || "").toLowerCase().replace(/^(www|m|l|lm)\./, "");
     if (ES_YOUTUBE.test(f)) {
-      return { tipo: "youtube", video: VIDEOS[o.video] ? o.video : "" };
+      return { tipo: "youtube", video: VIDEOS[o.video] || titulo(o.video) ? o.video : "" };
     }
     for (var i = 0; i < REDES.length; i++) {
       if (REDES[i].re.test(f)) return { tipo: "red", red: REDES[i].nombre };
@@ -113,7 +116,8 @@
     var cierre = " y quiero ver cómo funcionaría el sistema en mi negocio.";
     var texto;
     if (c.tipo === "youtube" && c.video) {
-      texto = "Hola Manuel, vi tu video sobre " + VIDEOS[c.video] +
+      texto = "Hola Manuel, vi tu video " +
+        (VIDEOS[c.video] ? "sobre " + VIDEOS[c.video] : "«" + titulo(c.video) + "»") +
         " y quiero ver cómo sería algo así en mi negocio.";
     } else if (c.tipo === "youtube") {
       texto = "Hola Manuel, te vi en YouTube" + cierre;
@@ -153,6 +157,30 @@
     if (typeof window.trackCTAClick === "function") window.trackCTAClick("WA_" + boton);
   }
 
+  // Título de un video del canal que no está en VIDEOS (guardado por ID).
+  function titulo(id) {
+    if (!id) return "";
+    try { return localStorage.getItem("velinex_titulo_" + id) || ""; } catch (e) { return ""; }
+  }
+
+  function buscarTitulo(id, alTerminar) {
+    if (!id || VIDEOS[id] || titulo(id) || !/^[A-Za-z0-9_-]{11}$/.test(id) || !window.fetch) return;
+    fetch("https://www.youtube.com/oembed?format=json&url=" +
+      encodeURIComponent("https://www.youtube.com/watch?v=" + id))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.title || !/@lionegmanuel/i.test(d.author_url || "")) return;
+        try { localStorage.setItem("velinex_titulo_" + id, d.title); } catch (e) {}
+        alTerminar();
+      })
+      .catch(function () {});
+  }
+
+  function prepararTodos() {
+    var botones = document.querySelectorAll("a[data-wa]");
+    for (var i = 0; i < botones.length; i++) preparar(botones[i]);
+  }
+
   function iniciar() {
     var botones = document.querySelectorAll("a[data-wa]");
     for (var i = 0; i < botones.length; i++) {
@@ -162,6 +190,10 @@
       preparar(a);
     }
     document.addEventListener("click", alClic, true);
+    var o = origen();
+    if (ES_YOUTUBE.test(String(o.fuente || "").toLowerCase().replace(/^(www|m)\./, ""))) {
+      buscarTitulo(o.video, prepararTodos);
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
